@@ -1,0 +1,568 @@
+{
+	"addresses": [
+		{
+			"$type": "Address",
+			"id": 1,
+			"customer": 2,
+			"title": "Dr.",
+			"firstName": "Otto",
+			"lastName": "Octavius",
+			"company": "Oscorp",
+			"addressLine1": "123 Main St",
+			"addressLine2": "Suite 100",
+			"city": "New York",
+			"state": "NY",
+			"postalCode": "10001",
+			"country": "US",
+			"phone": "1234567890"
+		},
+		{
+			"$type": "Address",
+			"id": 2,
+			"customer": 2,
+			"title": "Mr.",
+			"firstName": "Oliver",
+			"lastName": "Twist",
+			"company": "",
+			"addressLine1": "48 Great Portland St",
+			"addressLine2": "",
+			"city": "London",
+			"state": "",
+			"postalCode": "W1W 7ND",
+			"country": "GB",
+			"phone": "1234567890"
+		}
+	],
+	"categories": [
+		{
+			"$type": "Category",
+			"id": 1,
+			"title": "Accessories",
+			"slug": "accessories"
+		},
+		{
+			"$type": "Category",
+			"id": 2,
+			"title": "T-Shirts",
+			"slug": "tshirts"
+		},
+		{
+			"$type": "Category",
+			"id": 3,
+			"title": "Hats",
+			"slug": "hats"
+		}
+	],
+	"footer": {
+		"$type": "Footer",
+		"id": 1,
+		"navItems": [
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "/admin",
+				"text": "Admin"
+			},
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "https://github.com/diego-schivo/ecommerce-template",
+				"text": "Source Code"
+			},
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "https://janilla.com/",
+				"text": "Janilla"
+			}
+		]
+	},
+	"formSubmissions": [],
+	"forms": [
+		{
+			"$type": "Form",
+			"id": 1,
+			"title": "Contact Form",
+			"fields": [
+				{
+					"$type": "TextField",
+					"name": "full-name",
+					"label": "Full Name",
+					"width": 100,
+					"required": true
+				},
+				{
+					"$type": "EmailField",
+					"name": "email",
+					"label": "Email",
+					"width": 100,
+					"required": true
+				},
+				{
+					"$type": "NumberField",
+					"name": "phone",
+					"label": "Phone",
+					"width": 100,
+					"required": false
+				},
+				{
+					"$type": "TextAreaField",
+					"name": "message",
+					"label": "Message",
+					"width": 100,
+					"required": true
+				}
+			],
+			"submitButtonLabel": "Submit",
+			"confirmationType": "MESSAGE",
+			"confirmationMessage": "<h2>The contact form has been submitted successfully.</h2>",
+			"emails": [
+				{
+					"$type": "Email",
+					"emailTo": "${email}",
+					"cc": "",
+					"bcc": "",
+					"replyTo": "",
+					"emailFrom": "\"Janilla\" <diego.schivo@janilla.com>",
+					"subject": "You've received a new message.",
+					"message": "Your contact form submission was successfully received."
+				}
+			]
+		}
+	],
+	"header": {
+		"$type": "Header",
+		"id": 1,
+		"navItems": [
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "/",
+				"text": "Home"
+			},
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "/shop",
+				"text": "Shop"
+			},
+			{
+				"$type": "Link",
+				"type": "CUSTOM",
+				"uri": "/account",
+				"text": "Account"
+			}
+		]
+	},
+	"media": [
+		{
+			"$type": "Media",
+			"id": 1,
+			"file": {
+				"$type": "File",
+				"name": "tshirt-white.webp"
+			},
+			"alt": "White tshirt with the Payload logo on the front",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 2,
+			"file": {
+				"$type": "File",
+				"name": "hat-logo.webp"
+			},
+			"alt": "Black hat with the Payload logo on the front",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 3,
+			"file": {
+				"$type": "File",
+				"name": "image-hero1.webp"
+			},
+			"alt": "Straight metallic shapes with a blue gradient",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 4,
+			"file": {
+				"$type": "File",
+				"name": "tshirt-black.webp"
+			},
+			"alt": "Black tshirt with the Payload logo on the front",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		}
+	],
+	"pages": [
+		{
+			"$type": "Page",
+			"id": 1,
+			"title": "Home",
+			"hero": {
+				"$type": "Hero",
+				"type": "LOW_IMPACT",
+				"richText": "<h1>Janilla Ecommerce Template</h1><p><a href=\"/admin\">Visit the admin dashboard</a> to begin managing this site's content. The code for this template is completely open-source and can be found <a href=\"https://github.com/diego-schivo/janilla-ecommerce-template\" rel=\"noopener noreferrer\" target=\"_blank\">on our Github</a>. </p>",
+				"links": [
+					{
+						"$type": "Link",
+						"type": "CUSTOM",
+						"uri": "/search",
+						"text": "All products",
+						"appearance": "DEFAULT"
+					},
+					{
+						"$type": "Link",
+						"type": "CUSTOM",
+						"uri": "/contact",
+						"text": "Contact",
+						"appearance": "OUTLINE"
+					}
+				],
+				"media": 4
+			},
+			"layout": [
+				{
+					"$type": "Content",
+					"columns": [
+						{
+							"$type": "Column",
+							"size": "FULL",
+							"richText": "<h2>Core features</h2>"
+						},
+						{
+							"$type": "Column",
+							"size": "ONE_THIRD",
+							"richText": "<h3>Admin Dashboard</h3><p>Manage this site's pages and products from the <a href=\"/admin\">admin dashboard</a>.</p>"
+						},
+						{
+							"$type": "Column",
+							"size": "ONE_THIRD",
+							"richText": "<h3>Preview</h3><p>Using versions, drafts, and preview, editors can review and share their changes before publishing them.</p>"
+						},
+						{
+							"$type": "Column",
+							"size": "ONE_THIRD",
+							"richText": "<h3>Page Builder</h3><p>Custom page builder allows you to create unique page, product, and project layouts for any type of content.</p>"
+						},
+						{
+							"$type": "Column",
+							"size": "ONE_THIRD",
+							"richText": "<h3>SEO</h3><p>Editors have complete control over SEO data and site content directly from the <a href=\"/admin\">admin dashboard</a>.</p>"
+						},
+						{
+							"$type": "Column",
+							"size": "ONE_THIRD",
+							"richText": "<h3>Dark Mode</h3><p>Users will experience this site in their preferred color scheme and each block can be inverted.</p>"
+						}
+					]
+				},
+				{
+					"$type": "MediaBlock",
+					"media": 3
+				},
+				{
+					"$type": "CallToAction",
+					"richText": "<h3>This is a call to action</h3><p>This is a custom layout building block <a href=\"/admin\">configured in the admin dashboard</a>.</p>",
+					"links": [
+						{
+							"$type": "Link",
+							"type": "CUSTOM",
+							"uri": "/products",
+							"text": "All products",
+							"appearance": "DEFAULT"
+						}
+					]
+				}
+			],
+			"meta": {
+				"$type": "Meta",
+				"title": "Janilla Ecommerce Template",
+				"description": "An open-source ecommerce site built with Janilla.",
+				"image": 2
+			},
+			"slug": "home",
+			"documentStatus": {
+				"$type": "DocumentStatus",
+				"name": "PUBLISHED"
+			}
+		},
+		{
+			"$type": "Page",
+			"id": 2,
+			"title": "Contact",
+			"hero": {
+				"$type": "Hero",
+				"type": "NONE",
+				"richText": "",
+				"links": []
+			},
+			"layout": [
+				{
+					"$type": "FormBlock",
+					"form": 1,
+					"introContent": "<h3>Example contact form:</h3>",
+					"enableIntro": "true"
+				}
+			],
+			"slug": "contact",
+			"documentStatus": {
+				"$type": "DocumentStatus",
+				"name": "PUBLISHED"
+			}
+		}
+	],
+	"products": [
+		{
+			"$type": "Product",
+			"id": 1,
+			"title": "Hat",
+			"description": "Top off your look with our classic hat, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
+			"gallery": [
+				2
+			],
+			"enableVariants": false,
+			"stock": 0,
+			"price": 25,
+			"categories": [
+				3
+			],
+			"meta": {
+				"$type": "Meta",
+				"title": "Hat | Janilla Ecommerce Template",
+				"description": "Top off your look with our classic hat, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
+				"image": 2
+			},
+			"slug": "hat",
+			"documentStatus": {
+				"$type": "DocumentStatus",
+				"name": "PUBLISHED"
+			}
+		},
+		{
+			"$type": "Product",
+			"id": 2,
+			"title": "Tshirt",
+			"description": "Top off your look with our classic tshirt, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
+			"gallery": [
+				4,
+				1
+			],
+			"enableVariants": true,
+			"variantOptions": [
+				{
+					"$type": "Color",
+					"options": [
+						{
+							"$type": "ColorOption",
+							"name": "BLACK"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "WHITE"
+						}
+					]
+				},
+				{
+					"$type": "Size",
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "SMALL"
+						},
+						{
+							"$type": "SizeOption",
+							"name": "MEDIUM"
+						},
+						{
+							"$type": "SizeOption",
+							"name": "LARGE"
+						},
+						{
+							"$type": "SizeOption",
+							"name": "X_LARGE"
+						}
+					]
+				}
+			],
+			"variants": [
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "SMALL"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "BLACK"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "MEDIUM"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "BLACK"
+						}
+					],
+					"price": 49.99,
+					"stock": 0
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "LARGE"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "BLACK"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "X_LARGE"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "BLACK"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "SMALL"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "WHITE"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "MEDIUM"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "WHITE"
+						}
+					],
+					"price": 49.99,
+					"stock": 0
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "LARGE"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "WHITE"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				},
+				{
+					"$type": "Variant",
+					"active": true,
+					"options": [
+						{
+							"$type": "SizeOption",
+							"name": "X_LARGE"
+						},
+						{
+							"$type": "ColorOption",
+							"name": "WHITE"
+						}
+					],
+					"price": 49.99,
+					"stock": 492
+				}
+			],
+			"stock": 0,
+			"price": 49.99,
+			"categories": [
+				2
+			],
+			"meta": {
+				"$type": "Meta",
+				"title": "Tshirt | Janilla Ecommerce Template",
+				"description": "Top off your look with our classic tshirt, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
+				"image": 4
+			},
+			"slug": "tshirt",
+			"documentStatus": {
+				"$type": "DocumentStatus",
+				"name": "PUBLISHED"
+			}
+		}
+	],
+	"users": [
+		{
+			"$type": "User",
+			"id": 1,
+			"name": "Demo Author",
+			"email": "demo-author@janilla.com",
+			"salt": "b99966fba75e6ed4a3206da3dd888e5b",
+			"hash": "c73c5f4d61cf1f9ef10ec1a0eb7b4d49ddd8ad2bf6815b2b3bf0a07dfb795d1e32eb7a89565bb8f844f85d5cb08b400fe8ea925a1b05f6720453d766a1a6941d",
+			"roles": [
+				{
+					"$type": "UserRole",
+					"name": "ADMIN"
+				}
+			]
+		},
+		{
+			"$type": "User",
+			"id": 2,
+			"name": "Customer",
+			"email": "customer@example.com",
+			"salt": "556cf0edc60fae8f541190dceb647c30",
+			"hash": "9fd3dc9061b1325907d33f15bee49ed3de5ae11967f7515fa9d6272dc83595776a981bb88fce843d24a1b19fbd37e03bbedbe566477ca5769953e922ab77c90d",
+			"roles": [
+				{
+					"$type": "UserRole",
+					"name": "CUSTOMER"
+				}
+			]
+		}
+	]
+}

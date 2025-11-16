@@ -1,0 +1,42 @@
+<main>
+  <article>
+    <form>
+      <label for="search" class="visually-hidden">Search</label>
+      <div>
+        <input id="search" name="q" value="${query}" placeholder="Search for products..." autocomplete="off" />
+        <lucide-icon data-name="search"></lucide-icon>
+      </div>
+      <button class="visually-hidden">submit</button>
+      <div>
+        <h3>Category</h3>
+        <ul>
+          <!--${categories}-->
+        </ul>
+        <h3>Sort by</h3>
+        <select name="sort">
+          <!--${sortOptions}-->
+        </select>
+      </div>
+    </form>
+    <div>
+      <!--${products}-->
+    </div>
+  </article>
+</main>
+
+<template id="category">
+  <li>
+    <label>
+      <input type="checkbox" name="category" value="${id}" class="visually-hidden" />
+      ${title}
+    </label>
+  </li>
+</template>
+
+<template id="option">
+  <option value="${value}" selected="${selected}">${text}</option>
+</template>
+
+<template id="product">
+  <card-element data-slug="${slug}"></card-element>
+</template>

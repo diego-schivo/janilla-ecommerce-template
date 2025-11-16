@@ -1,0 +1,31 @@
+<main>
+  <article>
+    <h1>Account settings</h1>
+    <p>
+      Change your account details below, or
+      <a href="#">click here</a>
+      to change your password.
+    </p>
+    <form>
+      <label>
+        Email Address
+        <input type="email" name="email" value="${user.email}" />
+      </label>
+      <label>
+        Name
+        <input type="text" name="name" value="${user.name}" />
+      </label>
+      <button class="primary" disabled>Update Account</button>
+    </form>
+  </article>
+  <article>
+    <h2>Recent Orders</h2>
+    <p>
+      These are the most recent orders you have placed.
+      Each order is associated with an payment.
+      As you place more orders, they will appear in your orders list.
+    </p>
+    <p>You have no orders.</p>
+    <a href="/orders" class="button primary">View all orders</a>
+  </article>
+</main>

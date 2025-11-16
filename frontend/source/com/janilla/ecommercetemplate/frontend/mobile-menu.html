@@ -1,0 +1,28 @@
+<button>
+  <lucide-icon data-name="menu"></lucide-icon>
+</button>
+<dialog>
+  <button>
+    <lucide-icon data-name="x"></lucide-icon>
+  </button>
+  <div>
+    <h2>My Store</h2>
+    <ul>
+      <!--${navItems}-->
+    </ul>
+    <h2>My account</h2>
+    <ul>
+      <!--${navItems2}-->
+    </ul>
+  </div>
+</dialog>
+
+<template id="list-item">
+  <li>
+    <!--${content}-->
+  </li>
+</template>
+
+<template id="link">
+  <a href="${href}" target="${target}" class="${class}">${text}</a>
+</template>

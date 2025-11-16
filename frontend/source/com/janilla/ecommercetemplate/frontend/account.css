@@ -1,0 +1,44 @@
+account-element {
+  main {
+    gap: 3rem !important;
+  }
+
+  article {
+    background: rgb(15, 15, 15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    gap: 2rem;
+    /*margin: 0 2rem;*/
+    padding: 2rem;
+  }
+
+  h1,
+  h2 {
+    font-size: 1.875rem;
+    line-height: 1.2;
+  }
+
+  p {
+    line-height: 1.875;
+  }
+
+  form {
+    gap: 2rem;
+  }
+
+  label {
+    gap: 0.5rem;
+  }
+
+  input {
+    color: rgb(248, 250, 252);
+    font-size: 1rem;
+    height: 2.25rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  button,
+  .button {
+    align-self: start;
+  }
+}

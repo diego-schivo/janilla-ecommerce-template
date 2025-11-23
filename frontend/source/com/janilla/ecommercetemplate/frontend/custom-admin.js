@@ -21,47 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import CmsAdmin from "./cms-admin.js";
+import Admin from "./admin.js";
 
-export default class CustomCmsAdmin extends CmsAdmin {
-
-	static get observedAttributes() {
-		return ["data-email", "data-path"];
-	}
+export default class CustomAdmin extends Admin {
 
 	static get templateNames() {
-		return ["cms-admin"];
+		return ["admin"];
+	}
+
+	static get observedAttributes() {
+		return ["data-api-url", "data-path", "data-user-id", "data-user-admin"];
 	}
 
 	constructor() {
 		super();
-	}
-
-	field(path, parent) {
-		const f = super.field(path, parent);
-		if (f.parent?.type === "User" && f.name === "password")
-			f.type = "String";
-		return f;
-	}
-
-	label(path) {
-		return ["description", "hero", "hero.richText", "meta"].includes(path) ? null : super.label(path);
-	}
-
-	headers(entitySlug) {
-		switch (entitySlug) {
-			case "addresses":
-				return ["addressLine1", "city", "postalCode", "country"];
-			case "categories":
-				return ["title", "slug"];
-			case "pages":
-				return ["title", "slug", "updatedAt"];
-			case "products":
-				return ["title", "enableVariants", "documentStatus"];
-			case "users":
-				return ["name", "email", "roles"];
-		}
-		return super.headers(entitySlug);
 	}
 
 	cell(object, key) {
@@ -76,12 +49,49 @@ export default class CustomCmsAdmin extends CmsAdmin {
 		return x;
 	}
 
+	dashboardGroups() {
+		return super.dashboardGroups().filter(x => x !== "collections");
+	}
+
+	field(path, parent) {
+		const f = super.field(path, parent);
+		if (f.parent?.type === "User" && f.name === "password")
+			f.type = "String";
+		return f;
+	}
+
+	headers(entitySlug) {
+		switch (entitySlug) {
+			case "addresses":
+				return ["id", "addressLine1", "city", "postalCode", "country"];
+			case "categories":
+				return ["title", "slug"];
+			case "pages":
+				return ["title", "slug", "updatedAt"];
+			case "products":
+				return ["title", "enableVariants", "documentStatus"];
+			case "users":
+				return ["name", "email", "roles"];
+		}
+		return super.headers(entitySlug);
+	}
+
+	label(path) {
+		return ["description", "hero", "hero.richText", "meta"].includes(path) ? null : super.label(path);
+	}
+
 	controlTemplate(field) {
 		switch (field.type) {
+			/*
+			case "List":
+				if (field.name === "addresses")
+					return "relationship-table";
+				break;
+			*/
 			case "Set":
 				//console.log("field", field);
 				if (field.name === "options" && field.parent.type === "Variant")
-					return "cms-variant-options";
+					return "variant-options";
 				break;
 			case "String":
 				switch (field.name) {
@@ -92,7 +102,7 @@ export default class CustomCmsAdmin extends CmsAdmin {
 					case "richText":
 						return "rich-text";
 					case "type":
-						return field.options.length <= 2 ? "radio" : "select";
+						return field.options.length <= 2 ? "radio-group" : "select";
 				}
 				break;
 		}
@@ -157,9 +167,5 @@ export default class CustomCmsAdmin extends CmsAdmin {
 			x.splice(x.findIndex(([k, _]) => k === "salt"), 4, ["password", null]);
 		//console.log("x", x);
 		return x;
-	}
-
-	dashboardGroups() {
-		return super.dashboardGroups().filter(([k, _]) => k !== "collections");
 	}
 }

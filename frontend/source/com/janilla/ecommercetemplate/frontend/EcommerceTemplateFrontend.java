@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -48,9 +49,9 @@ import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.Net;
-import com.janilla.reflect.ClassAndMethod;
 import com.janilla.web.ApplicationHandlerFactory;
 import com.janilla.web.Bind;
+import com.janilla.web.Invocable;
 import com.janilla.web.Handle;
 import com.janilla.web.NotFoundException;
 import com.janilla.web.RenderableFactory;
@@ -108,10 +109,10 @@ public class EcommerceTemplateFrontend {
 		{
 			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of("methods",
 					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
-							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new ClassAndMethod(x, y)))
+							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
 							.toList(),
 					"renderableFactory", diFactory.create(RenderableFactory.class), "files",
-					Stream.of("com.janilla.frontend", EcommerceTemplateFrontend.class.getPackageName())
+					Stream.of("com.janilla.frontend2", EcommerceTemplateFrontend.class.getPackageName())
 							.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList()));
 			handler = x -> {
 				var h = f.createHandler(Objects.requireNonNullElse(x.exception(), x.request()));
@@ -160,54 +161,44 @@ public class EcommerceTemplateFrontend {
 	}
 
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
-	public Index admin(String path, CustomHttpExchange exchange) {
+	public Object admin(String path, CustomHttpExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.admin, path=" + path);
 		if (path == null || path.isEmpty())
 			path = "/";
 		switch (path) {
 		case "/":
-			if (exchange.sessionUser() == null) {
-				var rs = exchange.response();
-				rs.setStatus(307);
-				rs.setHeaderValue("cache-control", "no-cache");
-				rs.setHeaderValue("location", "/admin/login");
-				return null;
-			}
+			if (exchange.sessionUser() == null)
+				return URI.create("/admin/login");
 			break;
 		case "/login":
-			if (((List<?>) dataFetching.users(0l, 1l)).isEmpty()) {
-				var rs = exchange.response();
-				rs.setStatus(307);
-				rs.setHeaderValue("cache-control", "no-cache");
-				rs.setHeaderValue("location", "/admin/create-first-user");
-				return null;
-			}
+			if (((List<?>) dataFetching.users(0l, 1l)).isEmpty())
+				return URI.create("/admin/create-first-user");
 			break;
 		}
-		return new Index("/admin.css", configuration.getProperty("ecommerce-template.api.url"),
+		return new Index(configuration.getProperty("ecommerce-template.api.url"),
 				Collections.singletonMap("user", exchange.sessionUser()));
 	}
 
-	@Handle(method = "GET", path = "/shop")
-	public Index shop(@Bind("q") String query, Long category, String sort, CustomHttpExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.shop, query=" + query + ", category=" + category);
-		var m = new LinkedHashMap<String, Object>();
-		m.put("user", exchange.sessionUser());
-		m.put("header", dataFetching.header());
-		m.put("categories", dataFetching.categories());
-		m.put("products", dataFetching.products(null, query, category, sort, exchange.tokenCookie()));
-		m.put("footer", dataFetching.footer());
-		return new Index("/style.css", configuration.getProperty("ecommerce-template.api.url"), m);
+	@Handle(method = "GET", path = "(/account|/account/addresses)")
+	public Object account(String path, CustomHttpExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.account, path=" + path);
+		if (exchange.sessionUser() == null)
+			return URI.create("/login");
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
 	}
 
-	@Handle(method = "GET", path = "/account")
-	public Index account(CustomHttpExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.account");
-		var m = new LinkedHashMap<String, Object>();
-		m.put("user", exchange.sessionUser());
-		m.put("header", dataFetching.header());
-		m.put("footer", dataFetching.footer());
-		return new Index("/style.css", configuration.getProperty("ecommerce-template.api.url"), m);
+	@Handle(method = "GET", path = "/login")
+	public Object login(CustomHttpExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.login");
+		if (exchange.sessionUser() != null)
+			return URI.create("/account");
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
+	}
+
+	@Handle(method = "GET", path = "/logout")
+	public Object logout(CustomHttpExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.logout");
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
 	}
 
 	@Handle(method = "GET", path = "/([\\w\\d-]*)")
@@ -218,11 +209,26 @@ public class EcommerceTemplateFrontend {
 		var pp = dataFetching.pages(slug, exchange.tokenCookie());
 		if (pp.isEmpty() && !slug.equals("home"))
 			throw new NotFoundException("slug=" + slug);
-		var m = new LinkedHashMap<String, Object>();
-		m.put("user", exchange.sessionUser());
-		m.put("header", dataFetching.header());
+		var m = state(exchange);
 		m.put("page", !pp.isEmpty() ? pp.getFirst() : null);
-		m.put("footer", dataFetching.footer());
-		return new Index("/style.css", configuration.getProperty("ecommerce-template.api.url"), m);
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+	}
+
+	@Handle(method = "GET", path = "/shop")
+	public Index shop(@Bind("q") String query, Long category, String sort, CustomHttpExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.shop, query=" + query + ", category=" + category);
+		var m = state(exchange);
+		m.put("categories", dataFetching.categories());
+		m.put("products", dataFetching.products(null, query, category, sort, exchange.tokenCookie()));
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+	}
+
+	protected Map<String, Object> state(CustomHttpExchange exchange) {
+		var x = new LinkedHashMap<String, Object>();
+		x.put("user", exchange.sessionUser());
+		x.put("header", dataFetching.header());
+		x.put("footer", dataFetching.footer());
+		x.put("enums", dataFetching.enums());
+		return x;
 	}
 }

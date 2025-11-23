@@ -26,6 +26,7 @@ package com.janilla.ecommercetemplate.frontend;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,11 @@ public class DataFetching {
 
 	public List<?> categories() {
 		return (List<?>) httpClient.getJson(uri("/categories"));
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, List<String>> enums() {
+		return (Map<String, List<String>>) httpClient.getJson(uri("/enums"));
 	}
 
 	public Object footer() {

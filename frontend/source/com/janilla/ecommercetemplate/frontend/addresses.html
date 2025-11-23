@@ -1,0 +1,32 @@
+<main>
+  <article>
+    <h1>Addresses</h1>
+    <ul>
+      <!--${items}-->
+    </ul>
+    <button name="add" class="secondary">Add a new address</button>
+  </article>
+</main>
+<!--${dialog}-->
+
+<template id="item">
+  <li>
+    <p>
+      ${title.name} ${firstName} ${lastName}<br />
+      ${phone}<br />
+      ${addressLine1}, ${addressLine2}<br />
+      ${city}, ${state} ${postalCode}<br />
+      ${country.name}
+    </p>
+    <button name="edit" value="${id}" class="secondary">Edit</button>
+  </li>
+</template>
+
+<template id="dialog">
+  <dialog open>
+    <button type="button" name="close">
+      <lucide-icon data-name="x"></lucide-icon>
+    </button>
+    <address-edit data-id="${id}"></address-edit>
+  </dialog>
+</template>

@@ -23,36 +23,62 @@
  */
 import WebComponent from "./web-component.js";
 
-export default class Orders extends WebComponent {
+export default class AddressEdit extends WebComponent {
 
 	static get templateNames() {
-		return ["orders"];
+		return ["address-edit"];
+	}
+
+	static get observedAttributes() {
+		return ["data-id"];
 	}
 
 	constructor() {
 		super();
 	}
 
-	async computeState() {
-		const s = this.state;
-		delete s.orders;
-		const a = this.closest("app-element");
-		s.orders = await this.closest("app-element").fetchData(`${a.dataset.apiUrl}/orders`);
-		this.requestDisplay();
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener("submit", this.handleSubmit);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener("submit", this.handleSubmit);
 	}
 
 	async updateDisplay() {
-		const s = this.state;
-		s.computeState ??= this.computeState();
+		const a = this.closest("app-element");
+		const u = a.state.user;
+		const a2 = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : { customer: u.id };
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			content: s.orders?.length ? {
-				$template: "list",
-				items: s.orders.map(x => ({
-					$template: "item",
-					...x
-				}))
-			} : { $template: "empty" }
+			title: a2.id ? "Edit address" : "Add a new address",
+			form: {
+				$template: "form",
+				...a2,
+				titleValues: a.state.enums["Title"],
+				countryValues: a.state.enums["Country"]
+			}
 		}));
+	}
+
+	handleSubmit = async event => {
+		event.preventDefault();
+		const a = this.closest("app-element");
+		const o = {
+			customer: a.state.user.id,
+			...Object.fromEntries(new FormData(event.target))
+		};
+		const r = await fetch(`${a.dataset.apiUrl}/addresses${this.dataset.id ? `/${this.dataset.id}` : ""}`, {
+			method: this.dataset.id ? "PUT" : "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(o)
+		});
+		if (r.ok)
+			this.dispatchEvent(new CustomEvent("address-change", {
+				bubbles: true,
+				detail: { address: await r.json() }
+			}));
 	}
 }

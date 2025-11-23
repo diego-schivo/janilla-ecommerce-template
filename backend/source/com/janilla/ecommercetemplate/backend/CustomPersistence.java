@@ -41,10 +41,10 @@ import java.util.stream.Stream;
 
 import com.janilla.cms.CmsPersistence;
 import com.janilla.ioc.DiFactory;
+import com.janilla.java.Converter;
 import com.janilla.java.Java;
-import com.janilla.json.Converter;
+import com.janilla.java.TypeResolver;
 import com.janilla.json.Json;
-import com.janilla.json.TypeResolver;
 import com.janilla.persistence.Crud;
 import com.janilla.persistence.CrudObserver;
 import com.janilla.persistence.Entity;

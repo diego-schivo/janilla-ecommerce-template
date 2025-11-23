@@ -35,7 +35,6 @@ mobile-menu {
 
   h2 {
     &:first-child {
-      font-family: Geist-Bold;
       font-size: 1rem;
       margin-bottom: 2rem;
     }

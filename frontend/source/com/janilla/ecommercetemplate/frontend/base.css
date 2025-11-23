@@ -1,20 +1,10 @@
-@font-face {
-  font-family: Geist-Bold;
-  src: url("/geist-font-1.5.1/Geist-Bold.woff2");
-}
-
-@font-face {
-  font-family: Geist;
-  src: url("/geist-font-1.5.1/Geist-Regular.woff2");
-}
-
-@font-face {
-  font-family: GeistMono;
-  src: url("/geist-font-1.5.1/GeistMono-Regular.woff2");
-}
-
 :root {
   color-scheme: light dark;
+}
+
+html,
+:host {
+  line-height: 1.5;
 }
 
 a,
@@ -76,10 +66,10 @@ button,
 
   &.primary,
   &.secondary {
-    align-content: center;
     border-radius: 0.25rem;
     box-sizing: border-box;
     height: 2.5rem;
+    justify-content: center;
     padding: 0.5rem 1rem;
     text-align: center;
   }
@@ -171,6 +161,11 @@ h1,
 h2,
 h3 {
   color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 1.8rem;
 }
 
 h2 {

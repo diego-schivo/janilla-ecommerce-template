@@ -36,6 +36,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
@@ -44,14 +46,14 @@ import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
+import com.janilla.java.DollarTypeResolver;
 import com.janilla.java.Java;
-import com.janilla.json.DollarTypeResolver;
-import com.janilla.json.TypeResolver;
+import com.janilla.java.TypeResolver;
 import com.janilla.net.Net;
 import com.janilla.persistence.ApplicationPersistenceBuilder;
 import com.janilla.persistence.Persistence;
-import com.janilla.reflect.ClassAndMethod;
 import com.janilla.web.ApplicationHandlerFactory;
+import com.janilla.web.Invocable;
 import com.janilla.web.Handle;
 import com.janilla.web.NotFoundException;
 
@@ -122,7 +124,7 @@ public class EcommerceTemplateBackend {
 		{
 			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of("methods",
 					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
-							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new ClassAndMethod(x, y)))
+							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
 							.toList(),
 					"files", List.of()));
 			handler = x -> {
@@ -170,5 +172,11 @@ public class EcommerceTemplateBackend {
 	@Handle(method = "POST", path = "/api/seed")
 	public void seed() throws IOException {
 		((CustomPersistence) persistence).seed();
+	}
+
+	@Handle(method = "GET", path = "/api/enums")
+	public Map<String, List<String>> enums() {
+		return Stream.of(Title.class, Country.class).collect(Collectors.toMap(x -> x.getSimpleName(),
+				x -> Arrays.stream(x.getEnumConstants()).map(Enum::name).toList()));
 	}
 }

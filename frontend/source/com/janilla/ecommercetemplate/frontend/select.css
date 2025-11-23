@@ -1,0 +1,29 @@
+select-element {
+  align-self: start;
+  position: relative;
+
+  select {
+    appearance: none;
+    /*
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem 0.5rem 0;
+    */
+    padding-right: 2rem;
+  }
+
+  lucide-icon {
+    pointer-events: none;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  svg {
+    display: block;
+    opacity: 0.5;
+    width: 1rem;
+  }
+}

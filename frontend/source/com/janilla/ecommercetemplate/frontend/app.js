@@ -66,6 +66,138 @@ export default class App extends WebComponent {
 		this.removeEventListener("user-change", this.handleUserChange);
 	}
 
+	async updateDisplay() {
+		const s = this.state;
+		if (!Object.hasOwn(s, "user"))
+			s.user = this.serverState && Object.hasOwn(this.serverState, "user")
+				? this.serverState.user
+				: await (await fetch(`${this.dataset.apiUrl}/users/me`)).json();
+		const u0 = s.user;
+
+		const p = location.pathname;
+		if (s.user) {
+			if (p === "/logout") {
+				await fetch(`${this.dataset.apiUrl}/users/logout`, { method: "POST" });
+				delete s.user;
+			}
+		} else if (["/account"].includes(p) || p.startsWith("/account/")) {
+			// location.href = "/login";
+			history.pushState({}, "", "/login");
+			dispatchEvent(new CustomEvent("popstate"));
+			return;
+		}
+
+		const m = p.match(adminRegex);
+		if (m) {
+			this.appendChild(this.interpolateDom({
+				$template: "",
+				admin: {
+					$template: "admin",
+					path: m[1] ?? "/",
+					apiUrl: this.dataset.apiUrl,
+					userId: s.user?.id,
+					userAdmin: s.user?.roles?.some(x => x.name === "ADMIN")
+				}
+			}));
+			return;
+		}
+
+		if (!Object.hasOwn(s, "header"))
+			s.header = this.serverState && Object.hasOwn(this.serverState, "header")
+				? this.serverState.header
+				: await (await fetch(`${this.dataset.apiUrl}/header`)).json();
+		if (!Object.hasOwn(s, "footer"))
+			s.footer = this.serverState && Object.hasOwn(this.serverState, "footer")
+				? this.serverState.footer
+				: await (await fetch(`${this.dataset.apiUrl}/footer`)).json();
+		if (!Object.hasOwn(s, "enums"))
+			s.enums = this.serverState && Object.hasOwn(this.serverState, "enums")
+				? this.serverState.enums
+				: await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
+
+		const cs = localStorage.getItem("janilla-ecommerce-template.color-scheme");
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			public: {
+				$template: "public",
+				colorScheme: cs ?? "light dark",
+				adminBar: s.user?.roles?.some(x => x.name === "ADMIN") ? {
+					$template: "admin-bar",
+					userEmail: s.user?.email
+				} : null,
+				header: {
+					$template: "header",
+					user: !!s.user
+				},
+				content: s.notFound ? { $template: "not-found" } : (() => {
+					switch (p) {
+						case "/account":
+							return { $template: "account" };
+						case "/account/addresses":
+							return { $template: "addresses" };
+						case "/checkout":
+							return { $template: "checkout" };
+						case "/login":
+							return { $template: "login" };
+						case "/logout":
+							return {
+								$template: "logout",
+								noOp: !u0
+							};
+						case "/order-confirmation":
+							return {
+								$template: "order-confirmation",
+								stripePaymentIntentId: new URLSearchParams(location.search).get("payment_intent")
+							};
+					}
+					const m2 = p.match(productRegex);
+					if (m2)
+						return {
+							$template: "product",
+							slug: m2[1].substring(1)
+						};
+					const m3 = p.match(ordersRegex);
+					if (m3)
+						return m3[1] ? {
+							$template: "order",
+							id: m3[1].substring(1)
+						} : { $template: "orders" };
+					return p === "/shop" ? (() => {
+						const s = new URLSearchParams(location.search);
+						return {
+							$template: "shop",
+							query: s.get("q"),
+							category: s.get("category"),
+							sort: s.get("sort")
+						};
+					})() : {
+						$template: "page",
+						slug: (() => {
+							const s2 = p.substring(1);
+							return s2 ? s2 : "home";
+						})()
+					};
+				})(),
+				footer: {
+					$template: "footer",
+					navItems: s.footer?.navItems?.map(x => ({
+						$template: "link",
+						...x,
+						document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+						href: x.type.name === "CUSTOM" ? x.uri : null,
+						target: x.newTab ? "_blank" : null
+					})),
+					options: ["auto", "light", "dark"].map(x => ({
+						$template: "option",
+						value: x,
+						text: x.charAt(0).toUpperCase() + x.substring(1),
+						selected: x === (cs ?? "auto")
+					}))
+				}
+			}
+		}));
+	}
+
 	handleChange = event => {
 		const el = event.target.closest("select");
 		if (el?.closest("footer")) {
@@ -85,8 +217,8 @@ export default class App extends WebComponent {
 				this.querySelector("dialog").showModal();
 			} else {
 				const u = new URL(a.href);
-				if (!u.pathname.match(adminRegex) !== !location.pathname.match(adminRegex))
-					return;
+				// if (!u.pathname.match(adminRegex) !== !location.pathname.match(adminRegex))
+				// return;
 				event.preventDefault();
 				history.pushState({}, "", u.pathname + u.search);
 				dispatchEvent(new CustomEvent("popstate"));
@@ -124,127 +256,6 @@ export default class App extends WebComponent {
 			this.state.user = event.detail.user;
 		else
 			delete this.state.user;
-	}
-
-	async updateDisplay() {
-		const s = this.state;
-		if (!Object.hasOwn(s, "user"))
-			s.user = this.serverState && Object.hasOwn(this.serverState, "user")
-				? this.serverState.user
-				: await (await fetch(`${this.dataset.apiUrl}/users/me`)).json();
-
-		const m = location.pathname.match(adminRegex);
-		if (m) {
-			this.appendChild(this.interpolateDom({
-				$template: "",
-				admin: {
-					$template: "admin",
-					path: m[1] ?? "/",
-					apiUrl: this.dataset.apiUrl,
-					userId: s.user?.id,
-					adminRole: s.user?.roles?.some(x => x.name === "ADMIN")
-				}
-			}));
-			return;
-		}
-
-		if (!Object.hasOwn(s, "header"))
-			s.header = this.serverState && Object.hasOwn(this.serverState, "header")
-				? this.serverState.header
-				: await (await fetch(`${this.dataset.apiUrl}/header`)).json();
-		if (!Object.hasOwn(s, "footer"))
-			s.footer = this.serverState && Object.hasOwn(this.serverState, "footer")
-				? this.serverState.footer
-				: await (await fetch(`${this.dataset.apiUrl}/footer`)).json();
-
-		const link = x => {
-			let h;
-			switch (x.type.name) {
-				case "REFERENCE":
-					switch (x.reference?.$type) {
-						case "Page":
-							h = `/${x.reference.slug}`;
-							break;
-						case "Product":
-							h = `/products/${x.reference.slug}`;
-							break;
-					}
-					break;
-				case "CUSTOM":
-					h = x.uri;
-					break;
-			}
-			return {
-				$template: "link",
-				...x,
-				href: h,
-				target: x.newTab ? "_blank" : null
-			};
-		};
-		const cs = localStorage.getItem("janilla-ecommerce-template.color-scheme");
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			style: `color-scheme: ${cs ?? "light dark"}`,
-			adminBar: s.user?.roles?.some(x => x.name === "ADMIN") ? {
-				$template: "admin-bar",
-				userEmail: s.user?.email
-			} : null,
-			header: { $template: "header" },
-			content: s.notFound ? { $template: "not-found" } : (() => {
-				switch (location.pathname) {
-					case "/account":
-						return { $template: "account" };
-					case "/checkout":
-						return { $template: "checkout" };
-					case "/login":
-						return { $template: "login" };
-					case "/logout":
-						return { $template: "logout" };
-					case "/order-confirmation":
-						return {
-							$template: "order-confirmation",
-							stripePaymentIntentId: new URLSearchParams(location.search).get("payment_intent")
-						};
-				}
-				const m2 = location.pathname.match(productRegex);
-				if (m2)
-					return {
-						$template: "product",
-						slug: m2[1].substring(1)
-					};
-				const m3 = location.pathname.match(ordersRegex);
-				if (m3)
-					return m3[1] ? {
-						$template: "order",
-						id: m3[1].substring(1)
-					} : { $template: "orders" };
-				return location.pathname === "/shop" ? (() => {
-					const s = new URLSearchParams(location.search);
-					return {
-						$template: "shop",
-						query: s.get("q"),
-						category: s.get("category"),
-						sort: s.get("sort")
-					};
-				})() : {
-					$template: "page",
-					slug: (() => {
-						const s2 = location.pathname.substring(1);
-						return s2 ? s2 : "home";
-					})()
-				};
-			})(),
-			footer: {
-				$template: "footer",
-				navItems: s.footer?.navItems?.map(link),
-				options: ["auto", "light", "dark"].map(x => ({
-					$template: "option",
-					value: x,
-					text: x.charAt(0).toUpperCase() + x.substring(1),
-					selected: x === (cs ?? "auto")
-				}))
-			}
-		}));
 	}
 
 	updateSeo(meta) {

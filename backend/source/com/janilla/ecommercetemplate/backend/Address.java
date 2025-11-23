@@ -32,7 +32,7 @@ import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Address(Long id, @Index @Types(User.class) Long customer, String title, String firstName, String lastName,
+public record Address(Long id, @Index @Types(User.class) Long customer, Title title, String firstName, String lastName,
 		String company, String addressLine1, String addressLine2, String city, String state, String postalCode,
 		Country country, String phone, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
 		Instant publishedAt) implements Document<Long> {

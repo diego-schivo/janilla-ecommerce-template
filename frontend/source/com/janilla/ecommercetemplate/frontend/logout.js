@@ -32,4 +32,16 @@ export default class Logout extends WebComponent {
 	constructor() {
 		super();
 	}
+
+	async updateDisplay() {
+		document.title = "Logout";
+		const a = this.closest("app-element");
+		a.updateSeo(null);
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			title: this.dataset.noOp !== undefined
+				? "You are already logged out."
+				: "Logged out successfully."
+		}));
+	}
 }

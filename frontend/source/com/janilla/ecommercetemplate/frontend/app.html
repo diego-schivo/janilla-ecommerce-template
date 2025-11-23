@@ -1,24 +1,22 @@
+<!--${public}-->
 <!--${admin}-->
-<!--${adminBar}-->
-<div style="${style}">
-  <!--${header}-->
-  <!--${content}-->
-  <!--${footer}-->
-</div>
 
-<template id="admin">
-  <cms-admin data-path="${path}" data-api-url="${apiUrl}"
-    data-user-id="${userId}" data-admin-role="${adminRole}">
-  </cms-admin>
+<template id="public">
+  <!--${adminBar}-->
+  <div style="color-scheme: ${colorScheme}">
+    <!--${header}-->
+    <!--${content}-->
+    <!--${footer}-->
+  </div>
 </template>
 
 <template id="admin-bar">
-  <cms-admin-bar data-user-email="${userEmail}"></cms-admin-bar>
+  <admin-bar data-user-email="${userEmail}"></admin-bar>
 </template>
 
 <template id="header">
   <header>
-    <mobile-menu></mobile-menu>
+    <mobile-menu data-user="${user}"></mobile-menu>
     <a href="/">
       <img src="/images/janilla-logo-light.svg" loading="lazy" />
     </a>
@@ -35,7 +33,7 @@
 </template>
 
 <template id="link">
-  <a href="${href}" target="${target}" class="${class}">${text}</a>
+  <link-element data-reference="${reference}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
 </template>
 
 <template id="page">
@@ -43,7 +41,11 @@
 </template>
 
 <template id="account">
-  <account-element></account-element>
+  <account-element class="account"></account-element>
+</template>
+
+<template id="addresses">
+  <addresses-element class="account"></addresses-element>
 </template>
 
 <template id="checkout">
@@ -55,7 +57,7 @@
 </template>
 
 <template id="logout">
-  <logout-element></logout-element>
+  <logout-element data-no-op="${noOp}"></logout-element>
 </template>
 
 <template id="order-confirmation">
@@ -107,4 +109,10 @@
 
 <template id="option">
   <option value="${value}" selected="${selected}">${text}</option>
+</template>
+
+<template id="admin">
+  <admin-element class="admin" data-path="${path}" data-api-url="${apiUrl}"
+    data-user-id="${userId}" data-user-admin="${userAdmin}">
+  </admin-element>
 </template>

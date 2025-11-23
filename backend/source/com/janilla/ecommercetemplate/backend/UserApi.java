@@ -41,9 +41,4 @@ public class UserApi extends com.janilla.cms.UserApi<Long, UserRole, User> {
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
 	}
-
-//	@Override
-//	public UserRole adminRole() {
-//		return UserRole.ADMIN;
-//	}
 }

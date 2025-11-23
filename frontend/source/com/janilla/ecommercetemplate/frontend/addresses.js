@@ -23,36 +23,69 @@
  */
 import WebComponent from "./web-component.js";
 
-export default class Orders extends WebComponent {
+export default class Addresses extends WebComponent {
 
 	static get templateNames() {
-		return ["orders"];
+		return ["addresses"];
 	}
 
 	constructor() {
 		super();
 	}
 
-	async computeState() {
-		const s = this.state;
-		delete s.orders;
-		const a = this.closest("app-element");
-		s.orders = await this.closest("app-element").fetchData(`${a.dataset.apiUrl}/orders`);
-		this.requestDisplay();
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener("address-change", this.handleAddressChange);
+		this.addEventListener("click", this.handleClick);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener("address-change", this.handleAddressChange);
+		this.removeEventListener("click", this.handleClick);
 	}
 
 	async updateDisplay() {
 		const s = this.state;
-		s.computeState ??= this.computeState();
+		const u = this.closest("app-element").state.user;
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			content: s.orders?.length ? {
-				$template: "list",
-				items: s.orders.map(x => ({
-					$template: "item",
-					...x
-				}))
-			} : { $template: "empty" }
+			items: u.addresses.map(x => ({
+				$template: "item",
+				...x
+			})),
+			dialog: s.dialog ? {
+				$template: "dialog",
+				...s.dialog
+			} : null
 		}));
+	}
+
+	handleAddressChange = event => {
+		event.stopPropagation();
+		this.dispatchEvent(new CustomEvent("user-change", {
+			bubbles: true,
+			detail: { user: event.detail.address.customer }
+		}));
+		delete this.state.dialog;
+		this.requestDisplay();
+	}
+
+	handleClick = event => {
+		const b = event.target.closest("button");
+		const s = this.state;
+		switch (b?.name) {
+			case "add":
+			case "edit":
+				event.stopPropagation();
+				s.dialog = { id: b.value };
+				this.requestDisplay();
+				break;
+			case "close":
+				event.stopPropagation();
+				delete s.dialog;
+				this.requestDisplay();
+				break;
+		}
 	}
 }

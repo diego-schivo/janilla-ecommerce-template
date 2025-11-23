@@ -5,6 +5,10 @@ login-element {
       gap: 1rem;
     }
 
+    a {
+      font-weight: 500;
+    }
+
     button {
       flex: 1;
     }

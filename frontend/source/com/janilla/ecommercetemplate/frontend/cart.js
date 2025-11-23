@@ -36,17 +36,17 @@ export default class Cart extends WebComponent {
 	connectedCallback() {
 		super.connectedCallback();
 		const r = this.closest("app-element");
-		r.addEventListener("cart-change", this.handleCartChange);
+		//r.addEventListener("cart-change", this.handleCartChange);
 		this.addEventListener("submit", this.handleSubmit);
-		r.addEventListener("user-change", this.handleUserChange);
+		//r.addEventListener("user-change", this.handleUserChange);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		const r = this.closest("app-element");
-		r.removeEventListener("cart-change", this.handleCartChange);
+		//r.removeEventListener("cart-change", this.handleCartChange);
 		this.removeEventListener("submit", this.handleSubmit);
-		r.removeEventListener("user-change", this.handleUserChange);
+		//r.removeEventListener("user-change", this.handleUserChange);
 	}
 
 	handleCartChange = () => {

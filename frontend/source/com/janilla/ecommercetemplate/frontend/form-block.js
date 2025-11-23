@@ -46,7 +46,8 @@ export default class FormBlock extends WebComponent {
 	handleSubmit = async event => {
 		event.preventDefault();
 		const ee = [...new FormData(event.target).entries()];
-		this.state.submission = await (await fetch("/api/form-submissions", {
+		const a = this.closest("app-element");
+		this.state.submission = await (await fetch(`${a.dataset.apiUrl}/form-submissions`, {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify({

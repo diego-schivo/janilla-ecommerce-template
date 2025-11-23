@@ -41,13 +41,18 @@ export default class Login extends WebComponent {
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.removeEventListener("submit", this.handleSubmit);
-		while (this.firstChild)
-			this.removeChild(this.lastChild);
+	}
+
+	async updateDisplay() {
+		document.title = "Login";
+		this.closest("app-element").updateSeo(null);
+		this.appendChild(this.interpolateDom({ $template: "" }));
 	}
 
 	handleSubmit = async event => {
 		event.preventDefault();
-		const r = await fetch("/api/users/login", {
+		const a = this.closest("app-element");
+		const r = await fetch(`${a.dataset.apiUrl}/users/login`, {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(Object.fromEntries(new FormData(event.target)))
@@ -60,10 +65,5 @@ export default class Login extends WebComponent {
 			history.pushState({}, "", "/account");
 			dispatchEvent(new CustomEvent("popstate"));
 		}
-	}
-
-	async updateDisplay() {
-		this.closest("app-element").updateSeo(null);
-		this.appendChild(this.interpolateDom({ $template: "" }));
 	}
 }

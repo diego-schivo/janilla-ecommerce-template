@@ -3,6 +3,7 @@ content-element {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 0 2rem;
 
     @media (min-width: 1441px) {
       column-gap: 4rem;

@@ -21,12 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.frontend;
+import WebComponent from "./web-component.js";
 
-import java.util.Map;
+export default class Select extends WebComponent {
 
-import com.janilla.web.Render;
+	static get templateNames() {
+		return ["select"];
+	}
 
-@Render(template = "index.html")
-public record Index(String apiUrl, @Render(renderer = StateRenderer.class) Map<String, Object> state) {
+	static get observedAttributes() {
+		return ["data-name", "data-value", "data-values"];
+	}
+
+	constructor() {
+		super();
+	}
+
+	async updateDisplay() {
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			...this.dataset,
+			options: this.dataset.values.split(",").map(x => ({
+				$template: "option",
+				value: x,
+				selected: x == this.dataset.value,
+				text: x
+			}))
+		}));
+	}
 }

@@ -35,7 +35,8 @@ export default class OrderConfirmation extends WebComponent {
 
 	connectedCallback() {
 		super.connectedCallback();
-		const u = new URL("/api/orders/poll", location.href);
+		const a = this.closest("app-element");
+		const u = new URL(`${a.dataset.apiUrl}/orders/poll`, location.href);
 		u.searchParams.append("stripePaymentIntentId", this.dataset.stripePaymentIntentId);
 		this.eventSource = new EventSource(u);
 		this.eventSource.onopen = () => {

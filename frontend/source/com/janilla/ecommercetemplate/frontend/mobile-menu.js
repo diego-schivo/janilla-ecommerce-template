@@ -29,6 +29,10 @@ export default class MobileMenu extends WebComponent {
 		return ["mobile-menu"];
 	}
 
+	static get observedAttributes() {
+		return ["data-user"];
+	}
+
 	constructor() {
 		super();
 	}
@@ -45,37 +49,19 @@ export default class MobileMenu extends WebComponent {
 
 	async updateDisplay() {
 		const as = this.closest("app-element").state;
-		const link = x => {
-			let h;
-			switch (x.type.name) {
-				case "REFERENCE":
-					switch (x.reference?.$type) {
-						case "Page":
-							h = `/${x.reference.slug}`;
-							break;
-						case "Product":
-							h = `/products/${x.reference.slug}`;
-							break;
-					}
-					break;
-				case "CUSTOM":
-					h = x.uri;
-					break;
-			}
-			return {
-				$template: "link",
-				...x,
-				href: h,
-				target: x.newTab ? "_blank" : null
-			};
-		};
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			navItems: as.header?.navItems?.map(x => ({
 				$template: "list-item",
-				content: link(x)
+				content: {
+					$template: "link",
+					...x,
+					document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+					href: x.type.name === "CUSTOM" ? x.uri : null,
+					target: x.newTab ? "_blank" : null
+				}
 			})),
-			navItems2: (as.user ? [{
+			navItems2: (this.dataset.user !== undefined ? [{
 				href: "/orders",
 				text: "Orders"
 			}, {

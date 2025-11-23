@@ -9,6 +9,7 @@ hero-element {
 
   article {
     gap: 1rem;
+    padding: 0 2rem;
   }
 
   section {
@@ -22,7 +23,8 @@ hero-element {
   }
 
   h1 {
-    font-weight: normal;
+    /*font-weight: normal;*/
+    font-weight: 800;
     font-size: 2.25rem;
     line-height: 1.1111111;
     margin: 0;

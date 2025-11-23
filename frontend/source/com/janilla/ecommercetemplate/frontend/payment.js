@@ -59,7 +59,8 @@ export default class Payment extends WebComponent {
 	async updateDisplay() {
 		this.appendChild(this.interpolateDom({ $template: "" }));
 		if (this.dataset.email && this.dataset.amount) {
-			const u = new URL("/api/stripe/create-payment-intent", location.href);
+			const a = this.closest("app-element");
+			const u = new URL(`${a.dataset.apiUrl}/stripe/create-payment-intent`, location.href);
 			u.searchParams.append("email", this.dataset.email);
 			u.searchParams.append("amount", this.dataset.amount);
 			const s = this.closest("app-element").state.stripe;

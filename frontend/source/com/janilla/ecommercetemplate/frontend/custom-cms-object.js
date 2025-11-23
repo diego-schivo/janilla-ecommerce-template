@@ -25,12 +25,12 @@ import CmsObject from "./cms-object.js";
 
 export default class CustomCmsObject extends CmsObject {
 
-	static get observedAttributes() {
-		return ["data-array-key", "data-path", "data-updated-at"];
-	}
-
 	static get templateNames() {
 		return ["cms-object", "custom-cms-object"];
+	}
+
+	static get observedAttributes() {
+		return ["data-array-key", "data-path", "data-updated-at"];
 	}
 
 	constructor() {

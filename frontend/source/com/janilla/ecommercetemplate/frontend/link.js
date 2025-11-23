@@ -21,12 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.frontend;
+import WebComponent from "./web-component.js";
 
-import java.util.Map;
+export default class Link extends WebComponent {
 
-import com.janilla.web.Render;
+	static get templateNames() {
+		return ["link"];
+	}
 
-@Render(template = "index.html")
-public record Index(String apiUrl, @Render(renderer = StateRenderer.class) Map<String, Object> state) {
+	static get observedAttributes() {
+		return ["data-document", "data-href", "data-target"];
+	}
+
+	constructor() {
+		super();
+	}
+
+	async updateDisplay() {
+		const o = { ...this.dataset };
+		if (this.dataset.document) {
+			const [t, s] = this.dataset.document.split(":");
+			switch (t) {
+				case "Page":
+					o.href = `/${s}`;
+					break;
+				case "Product":
+					o.href = `/products/${s}`;
+					break;
+			}
+		}
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			...o
+		}));
+	}
 }

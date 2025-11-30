@@ -27,5 +27,6 @@ import java.util.List;
 
 public record Collections(List<Address> addresses, List<Category> categories, List<Form> forms,
 		List<FormSubmission> formSubmissions, List<Media> media, List<Order> orders, List<Page> pages,
-		List<Product> products, List<User> users) {
+		List<Product> products, List<User> users, List<VariantOption> variantOptions, List<VariantType> variantTypes,
+		List<Variant> variants) {
 }

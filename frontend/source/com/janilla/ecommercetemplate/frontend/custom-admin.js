@@ -42,7 +42,9 @@ export default class CustomAdmin extends Admin {
 		switch (key) {
 			case "country":
 			case "documentStatus":
-				return x.name;
+				return x?.name;
+			case "options":
+				return x.map(y => y.label).join();
 			case "roles":
 				return x.map(y => y.name).join();
 		}
@@ -72,6 +74,12 @@ export default class CustomAdmin extends Admin {
 				return ["title", "enableVariants", "documentStatus"];
 			case "users":
 				return ["name", "email", "roles"];
+			case "variant-options":
+				return ["id", "label", "value"];
+			case "variant-types":
+				return ["id", "label", "name"];
+			case "variants":
+				return ["id", "title", "options", "inventory", "documentStatus"];
 		}
 		return super.headers(entitySlug);
 	}
@@ -88,11 +96,21 @@ export default class CustomAdmin extends Admin {
 					return "relationship-table";
 				break;
 			*/
+			case "List":
+				switch (field.name) {
+					case "options":
+						//return "join";
+						return "variant-options";
+					case "variantTypes":
+						return "relationship";
+				}
+				break;
+			/*
 			case "Set":
-				//console.log("field", field);
 				if (field.name === "options" && field.parent.type === "Variant")
 					return "variant-options";
 				break;
+			*/
 			case "String":
 				switch (field.name) {
 					case "confirmationMessage":
@@ -120,7 +138,7 @@ export default class CustomAdmin extends Admin {
 			case "Product":
 				return {
 					Content: ["description", "gallery", "content"],
-					ProductDetails: ["enableVariants", "variantOptions", "variants", "stock", "price"],
+					ProductDetails: ["enableVariants", "variantTypes", "variants", "stock", "price"],
 					SEO: ["meta"]
 				};
 		}
@@ -149,6 +167,7 @@ export default class CustomAdmin extends Admin {
 		return super.sidebar(type);
 	}
 
+	/*
 	setValue(object, key, value, field) {
 		if (field.name === "options" && field.parent.type === "Variant") {
 			const vv = value.split(":");
@@ -159,6 +178,7 @@ export default class CustomAdmin extends Admin {
 		}
 		return super.setValue(object, key, value, field);
 	}
+	*/
 
 	formProperties(field) {
 		//console.log("f", f);
@@ -167,5 +187,19 @@ export default class CustomAdmin extends Admin {
 			x.splice(x.findIndex(([k, _]) => k === "salt"), 4, ["password", null]);
 		//console.log("x", x);
 		return x;
+	}
+
+	title(document) {
+		switch (document.$type) {
+			case "VariantOption":
+			case "VariantType":
+				return document.label;
+			default:
+				return super.title(document);
+		}
+	}
+
+	fieldLabel(ct) {
+		return ct === "variant-options" ? "no-label" : super.fieldLabel(ct);
 	}
 }

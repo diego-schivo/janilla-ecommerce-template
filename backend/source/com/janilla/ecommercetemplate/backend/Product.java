@@ -26,7 +26,6 @@ package com.janilla.ecommercetemplate.backend;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import com.janilla.cms.Document;
 import com.janilla.cms.DocumentStatus;
@@ -40,19 +39,13 @@ import com.janilla.persistence.Store;
 @Versions(drafts = true)
 public record Product(Long id, String title, String description, List<@Types(Media.class) Long> gallery,
 		Boolean enableVariants, List<@Types( {
-				Fabric.class, Size.class, Color.class }) Object> variantOptions,
-		List<Variant> variants, Long stock, BigDecimal price, @Index List<@Types(Category.class) Long> categories,
-		Meta meta, @Index String slug, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
-		Instant publishedAt) implements Document<Long>{
+				VariantType.class }) Long> variantTypes,
+		List<@Types(Variant.class) Long> variants, Boolean priceInUsdEnabled, BigDecimal priceInUsd,
+		@Index List<@Types(Category.class) Long> categories, Meta meta, @Index String slug, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long>{
 
-	public Product withVariants(List<Variant> variants) {
-		return new Product(id, title, description, gallery, enableVariants, variantOptions, variants, stock, price,
-				categories, meta, slug, createdAt, updatedAt, documentStatus, publishedAt);
-	}
-
-	public Product withNonNullVariantIds() {
-		return variants != null && variants.stream().anyMatch(x -> x.id() == null)
-				? withVariants(variants.stream().map(x -> x.id() == null ? x.withId(UUID.randomUUID()) : x).toList())
-				: this;
+	public Product withVariants(List<Long> variants) {
+		return new Product(id, title, description, gallery, enableVariants, variantTypes, variants, priceInUsdEnabled,
+				priceInUsd, categories, meta, slug, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

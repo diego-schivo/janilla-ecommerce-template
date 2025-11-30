@@ -21,32 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.fullstack;
+import AdminFields from "./admin-fields.js";
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+export default class CustomAdminFields extends AdminFields {
 
-import com.janilla.ioc.Context;
+	static get templateNames() {
+		return ["admin-fields", "custom-admin-fields"];
+	}
 
-@Context("fullstack")
-public class CustomProperties extends Properties {
+	static get observedAttributes() {
+		return ["data-array-key", "data-path", "data-updated-at"];
+	}
 
-	private static final long serialVersionUID = -2294199037395154052L;
-
-	public CustomProperties(Path file) {
-		try {
-			try (var x = FullstackApplication.class.getResourceAsStream("configuration.properties")) {
-				load(x);
-			}
-			if (file != null)
-				try (var x = Files.newInputStream(file)) {
-					load(x);
-				}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	constructor() {
+		super();
 	}
 }

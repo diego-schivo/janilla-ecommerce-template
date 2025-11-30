@@ -21,32 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.fullstack;
+import WebComponent from "./web-component.js";
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+export default class ProductDescription extends WebComponent {
 
-import com.janilla.ioc.Context;
+	static get templateNames() {
+		return ["product-description"];
+	}
 
-@Context("fullstack")
-public class CustomProperties extends Properties {
+	static get observedAttributes() {
+		return [];
+	}
 
-	private static final long serialVersionUID = -2294199037395154052L;
+	constructor() {
+		super();
+	}
 
-	public CustomProperties(Path file) {
-		try {
-			try (var x = FullstackApplication.class.getResourceAsStream("configuration.properties")) {
-				load(x);
+	async updateDisplay() {
+		const p = this.closest("product-element").state.product;
+		const aa = p.variants?.map(x => x.priceInUsd);
+		const la = aa ? Math.min(...aa) : null;
+		const ha = aa ? Math.max(...aa) : null;
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			...p,
+			price: {
+				$template: "price",
+				...(la === ha ? { amount: la } : {
+					lowestAmount: la,
+					highestAmount: ha
+				})
 			}
-			if (file != null)
-				try (var x = Files.newInputStream(file)) {
-					load(x);
-				}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		}));
 	}
 }

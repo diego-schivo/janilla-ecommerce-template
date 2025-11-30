@@ -29,8 +29,8 @@ import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 
-import com.janilla.ecommercetemplate.backend.EcommerceTemplateBackend;
-import com.janilla.ecommercetemplate.frontend.EcommerceTemplateFrontend;
+import com.janilla.ecommercetemplate.backend.BackendApplication;
+import com.janilla.ecommercetemplate.frontend.FrontendApplication;
 import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpRequest;
@@ -41,12 +41,12 @@ import com.janilla.ioc.Context;
 @Context("fullstack")
 public class CustomHttpServer extends HttpServer {
 
-	protected final EcommerceTemplateBackend backend;
+	protected final BackendApplication backend;
 
-	protected final EcommerceTemplateFrontend frontend;
+	protected final FrontendApplication frontend;
 
 	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler,
-			EcommerceTemplateBackend backend, EcommerceTemplateFrontend frontend) {
+			BackendApplication backend, FrontendApplication frontend) {
 		super(sslContext, endpoint, handler);
 		this.backend = backend;
 		this.frontend = frontend;

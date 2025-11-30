@@ -1,0 +1,58 @@
+.admin admin-variant-options {
+  div:has(> select) {
+    position: relative;
+
+    > div {
+      display: flex;
+      gap: 0.25rem;
+      pointer-events: none;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      translate: 0 -50%;
+
+      button {
+        background: transparent;
+        border: none;
+        padding: 0;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+
+  select {
+    font-size: 0.75rem;
+    width: 100%;
+
+    &&::picker-icon {
+      content: "";
+      width: 1rem;
+    }
+  }
+
+  ::picker(select) {
+    border: none;
+  }
+
+  selectedcontent:empty::before {
+    content: "\200B";
+  }
+
+  option {
+    background: rgb(34, 34, 34);
+    padding: 0.5rem 1rem;
+
+    &:checked {
+      background: rgb(101, 101, 101);
+    }
+
+    &::checkmark {
+      content: none;
+    }
+  }
+}

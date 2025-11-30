@@ -36,7 +36,7 @@ body {
   }
 }
 
-button,
+/*button,*/
 .button,
 input,
 label,
@@ -46,7 +46,7 @@ textarea {
   font-size: 0.875rem;
 }
 
-button,
+/*button,*/
 .button,
 input,
 select,
@@ -54,7 +54,7 @@ textarea {
   font-family: Geist;
 }
 
-button,
+/*button,*/
 .button {
   align-items: center;
   border: none;

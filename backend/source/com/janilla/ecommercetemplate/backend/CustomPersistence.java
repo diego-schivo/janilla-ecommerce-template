@@ -53,19 +53,6 @@ import com.janilla.sqlite.SqliteDatabase;
 
 public class CustomPersistence extends CmsPersistence {
 
-	protected static final CrudObserver PRODUCT_OBSERVER = new CrudObserver() {
-
-		@Override
-		public Entity beforeCreate(Entity entity) {
-			return ((Product) entity).withNonNullVariantIds();
-		}
-
-		@Override
-		public Entity beforeUpdate(Entity entity) {
-			return beforeCreate(entity);
-		}
-	};
-
 //	protected static final CrudObserver USER_OBSERVER = new CrudObserver() {
 //
 //		@Override
@@ -103,46 +90,19 @@ public class CustomPersistence extends CmsPersistence {
 		var x = super.newCrud(type);
 		if (x != null) {
 			if (type == Product.class)
-				x.observers().add(PRODUCT_OBSERVER);
+				x.observers()
+						.add((CrudObserver) diFactory.create(ProductCrudObserver.class, Map.of("persistence", this)));
 			else if (type == User.class)
 				x.observers().add((CrudObserver) diFactory.create(UserCrudObserver.class, Map.of("persistence", this)));
+			else if (type == VariantType.class)
+				x.observers().add(
+						(CrudObserver) diFactory.create(VariantTypeCrudObserver.class, Map.of("persistence", this)));
 		}
 		return x;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void seed() throws IOException {
-//		for (var t : List.of(Category.class, Footer.class, Form.class, FormSubmission.class, Header.class, Media.class,
-//				Page.class, Product.class, User.class))
-//			database.perform(() -> {
-//				var c = crud(t);
-//				c.delete(c.list());
-//				return null;
-//			}, true);
-//
-//		SeedData sd;
-//		try (var is = getClass().getResourceAsStream("seed-data.json")) {
-//			var s = new String(is.readAllBytes());
-//			var o = Json.parse(s);
-//			sd = (SeedData) diFactory.create(Converter.class).convert(o, SeedData.class);
-//		}
-//		for (var x : sd.categories())
-//			crud(Category.class).create(x);
-//		crud(Footer.class).create(sd.footer());
-//		for (var x : sd.forms())
-//			crud(Form.class).create(x);
-//		for (var x : sd.formSubmissions())
-//			crud(FormSubmission.class).create(x);
-//		crud(Header.class).create(sd.header());
-//		for (var x : sd.media())
-//			crud(Media.class).create(x);
-//		for (var x : sd.pages())
-//			crud(Page.class).create(x);
-//		for (var x : sd.products())
-//			crud(Product.class).create(x);
-//		for (var x : sd.users())
-//			crud(User.class).create(x);
-
 		Reflection.properties(SeedData.class).forEach(x -> database.perform(() -> {
 			var t = x.genericType() instanceof ParameterizedType pt ? (Class<?>) pt.getActualTypeArguments()[0]
 					: x.type();

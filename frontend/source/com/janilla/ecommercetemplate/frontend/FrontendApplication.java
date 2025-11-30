@@ -51,22 +51,22 @@ import com.janilla.java.Java;
 import com.janilla.net.Net;
 import com.janilla.web.ApplicationHandlerFactory;
 import com.janilla.web.Bind;
-import com.janilla.web.Invocable;
 import com.janilla.web.Handle;
+import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
 import com.janilla.web.RenderableFactory;
 
-public class EcommerceTemplateFrontend {
+public class FrontendApplication {
 
-	public static final AtomicReference<EcommerceTemplateFrontend> INSTANCE = new AtomicReference<>();
+	public static final AtomicReference<FrontendApplication> INSTANCE = new AtomicReference<>();
 
 	public static void main(String[] args) {
 		try {
-			EcommerceTemplateFrontend a;
+			FrontendApplication a;
 			{
-				var f = new DiFactory(Java.getPackageClasses(EcommerceTemplateFrontend.class.getPackageName()),
-						EcommerceTemplateFrontend.INSTANCE::get);
-				a = f.create(EcommerceTemplateFrontend.class,
+				var f = new DiFactory(Stream.of(FrontendApplication.class.getPackageName(), "com.janilla.web")
+						.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), INSTANCE::get);
+				a = f.create(FrontendApplication.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -96,24 +96,29 @@ public class EcommerceTemplateFrontend {
 
 	protected final DiFactory diFactory;
 
+	protected final List<Path> files;
+
 	protected final HttpHandler handler;
+
+	protected final List<Invocable> invocables;
 
 	protected final HttpClient httpClient;
 
-	public EcommerceTemplateFrontend(DiFactory diFactory, Path configurationFile) {
+	protected final RenderableFactory renderableFactory;
+
+	public FrontendApplication(DiFactory diFactory, Path configurationFile) {
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
 		configuration = diFactory.create(Properties.class, Collections.singletonMap("file", configurationFile));
+		invocables = types().stream().flatMap(x -> Arrays.stream(x.getMethods())
+				.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y))).toList();
+		renderableFactory = diFactory.create(RenderableFactory.class);
+		files = Stream.of("com.janilla.frontend", FrontendApplication.class.getPackageName())
+				.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList();
 
 		{
-			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of("methods",
-					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
-							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
-							.toList(),
-					"renderableFactory", diFactory.create(RenderableFactory.class), "files",
-					Stream.of("com.janilla.frontend2", EcommerceTemplateFrontend.class.getPackageName())
-							.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList()));
+			var f = diFactory.create(ApplicationHandlerFactory.class);
 			handler = x -> {
 				var h = f.createHandler(Objects.requireNonNullElse(x.exception(), x.request()));
 				if (h == null)
@@ -148,20 +153,40 @@ public class EcommerceTemplateFrontend {
 		return diFactory;
 	}
 
+	public List<Path> files() {
+		return files;
+	}
+
 	public HttpHandler handler() {
 		return handler;
+	}
+
+	public List<Invocable> invocables() {
+		return invocables;
 	}
 
 	public HttpClient httpClient() {
 		return httpClient;
 	}
 
+	public RenderableFactory renderableFactory() {
+		return renderableFactory;
+	}
+
 	public Collection<Class<?>> types() {
 		return diFactory.types();
 	}
 
+	@Handle(method = "GET", path = "(/account|/account/addresses)")
+	public Object account(String path, FrontendExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.account, path=" + path);
+		if (exchange.sessionUser() == null)
+			return URI.create("/login");
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
+	}
+
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
-	public Object admin(String path, CustomHttpExchange exchange) {
+	public Object admin(String path, FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.admin, path=" + path);
 		if (path == null || path.isEmpty())
 			path = "/";
@@ -179,16 +204,8 @@ public class EcommerceTemplateFrontend {
 				Collections.singletonMap("user", exchange.sessionUser()));
 	}
 
-	@Handle(method = "GET", path = "(/account|/account/addresses)")
-	public Object account(String path, CustomHttpExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.account, path=" + path);
-		if (exchange.sessionUser() == null)
-			return URI.create("/login");
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
-	}
-
 	@Handle(method = "GET", path = "/login")
-	public Object login(CustomHttpExchange exchange) {
+	public Object login(FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.login");
 		if (exchange.sessionUser() != null)
 			return URI.create("/account");
@@ -196,13 +213,13 @@ public class EcommerceTemplateFrontend {
 	}
 
 	@Handle(method = "GET", path = "/logout")
-	public Object logout(CustomHttpExchange exchange) {
+	public Object logout(FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.logout");
 		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
 	}
 
 	@Handle(method = "GET", path = "/([\\w\\d-]*)")
-	public Index page(String slug, CustomHttpExchange exchange) {
+	public Index page(String slug, FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.page, slug=" + slug);
 		if (slug == null || slug.isEmpty())
 			slug = "home";
@@ -214,8 +231,19 @@ public class EcommerceTemplateFrontend {
 		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
 	}
 
+	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
+	public Index product(String slug, FrontendExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.product, slug=" + slug);
+		var pp = dataFetching.products(slug, null, null, null, exchange.tokenCookie());
+		if (pp.isEmpty())
+			throw new NotFoundException("slug=" + slug);
+		var m = state(exchange);
+		m.put("product", pp.getFirst());
+		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+	}
+
 	@Handle(method = "GET", path = "/shop")
-	public Index shop(@Bind("q") String query, Long category, String sort, CustomHttpExchange exchange) {
+	public Index shop(@Bind("q") String query, Long category, String sort, FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.shop, query=" + query + ", category=" + category);
 		var m = state(exchange);
 		m.put("categories", dataFetching.categories());
@@ -223,7 +251,7 @@ public class EcommerceTemplateFrontend {
 		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
 	}
 
-	protected Map<String, Object> state(CustomHttpExchange exchange) {
+	protected Map<String, Object> state(FrontendExchange exchange) {
 		var x = new LinkedHashMap<String, Object>();
 		x.put("user", exchange.sessionUser());
 		x.put("header", dataFetching.header());

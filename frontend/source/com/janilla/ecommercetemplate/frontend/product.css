@@ -1,12 +1,22 @@
 product-element {
-  padding: 0 1rem;
+  /*padding: 0 1rem;*/
 
   a:has(> lucide-icon) {
     color: gray;
     display: flex;
+    font-family: GeistMono;
+    font-size: 0.75rem;
+    font-weight: 500;
     gap: 0.5rem;
     text-transform: uppercase;
     text-decoration: none;
+  }
+
+  div:has(> product-description) {
+    background: rgb(15, 15, 15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 2rem;
   }
 
   div:has(> ul),
@@ -25,34 +35,23 @@ product-element {
     }
   }
 
-  #gallery-arrows {
-    ul {
-      background: gray;
-      border-radius: 9999px;
-      padding: 0.5rem 0;
-    }
-
-  li:not(:first-child) {
-      border-left: 1px solid darkgray;
-    }
-
-    button {
-      color: darkgray;
-      padding: 0.25rem 1.5rem;
-    }
-  }
-
   #gallery-thumbnails {
     ul {
-      gap: 0.5rem;
+      /*
+      gap: 1rem;
+      */
+    }
+
+    li {
+      box-sizing: border-box;
+      flex: 20% 0 0;
+      padding: 0 0.5rem;
     }
   
     button {
       border: 1px solid darkgray;
       border-radius: 0.5rem;
-      height: 5rem;
       overflow: hidden;
-      width: 5rem;
 
       &.active {
         border: 2px solid blue;
@@ -64,17 +63,5 @@ product-element {
     height: 100%;
     object-fit: cover;
     width: 100%;
-  }
-
-  h1 {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-
-    @media (min-width: 1441px) {
-      font-size: 3.75rem;
-      font-weight: 400;
-      line-height: 1;
-      margin-bottom: 1.5rem;
-    }
   }
 }

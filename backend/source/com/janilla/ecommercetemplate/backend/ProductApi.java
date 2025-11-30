@@ -82,11 +82,11 @@ public class ProductApi extends CollectionApi<Long, Product> {
 		case "-createdAt":
 			pp = pp.sorted(Comparator.comparing((Product x) -> x.createdAt()).reversed());
 			break;
-		case "priceInUSD":
-			pp = pp.sorted(Comparator.comparing(x -> x.price()));
+		case "priceInUsd":
+			pp = pp.sorted(Comparator.comparing(x -> x.priceInUsd()));
 			break;
-		case "-priceInUSD":
-			pp = pp.sorted(Comparator.comparing((Product x) -> x.price()).reversed());
+		case "-priceInUsd":
+			pp = pp.sorted(Comparator.comparing((Product x) -> x.priceInUsd()).reversed());
 			break;
 		}
 		return pp.toList();

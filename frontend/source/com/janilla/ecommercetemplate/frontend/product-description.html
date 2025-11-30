@@ -1,0 +1,16 @@
+<h1>${title}</h1>
+<!--${price}-->
+<p>${description}</p>
+<form>
+  <!--${variantSelector}-->
+  <button disabled="${disabled}" class="primary">Add To Cart</button>
+</form>
+
+<template id="price">
+  <price-element data-amount="${amount}"
+    data-lowest-amount="${lowestAmount}" data-highest-amount="${highestAmount}" />
+</template>
+
+<template id="variant-selector">
+  <variant-selector></variant-selector>
+</template>

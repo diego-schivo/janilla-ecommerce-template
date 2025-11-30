@@ -35,7 +35,7 @@ public record Media(Long id, File file, String alt, String caption, Instant crea
 
 	public String uri() {
 		return file != null
-				? (EcommerceTemplateBackend.INSTANCE.get().configuration().getProperty("ecommerce-template.api.url")
+				? (BackendApplication.INSTANCE.get().configuration().getProperty("ecommerce-template.api.url")
 						+ "/images/" + file.name())
 				: null;
 	}

@@ -32,11 +32,11 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 import com.janilla.http.HttpHandler;
-import com.janilla.http.HttpHandlerFactory;
 import com.janilla.http.HttpRequest;
 import com.janilla.http.HttpResponse;
+import com.janilla.web.FileHandlerFactory;
 
-public class CmsFileHandlerFactory implements HttpHandlerFactory {
+public class CmsFileHandlerFactory implements FileHandlerFactory {
 
 	protected final Properties configuration;
 

@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
-
-import java.util.Set;
-
-public record Fabric(Set<FabricOption> options) {
-}
+//package com.janilla.ecommercetemplate.backend;
+//
+//import java.util.Set;
+//
+//public record Fabric(Set<FabricOption> options) {
+//}

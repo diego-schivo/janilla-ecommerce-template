@@ -21,32 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.fullstack;
+import WebComponent from "./web-component.js";
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+export default class Price extends WebComponent {
 
-import com.janilla.ioc.Context;
+	static get templateNames() {
+		return ["price"];
+	}
 
-@Context("fullstack")
-public class CustomProperties extends Properties {
+	static get observedAttributes() {
+		return ["data-amount", "data-lowest-amount", "data-highest-amount"];
+	}
 
-	private static final long serialVersionUID = -2294199037395154052L;
+	constructor() {
+		super();
+	}
 
-	public CustomProperties(Path file) {
-		try {
-			try (var x = FullstackApplication.class.getResourceAsStream("configuration.properties")) {
-				load(x);
-			}
-			if (file != null)
-				try (var x = Files.newInputStream(file)) {
-					load(x);
-				}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	async updateDisplay() {
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			amounts: (this.dataset.lowestAmount && this.dataset.highestAmount
+				? [this.dataset.lowestAmount, this.dataset.highestAmount]
+				: this.dataset.amount ? [this.dataset.amount] : []).map(x => ({
+					$template: "amount",
+					amount: x
+				}))
+		}));
 	}
 }

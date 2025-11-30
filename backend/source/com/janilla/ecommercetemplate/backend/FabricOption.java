@@ -1,6 +1,6 @@
-package com.janilla.ecommercetemplate.backend;
-
-public enum FabricOption {
-
-	COTTON, POLYESTER, WOOL
-}
+//package com.janilla.ecommercetemplate.backend;
+//
+//public enum FabricOption {
+//
+//	COTTON, POLYESTER, WOOL
+//}

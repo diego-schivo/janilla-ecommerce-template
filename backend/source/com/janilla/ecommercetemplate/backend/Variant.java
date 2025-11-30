@@ -1,12 +1,18 @@
 package com.janilla.ecommercetemplate.backend;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.List;
 
-public record Variant(UUID id, Boolean active, Set<Object> options, BigDecimal price, Long stock) {
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.Types;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
 
-	public Variant withId(UUID id) {
-		return new Variant(id, active, options, price, stock);
-	}
+@Store
+public record Variant(Long id, String title, @Index @Types(Product.class) Long product,
+		List<@Types(VariantOption.class) Long> options, Long inventory, Boolean priceInUsdEnabled,
+		BigDecimal priceInUsd, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
+		implements Document<Long> {
 }

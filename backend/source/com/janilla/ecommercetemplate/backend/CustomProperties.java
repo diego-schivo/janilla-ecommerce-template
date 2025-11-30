@@ -35,7 +35,7 @@ public class CustomProperties extends Properties {
 
 	public CustomProperties(Path file) {
 		try {
-			try (var x = EcommerceTemplateBackend.class.getResourceAsStream("configuration.properties")) {
+			try (var x = BackendApplication.class.getResourceAsStream("configuration.properties")) {
 				load(x);
 			}
 			if (file != null)

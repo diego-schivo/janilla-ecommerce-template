@@ -53,21 +53,21 @@ import com.janilla.net.Net;
 import com.janilla.persistence.ApplicationPersistenceBuilder;
 import com.janilla.persistence.Persistence;
 import com.janilla.web.ApplicationHandlerFactory;
-import com.janilla.web.Invocable;
 import com.janilla.web.Handle;
+import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
 
-public class EcommerceTemplateBackend {
+public class BackendApplication {
 
-	public static final AtomicReference<EcommerceTemplateBackend> INSTANCE = new AtomicReference<>();
+	public static final AtomicReference<BackendApplication> INSTANCE = new AtomicReference<>();
 
 	public static void main(String[] args) {
 		try {
-			EcommerceTemplateBackend a;
+			BackendApplication a;
 			{
-				var f = new DiFactory(Java.getPackageClasses(EcommerceTemplateBackend.class.getPackageName()),
-						INSTANCE::get);
-				a = f.create(EcommerceTemplateBackend.class,
+				var f = new DiFactory(Stream.of(BackendApplication.class.getPackageName(), "com.janilla.web")
+						.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), INSTANCE::get);
+				a = f.create(BackendApplication.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -94,7 +94,7 @@ public class EcommerceTemplateBackend {
 	protected final Properties configuration;
 
 	protected final Predicate<HttpExchange> drafts = x -> {
-		var u = x instanceof CustomHttpExchange x2 ? x2.sessionUser() : null;
+		var u = x instanceof BackendExchange x2 ? x2.sessionUser() : null;
 		return u != null && u.hasRole(UserRole.ADMIN);
 	};
 
@@ -102,11 +102,13 @@ public class EcommerceTemplateBackend {
 
 	protected final HttpHandler handler;
 
+	protected final List<Invocable> invocables;
+
 	protected final Persistence persistence;
 
 	protected final TypeResolver typeResolver;
 
-	public EcommerceTemplateBackend(DiFactory diFactory, Path configurationFile) {
+	public BackendApplication(DiFactory diFactory, Path configurationFile) {
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
@@ -122,10 +124,13 @@ public class EcommerceTemplateBackend {
 		}
 
 		{
-			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of("methods",
-					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
-							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
-							.toList(),
+			invocables = types().stream().flatMap(x -> Arrays.stream(x.getMethods())
+					.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y))).toList();
+			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of(
+//					"methods",
+//					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
+//							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
+//							.toList(),
 					"files", List.of()));
 			handler = x -> {
 				var h = f.createHandler(Objects.requireNonNullElse(x.exception(), x.request()));
@@ -150,6 +155,10 @@ public class EcommerceTemplateBackend {
 
 	public HttpHandler handler() {
 		return handler;
+	}
+
+	public List<Invocable> invocables() {
+		return invocables;
 	}
 
 	public Persistence persistence() {

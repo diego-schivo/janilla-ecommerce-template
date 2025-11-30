@@ -21,32 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.fullstack;
+package com.janilla.ecommercetemplate.backend;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+import java.time.Instant;
+import java.util.List;
 
-import com.janilla.ioc.Context;
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.Types;
+import com.janilla.persistence.Store;
 
-@Context("fullstack")
-public class CustomProperties extends Properties {
+@Store
+public record VariantType(Long id, String label, String name, List<@Types(VariantOption.class) Long> options,
+		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
+		implements Document<Long> {
 
-	private static final long serialVersionUID = -2294199037395154052L;
-
-	public CustomProperties(Path file) {
-		try {
-			try (var x = FullstackApplication.class.getResourceAsStream("configuration.properties")) {
-				load(x);
-			}
-			if (file != null)
-				try (var x = Files.newInputStream(file)) {
-					load(x);
-				}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	public VariantType withOptions(List<Long> options) {
+		return new VariantType(id, label, name, options, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

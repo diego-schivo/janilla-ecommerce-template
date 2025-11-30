@@ -52,18 +52,36 @@ export default class Product extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const a = this.closest("app-element");
 		const s = this.state;
-		s.product = a.serverState.product;
+		s.computeState ??= this.computeState();
+		this.closest("app-element").updateSeo(s.product?.meta);
+		const pp = s.product?.variants?.filter(x => x.active)?.map(x => x.price);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			image: s.product.gallery[0],
-			galleryThumbnails: s.product.gallery.map((x, i) => ({
+			...s.product,
+			image: s.product?.gallery[s.galleryIndex],
+			galleryArrows: ["left", "right"].map(x => ({
+				$template: "gallery-arrow",
+				name: `arrow-${x}`
+			})),
+			galleryThumbnails: s.product?.gallery.map((x, i) => ({
 				$template: "gallery-thumbnail",
-				active: i === 0 ? "active" : null,
+				active: i === s.galleryIndex ? "active" : null,
 				image: x
-			}))
+			})),
+			lowestAmount: pp ? Math.min(...pp) : null,
+			highestAmount: pp ? Math.max(...pp) : null,
+			variantSelector: s.product?.enableVariants ? { $template: "variant-selector" } : null,
+			disabled: !s.variant
 		}));
+	}
+
+	async computeState() {
+		const s = this.state;
+		const usp = new URLSearchParams({ slug: this.dataset.slug });
+		s.product = (await this.closest("app-element").fetchData(`/api/products?${usp}`))[0];
+		s.galleryIndex = 0;
+		this.requestDisplay();
 	}
 
 	handleChange = async event => {
@@ -132,5 +150,9 @@ export default class Product extends WebComponent {
 		} else
 			localStorage.setItem("cart", JSON.stringify(c));
 		this.dispatchEvent(new CustomEvent("cart-change", { bubbles: true }));
+	}
+
+	data(path) {
+		return path.split(".").reduce((x, n) => x[Array.isArray(x) ? parseInt(n) : n], this.state.product);
 	}
 }

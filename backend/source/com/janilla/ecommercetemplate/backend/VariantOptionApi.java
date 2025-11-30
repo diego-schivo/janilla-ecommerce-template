@@ -21,32 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.fullstack;
+package com.janilla.ecommercetemplate.backend;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+import java.util.function.Predicate;
 
-import com.janilla.ioc.Context;
+import com.janilla.cms.CollectionApi;
+import com.janilla.http.HttpExchange;
+import com.janilla.persistence.Persistence;
+import com.janilla.web.Handle;
 
-@Context("fullstack")
-public class CustomProperties extends Properties {
+@Handle(path = "/api/variant-options")
+public class VariantOptionApi extends CollectionApi<Long, VariantOption> {
 
-	private static final long serialVersionUID = -2294199037395154052L;
-
-	public CustomProperties(Path file) {
-		try {
-			try (var x = FullstackApplication.class.getResourceAsStream("configuration.properties")) {
-				load(x);
-			}
-			if (file != null)
-				try (var x = Files.newInputStream(file)) {
-					load(x);
-				}
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+	public VariantOptionApi(Predicate<HttpExchange> drafts, Persistence persistence) {
+		super(VariantOption.class, drafts, persistence);
 	}
 }

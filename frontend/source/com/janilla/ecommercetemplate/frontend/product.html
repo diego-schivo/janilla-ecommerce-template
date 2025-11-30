@@ -4,41 +4,19 @@
       <lucide-icon data-name="chevron-left"></lucide-icon>
       All products
     </a>
-    <img src="${image.uri}" loading="lazy" />
+    <div>
+      <img src="${image.uri}" loading="lazy" />
 
-    <div id="gallery-arrows">
-      <ul>
-        <!--${galleryArrows}-->
-      </ul>
+      <div id="gallery-thumbnails">
+        <ul>
+          <!--${galleryThumbnails}-->
+        </ul>
+      </div>
+
+      <product-description></product-description>
     </div>
-
-    <div id="gallery-thumbnails">
-      <ul>
-        <!--${galleryThumbnails}-->
-      </ul>
-    </div>
-
-    <h1>${title}</h1>
-    <p>
-      <intl-format data-type="amount" data-value="${lowestAmount}"></intl-format>
-      -
-      <intl-format data-type="amount" data-value="${highestAmount}"></intl-format>
-    </p>
-    <p>${description}</p>
-    <form>
-      <!--${variantSelector}-->
-      <button disabled="${disabled}" class="primary">Add To Cart</button>
-    </form>
   </article>
 </main>
-
-<template id="gallery-arrow">
-  <li>
-    <button>
-      <lucide-icon data-name="${name}"></lucide-icon>
-    </button>
-  </li>
-</template>
 
 <template id="gallery-thumbnail">
   <li>
@@ -46,8 +24,4 @@
       <img src="${image.uri}" loading="lazy" />
     </button>
   </li>
-</template>
-
-<template id="variant-selector">
-  <variant-selector></variant-selector>
 </template>

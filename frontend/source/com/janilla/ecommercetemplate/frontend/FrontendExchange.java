@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.janilla.http.BaseHttpExchange;
 import com.janilla.http.HttpCookie;
 import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpRequest;
@@ -37,7 +38,7 @@ import com.janilla.http.HttpResponse;
 import com.janilla.json.Jwt;
 import com.janilla.web.UnauthorizedException;
 
-public class CustomHttpExchange extends HttpExchange.Base {
+public class FrontendExchange extends BaseHttpExchange {
 
 	private static final String SESSION_COOKIE = "janilla-ecommerce-template-token";
 
@@ -47,7 +48,7 @@ public class CustomHttpExchange extends HttpExchange.Base {
 
 	protected final Map<String, Object> session = new HashMap<>();
 
-	public CustomHttpExchange(HttpRequest request, HttpResponse response, Properties configuration,
+	public FrontendExchange(HttpRequest request, HttpResponse response, Properties configuration,
 			DataFetching dataFetching) {
 		super(request, response);
 		this.configuration = configuration;

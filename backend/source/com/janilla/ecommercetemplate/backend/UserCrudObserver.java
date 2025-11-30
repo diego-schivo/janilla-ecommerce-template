@@ -24,7 +24,7 @@ public class UserCrudObserver implements CrudObserver<User> {
 			c = c.withNonNullItemIds();
 		var e = c != entity.cart() ? entity.withCart(c) : entity;
 		if (e.addresses() != null)
-			e.withAddresses(null);
+			e = e.withAddresses(null);
 		return e;
 	}
 

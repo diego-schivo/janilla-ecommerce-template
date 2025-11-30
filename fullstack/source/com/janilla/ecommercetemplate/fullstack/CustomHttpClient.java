@@ -28,13 +28,13 @@ import java.util.Map;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.Context;
 import com.janilla.http.DirectHttpClient;
-import com.janilla.ecommercetemplate.backend.EcommerceTemplateBackend;
+import com.janilla.ecommercetemplate.backend.BackendApplication;
 
 @Context("frontend")
 public class CustomHttpClient extends DirectHttpClient {
 
 	public CustomHttpClient() {
-		var b = EcommerceTemplateBackend.INSTANCE.get();
+		var b = BackendApplication.INSTANCE.get();
 		super(b.diFactory().create(HttpServer.class, Map.of("handler", b.handler())));
 	}
 }

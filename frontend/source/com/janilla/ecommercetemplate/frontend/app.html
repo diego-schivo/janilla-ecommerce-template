@@ -21,7 +21,7 @@
       <img src="/images/janilla-logo-light.svg" loading="lazy" />
     </a>
     <div>
-      <cart-element></cart-element>
+      <cart-modal></cart-modal>
     </div>
   </header>
 </template>
@@ -49,7 +49,7 @@
 </template>
 
 <template id="checkout">
-  <checkout-element></checkout-element>
+  <checkout-element data-user-email="${userEmail}"></checkout-element>
 </template>
 
 <template id="login">
@@ -58,6 +58,10 @@
 
 <template id="logout">
   <logout-element data-no-op="${noOp}"></logout-element>
+</template>
+
+<template id="not-found">
+  <not-found></not-found>
 </template>
 
 <template id="order-confirmation">
@@ -72,20 +76,16 @@
   <order-element data-id="${id}"></order-element>
 </template>
 
-<template id="shop">
-  <shop-element data-query="${query}" data-category="${category}" data-sort="${sort}"></shop-element>
-</template>
-
 <template id="product">
-  <product-element data-slug="${slug}"></product-element>
+  <product-element data-slug="${slug}" data-search="${search}"></product-element>
 </template>
 
 <template id="search">
   <search-element data-query="${query}"></search-element>
 </template>
 
-<template id="not-found">
-  <not-found></not-found>
+<template id="shop">
+  <shop-element data-query="${query}" data-category="${category}" data-sort="${sort}"></shop-element>
 </template>
 
 <template id="footer">

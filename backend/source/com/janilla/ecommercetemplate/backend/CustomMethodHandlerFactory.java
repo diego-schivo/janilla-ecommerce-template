@@ -49,8 +49,9 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 
 	public static final AtomicReference<CustomMethodHandlerFactory> INSTANCE = new AtomicReference<>();
 
-	protected static final Set<String> GUEST_POST = Set.of("/api/form-submissions", "/api/users/first-register",
-			"/api/users/forgot-password", "/api/users/login", "/api/users/reset-password");
+	protected static final Set<String> GUEST_POST = Set.of("/api/carts", "/api/form-submissions",
+			"/api/users/first-register", "/api/users/forgot-password", "/api/users/login", "/api/users/reset-password",
+			"/api/stripe/webhooks");
 
 	protected static final Set<String> USER_LOGIN_LOGOUT = Set.of("/api/users/login", "/api/users/logout");
 
@@ -71,12 +72,20 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 	@Override
 	protected boolean handle(Invocation invocation, HttpExchange exchange) {
 		var rq = exchange.request();
-		if (rq.getPath().startsWith("/api/") && !rq.getMethod().equals("GET")) {
-			if (rq.getMethod().equals("OPTIONS") || GUEST_POST.contains(rq.getPath()))
-				;
-			else
+		if (rq.getPath().startsWith("/api/"))
+			switch (rq.getMethod()) {
+			case "GET", "OPTIONS":
+				break;
+			case "PATCH":
+				if (rq.getPath().startsWith("/api/carts/"))
+					break;
+			case "POST":
+				if (GUEST_POST.contains(rq.getPath()))
+					break;
+			default:
 				((BackendExchange) exchange).requireSessionEmail();
-		}
+				break;
+			}
 
 		if (Boolean.parseBoolean(configuration.getProperty("ecommerce-template.live-demo"))) {
 			if (rq.getMethod().equals("GET") || USER_LOGIN_LOGOUT.contains(rq.getPath()))

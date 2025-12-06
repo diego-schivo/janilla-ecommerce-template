@@ -33,6 +33,46 @@
 			"phone": "1234567890"
 		}
 	],
+	"carts": [
+		{
+			"$type": "Cart",
+			"id": 1,
+			"items": [
+				{
+					"$type": "CartItem",
+					"product": 2,
+					"variant": 2,
+					"quantity": 1
+				}
+			],
+			"customer": 2,
+			"status": "ACTIVE",
+			"subtotal": 49.99,
+			"currency": "USD"
+		},
+		{
+			"$type": "Cart",
+			"id": 3,
+			"items": [
+				{
+					"$type": "CartItem",
+					"product": 2,
+					"variant": 1,
+					"quantity": 1
+				},
+				{
+					"$type": "CartItem",
+					"product": 2,
+					"variant": 2,
+					"quantity": 1
+				}
+			],
+			"customer": 2,
+			"status": "PURCHASED",
+			"subtotal": 99.98,
+			"currency": "USD"
+		}
+	],
 	"categories": [
 		{
 			"$type": "Category",
@@ -144,15 +184,6 @@
 				"$type": "Link",
 				"type": "CUSTOM",
 				"uri": "/",
-				"text": "Home"
-			},
-			{
-				"$type": "Link",
-				"type": "REFERENCE",
-				"document": {
-					"$type": "Page",
-					"id": 1
-				},
 				"text": "Home"
 			},
 			{
@@ -336,7 +367,9 @@
 			"title": "Hat",
 			"description": "Top off your look with our classic hat, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
 			"gallery": [
-				2
+				{
+					"image": 2
+				}
 			],
 			"enableVariants": false,
 			"priceInUsdEnabled": true,
@@ -362,8 +395,14 @@
 			"title": "Tshirt",
 			"description": "Top off your look with our classic tshirt, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
 			"gallery": [
-				4,
-				1
+				{
+					"image": 4,
+					"variantOption": 5
+				},
+				{
+					"image": 1,
+					"variantOption": 6
+				}
 			],
 			"enableVariants": true,
 			"variantTypes": [

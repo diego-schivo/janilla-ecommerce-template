@@ -41,8 +41,11 @@ export default class CustomAdmin extends Admin {
 		const x = super.cell(object, key);
 		switch (key) {
 			case "country":
+			case "currency":
 			case "documentStatus":
 				return x?.name;
+			case "items":
+				return `${x.length} items`;
 			case "options":
 				return x.map(y => y.label).join();
 			case "roles":
@@ -66,6 +69,8 @@ export default class CustomAdmin extends Admin {
 		switch (entitySlug) {
 			case "addresses":
 				return ["id", "addressLine1", "city", "postalCode", "country"];
+			case "carts":
+				return ["id", "createdAt", "currency", "items"];
 			case "categories":
 				return ["title", "slug"];
 			case "pages":

@@ -34,7 +34,7 @@ export default class App extends WebComponent {
 	}
 
 	static get observedAttributes() {
-		return ["data-api-url"];
+		return ["data-api-url", "data-stripe-publishable-key"];
 	}
 
 	constructor() {
@@ -136,7 +136,18 @@ export default class App extends WebComponent {
 						case "/account/addresses":
 							return { $template: "addresses" };
 						case "/checkout":
-							return { $template: "checkout" };
+							if (!Array.from(document.head.querySelectorAll("script"))
+								.some(x => x.getAttribute("src") === "https://js.stripe.com/clover/stripe.js")) {
+								const el = document.createElement("script");
+								el.setAttribute("src", "https://js.stripe.com/clover/stripe.js");
+								document.head.append(el);
+							}
+							if (!Object.hasOwn(s, "stripe"))
+								s.stripe = typeof Stripe !== "undefined" ? Stripe(this.dataset.stripePublishableKey) : null;
+							return {
+								$template: "checkout",
+								userEmail: s.user?.email
+							};
 						case "/login":
 							return { $template: "login" };
 						case "/logout":
@@ -154,7 +165,8 @@ export default class App extends WebComponent {
 					if (m2)
 						return {
 							$template: "product",
-							slug: m2[1].substring(1)
+							slug: m2[1].substring(1),
+							search: location.search
 						};
 					const m3 = p.match(ordersRegex);
 					if (m3)

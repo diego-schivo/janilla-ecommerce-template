@@ -1,17 +1,17 @@
 <dl>
-  <!--${options}-->
+  <!--${types}-->
 </dl>
 
-<template id="option">
-  <dt>${title}</dt>
+<template id="type">
+  <dt>${label}</dt>
   <dd>
-    <!--${values}-->
+    <!--${options}-->
   </dd>
 </template>
 
-<template id="value">
+<template id="option">
   <label>
-    <input type="radio" name="${name}" value="${value}" class="visually-hidden" />
-    ${text}
+    <input type="radio" name="${name}" value="${id}" class="visually-hidden" checked="${checked}" disabled="${disabled}" />
+    ${label}
   </label>
 </template>

@@ -5,23 +5,8 @@
       All products
     </a>
     <div>
-      <img src="${image.uri}" loading="lazy" />
-
-      <div id="gallery-thumbnails">
-        <ul>
-          <!--${galleryThumbnails}-->
-        </ul>
-      </div>
-
-      <product-description></product-description>
+      <product-gallery data-variant-options="${variantOptions}"></product-gallery>
+      <product-description data-variant="${variant}"></product-description>
     </div>
   </article>
 </main>
-
-<template id="gallery-thumbnail">
-  <li>
-    <button class="nobutton ${active}">
-      <img src="${image.uri}" loading="lazy" />
-    </button>
-  </li>
-</template>

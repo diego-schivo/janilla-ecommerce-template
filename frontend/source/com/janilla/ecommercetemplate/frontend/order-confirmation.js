@@ -29,6 +29,10 @@ export default class OrderConfirmation extends WebComponent {
 		return ["order-confirmation"];
 	}
 
+	static get observedAttributes() {
+		return ["data-stripe-payment-intent-id"];
+	}
+
 	constructor() {
 		super();
 	}

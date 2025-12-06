@@ -29,24 +29,64 @@ export default class VariantSelector extends WebComponent {
 		return ["variant-selector"];
 	}
 
+	static get observedAttributes() {
+		return ["data-options"];
+	}
+
 	constructor() {
 		super();
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener("change", this.handleChange);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener("change", this.handleChange);
+	}
+
 	async updateDisplay() {
 		const p = this.closest("product-element").state.product;
+		const oo = this.dataset.options.split(",");
+		const fd = new FormData(this.closest("form"));
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			options: p.variantOptions.map(x => ({
-				$template: "option",
-				title: x.$type,
-				values: x.options.map(y => ({
-					$template: "value",
-					name: x.$type,
-					value: y.name,
-					text: y.name
+			types: p.variantTypes
+				.sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
+				.map(x => ({
+					$template: "type",
+					...x,
+					options: x.options.map(y => ({
+						$template: "option",
+						name: x.name,
+						...y,
+						checked: oo.includes(y.id.toString()),
+						disabled: !p.variants
+							.filter(v => v.options.every(o => o.type.id === x.id
+								? o.id === y.id
+								: !fd.has(o.type.name) || fd.get(o.type.name) == o.id))
+							.some(v => v.inventory)
+					}))
 				}))
-			}))
 		}));
+	}
+
+	handleChange = event => {
+		const el = event.target;
+		const u = new URL(location.href);
+		u.searchParams.set(el.name, el.value);
+
+		const p = this.closest("product-element").state.product;
+		const fd = new FormData(el.form);
+		const v = p.variants.find(x => x.options.every(y => y.id == fd.get(y.type.name)));
+		if (v)
+			u.searchParams.set("variant", v.id);
+		else
+			u.searchParams.delete("variant");
+
+		history.pushState({}, "", u.pathname + u.search);
+		dispatchEvent(new CustomEvent("popstate"));
 	}
 }

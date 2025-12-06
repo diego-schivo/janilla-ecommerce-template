@@ -6,11 +6,16 @@
     <title>Janilla Ecommerce Template</title>
     <link rel="icon" href="/images/favicon.svg" />
     <link rel="stylesheet" href="/style.css" />
+    <!--${stripe}-->
     <script type="module" src="/script.js"></script>
   </head>
   <body>
-    <app-element data-api-url="${apiUrl}">
+    <app-element data-api-url="${apiUrl}" data-stripe-publishable-key="${stripePublishableKey}">
       <script type="application/json">${state}</script>
     </app-element>
   </body>
 </html>
+
+<template id="stripe">
+  <script src="https://js.stripe.com/clover/stripe.js"></script>
+</template>

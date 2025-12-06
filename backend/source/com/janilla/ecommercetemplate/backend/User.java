@@ -44,8 +44,8 @@ import com.janilla.persistence.Store;
 @Store
 public record User(Long id, String name, @Index String email, String salt, String hash,
 		@Index String resetPasswordToken, Instant resetPasswordExpiration, Set<UserRole> roles,
-		@Index String stripeCustomerId, Cart cart, List<@Types(Address.class) Long> addresses, Instant createdAt,
-		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
+		@Index String stripeCustomerId, List<@Types(Cart.class) Long> carts, List<@Types(Address.class) Long> addresses,
+		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
 		implements com.janilla.cms.User<Long, UserRole> {
 
 	private static final SecretKeyFactory SECRET;
@@ -87,39 +87,39 @@ public record User(Long id, String name, @Index String email, String salt, Strin
 	public User withPassword(String password) {
 		if (password == null || password.isEmpty())
 			return new User(id, name, email, null, null, resetPasswordToken, resetPasswordExpiration, roles,
-					stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+					stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 		var s = new byte[16];
 		RANDOM.nextBytes(s);
 		var h = hash(password.toCharArray(), s);
 		var f = HexFormat.of();
 		return new User(id, name, email, f.formatHex(s), f.formatHex(h), resetPasswordToken, resetPasswordExpiration,
-				roles, stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				roles, stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
 	@Override
 	public User withResetPassword(String resetPasswordToken, Instant resetPasswordExpiration) {
 		return new User(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
-				stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
 	@Override
 	public User withRoles(Set<UserRole> roles) {
 		return new User(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
-				stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
 	public User withStripeCustomerId(String stripeCustomerId) {
 		return new User(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
-				stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public User withCart(Cart cart) {
+	public User withCarts(List<Long> carts) {
 		return new User(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
-				stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
 	public User withAddresses(List<Long> addresses) {
 		return new User(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
-				stripeCustomerId, cart, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

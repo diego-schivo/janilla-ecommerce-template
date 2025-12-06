@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/style.css" />
+<div>
+  <p>
+    ${title.name} ${firstName} ${lastName}<br />
+    ${phone}<br />
+    ${addressLine1}, ${addressLine2}<br />
+    ${city}, ${state} ${postalCode}<br />
+    ${country.name}
+  </p>
+</div>
+<div>
+  <slot name="before-actions"></slot>
+  <slot name="actions">
+    <button name="edit" class="button secondary">Edit</button>
+  </slot>
+  <slot name="after-actions"></slot>
+</div>

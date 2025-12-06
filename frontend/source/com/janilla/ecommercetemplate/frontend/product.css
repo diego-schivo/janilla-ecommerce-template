@@ -1,6 +1,10 @@
-product-element {
-  /*padding: 0 1rem;*/
+app-element:has(product-element) {
+  > div {
+    gap: 2.5rem;
+  }
+}
 
+product-element {
   a:has(> lucide-icon) {
     color: gray;
     display: flex;
@@ -8,17 +12,27 @@ product-element {
     font-size: 0.75rem;
     font-weight: 500;
     gap: 0.5rem;
+    letter-spacing: 0.1em;
+    padding-left: 0.75rem;
     text-transform: uppercase;
     text-decoration: none;
   }
 
-  div:has(> product-description) {
-    background: rgb(15, 15, 15);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    padding: 2rem;
+  article:has(product-gallery) {
+    gap: 1.5rem;
+
+    > div {
+      background: rgb(15, 15, 15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding: 2rem;
+    }
   }
 
+  /*
   div:has(> ul),
   ul {
     display: flex;
@@ -34,34 +48,5 @@ product-element {
       padding: 0;
     }
   }
-
-  #gallery-thumbnails {
-    ul {
-      /*
-      gap: 1rem;
-      */
-    }
-
-    li {
-      box-sizing: border-box;
-      flex: 20% 0 0;
-      padding: 0 0.5rem;
-    }
-  
-    button {
-      border: 1px solid darkgray;
-      border-radius: 0.5rem;
-      overflow: hidden;
-
-      &.active {
-        border: 2px solid blue;
-      }
-    }
-  }
-
-  img {
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
-  }
+  */
 }

@@ -5,6 +5,7 @@
 html,
 :host {
   line-height: 1.5;
+  text-size-adjust: 100%;
 }
 
 a,
@@ -54,6 +55,12 @@ textarea {
   font-family: Geist;
 }
 
+button {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
 /*button,*/
 .button {
   align-items: center;
@@ -72,17 +79,17 @@ textarea {
     justify-content: center;
     padding: 0.5rem 1rem;
     text-align: center;
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 
   &.primary {
     background: rgb(248, 250, 252);
     color: rgb(15, 23, 42);
 
-    &[disabled] {
-      opacity: 0.5;
-    }
-
-    &:not([disabled]):hover {
+    &:not(:disabled):hover {
       background: rgba(248, 250, 252, 0.9);
     }
   }
@@ -105,7 +112,9 @@ ul {
   margin: 0;
 }
 
+/*
 dialog {
+  background: rgb(10, 10, 10);
   border: none;
   box-sizing: border-box;
   display: flex;
@@ -133,13 +142,12 @@ dialog {
 
   > button {
     background: transparent;
-    /*color: gray;*/
     color: rgb(248, 250, 252);
     height: auto;
     padding: 0;
     position: absolute;
-    right: 1em;
-    top: 1em;
+    right: 1rem;
+    top: 1rem;
 
     &,
     &:hover {
@@ -152,6 +160,7 @@ dialog {
     gap: 1rem;
   }
 }
+*/
 
 ::backdrop {
   background: oklab(0 0 0 / 0.8);
@@ -210,6 +219,25 @@ label {
 
   &:has([required]) span::after {
     content: " *";
+  }
+
+  &.checkbox {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    input:not(:checked) + lucide-icon {
+      svg {
+        display: none;
+      }
+    }
+
+    lucide-icon {
+      background: light-dark(rgb(221, 221, 221), rgb(34, 34, 34));
+      border: 1px solid rgb(60, 60, 60);
+      border-radius: 0.1875rem;
+    }
   }
 }
 

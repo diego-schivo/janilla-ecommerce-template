@@ -23,10 +23,31 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.util.List;
+import java.util.function.Predicate;
 
-public record SeedData(List<Address> addresses, List<Cart> carts, List<Category> categories, Footer footer,
-		List<FormSubmission> formSubmissions, List<Form> forms, Header header, List<Media> media, List<Page> pages,
-		List<Product> products, List<User> users, List<VariantOption> variantOptions, List<VariantType> variantTypes,
-		List<Variant> variants) {
+import com.janilla.cms.CollectionApi;
+import com.janilla.http.HttpExchange;
+import com.janilla.persistence.Persistence;
+import com.janilla.web.Handle;
+
+@Handle(path = "/api/carts")
+public class CartApi extends CollectionApi<Long, Cart> {
+
+	public CartApi(Predicate<HttpExchange> drafts, Persistence persistence) {
+		super(Cart.class, drafts, persistence);
+	}
+
+	@Override
+	public Cart create(Cart entity) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Handle(method = "POST")
+	public Cart create(Cart entity, BackendExchange exchange) {
+		var e = entity;
+		var u = exchange.sessionUser();
+		if (u != null)
+			e = entity.withCustomer(u.id());
+		return super.create(e);
+	}
 }

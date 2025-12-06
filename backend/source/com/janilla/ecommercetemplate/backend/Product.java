@@ -37,8 +37,8 @@ import com.janilla.persistence.Store;
 @Store
 //@Index(sort = "title")
 @Versions(drafts = true)
-public record Product(Long id, String title, String description, List<@Types(Media.class) Long> gallery,
-		Boolean enableVariants, List<@Types( {
+public record Product(Long id, String title, String description, List<GalleryItem> gallery, Boolean enableVariants,
+		List<@Types( {
 				VariantType.class }) Long> variantTypes,
 		List<@Types(Variant.class) Long> variants, Boolean priceInUsdEnabled, BigDecimal priceInUsd,
 		@Index List<@Types(Category.class) Long> categories, Meta meta, @Index String slug, Instant createdAt,
@@ -47,5 +47,8 @@ public record Product(Long id, String title, String description, List<@Types(Med
 	public Product withVariants(List<Long> variants) {
 		return new Product(id, title, description, gallery, enableVariants, variantTypes, variants, priceInUsdEnabled,
 				priceInUsd, categories, meta, slug, createdAt, updatedAt, documentStatus, publishedAt);
+	}
+
+	public record GalleryItem(@Types(Media.class) Long image, @Types(VariantOption.class) Long variantOption) {
 	}
 }

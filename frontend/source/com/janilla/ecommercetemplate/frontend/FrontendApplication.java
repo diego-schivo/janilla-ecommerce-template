@@ -182,7 +182,8 @@ public class FrontendApplication {
 		IO.println("EcommerceTemplateFrontend.account, path=" + path);
 		if (exchange.sessionUser() == null)
 			return URI.create("/login");
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
 	}
 
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
@@ -200,8 +201,17 @@ public class FrontendApplication {
 				return URI.create("/admin/create-first-user");
 			break;
 		}
-		return new Index(configuration.getProperty("ecommerce-template.api.url"),
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"),
 				Collections.singletonMap("user", exchange.sessionUser()));
+	}
+
+	@Handle(method = "GET", path = "/checkout")
+	public Index checkout(FrontendExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.checkout");
+		var m = state(exchange);
+		return new Index(new Object(), configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
 	}
 
 	@Handle(method = "GET", path = "/login")
@@ -209,13 +219,23 @@ public class FrontendApplication {
 		IO.println("EcommerceTemplateFrontend.login");
 		if (exchange.sessionUser() != null)
 			return URI.create("/account");
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
 	}
 
 	@Handle(method = "GET", path = "/logout")
 	public Object logout(FrontendExchange exchange) {
 		IO.println("EcommerceTemplateFrontend.logout");
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), state(exchange));
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
+	}
+
+	@Handle(method = "GET", path = "/order-confirmation")
+	public Index orderConfirmation(FrontendExchange exchange) {
+		IO.println("EcommerceTemplateFrontend.orderConfirmation");
+		var m = state(exchange);
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
 	}
 
 	@Handle(method = "GET", path = "/([\\w\\d-]*)")
@@ -228,7 +248,8 @@ public class FrontendApplication {
 			throw new NotFoundException("slug=" + slug);
 		var m = state(exchange);
 		m.put("page", !pp.isEmpty() ? pp.getFirst() : null);
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
 	}
 
 	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
@@ -239,7 +260,8 @@ public class FrontendApplication {
 			throw new NotFoundException("slug=" + slug);
 		var m = state(exchange);
 		m.put("product", pp.getFirst());
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
 	}
 
 	@Handle(method = "GET", path = "/shop")
@@ -248,7 +270,8 @@ public class FrontendApplication {
 		var m = state(exchange);
 		m.put("categories", dataFetching.categories());
 		m.put("products", dataFetching.products(null, query, category, sort, exchange.tokenCookie()));
-		return new Index(configuration.getProperty("ecommerce-template.api.url"), m);
+		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
 	}
 
 	protected Map<String, Object> state(FrontendExchange exchange) {

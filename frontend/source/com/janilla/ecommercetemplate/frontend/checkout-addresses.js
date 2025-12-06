@@ -23,14 +23,14 @@
  */
 import WebComponent from "./web-component.js";
 
-export default class Payment extends WebComponent {
+export default class CheckoutAddresses extends WebComponent {
 
 	static get templateNames() {
-		return ["payment"];
+		return ["checkout-addresses"];
 	}
 
 	static get observedAttributes() {
-		return ["data-email", "data-amount"];
+		return ["data-heading", "data-description", "data-name"];
 	}
 
 	constructor() {
@@ -39,40 +39,57 @@ export default class Payment extends WebComponent {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
+		this.addEventListener("click", this.handleClick);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
+		this.removeEventListener("click", this.handleClick);
 	}
 
 	async updateDisplay() {
-		this.appendChild(this.interpolateDom({ $template: "" }));
-		if (!this.state.elements) {
-			const a = this.closest("app-element");
-			const u = new URL(`${a.dataset.apiUrl}/stripe/create-payment-intent`, location.href);
-			u.searchParams.append("email", this.dataset.email);
-			u.searchParams.append("amount", this.dataset.amount);
-			const j = await (await fetch(u)).json();
-			this.state.elements = a.state.stripe.elements({
-				appearance: {
-					theme: "stripe",
-				},
-				clientSecret: j["client_secret"]
-				//loader: "auto"
-			});
-			this.state.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
-		}
+		const a = this.closest("app-element");
+		const s = this.state;
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			...this.dataset,
+			...this.state,
+			items: a.state.user.addresses.map(x => ({
+				$template: "item",
+				id: x.id
+			}))
+		}));
+		const d = this.querySelector("dialog");
+		if (s.dialog)
+			d.showModal();
+		else
+			d.close();
 	}
 
-	handleSubmit = async event => {
-		event.preventDefault();
-		const { error, paymentIntent } = await this.closest("app-element").state.stripe.confirmPayment({
-			elements: this.state.elements,
-			confirmParams: { return_url: `${location.origin}/order-confirmation` }
-		});
-		console.log("error", error);
-		console.log("paymentIntent", paymentIntent);
+	handleClick = event => {
+		const b = event.target.closest("button");
+		const s = this.state;
+		switch (b?.name) {
+			case "close":
+				delete s.dialog;
+				this.requestDisplay();
+				break;
+			case "open":
+				s.dialog = true;
+				this.requestDisplay();
+				break;
+			case "select":
+				/*
+				this.dispatchEvent(new CustomEvent("addressselected", {
+					bubbles: true,
+					detail: { id: parseInt(b.value) }
+				}));
+				*/
+				this.state.value = b.value;
+				const i = this.querySelector(`input[name="${this.dataset.name}"]`);
+				i.value = b.value;
+				i.dispatchEvent(new Event("change", { bubbles: true }));
+				break;
+		}
 	}
 }

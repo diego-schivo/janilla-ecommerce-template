@@ -21,12 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+import WebComponent from "./web-component.js";
 
-import java.util.List;
+export default class AddressItem extends WebComponent {
 
-public record SeedData(List<Address> addresses, List<Cart> carts, List<Category> categories, Footer footer,
-		List<FormSubmission> formSubmissions, List<Form> forms, Header header, List<Media> media, List<Page> pages,
-		List<Product> products, List<User> users, List<VariantOption> variantOptions, List<VariantType> variantTypes,
-		List<Variant> variants) {
+	static get templateNames() {
+		return ["address-item"];
+	}
+
+	static get observedAttributes() {
+		return ["data-id"];
+	}
+
+	constructor() {
+		super();
+		this.attachShadow({ mode: "open" });
+	}
+
+	async updateDisplay() {
+		const s = this.state;
+		const a = this.closest("app-element");
+		s.address ??= a.state.user.addresses.find(x => x.id == this.dataset.id);
+		this.shadowRoot.appendChild(this.interpolateDom({
+			$template: "",
+			...s.address
+		}));
+	}
 }

@@ -23,14 +23,14 @@
  */
 import WebComponent from "./web-component.js";
 
-export default class Payment extends WebComponent {
+export default class ProductGallery extends WebComponent {
 
 	static get templateNames() {
-		return ["payment"];
+		return ["product-gallery"];
 	}
 
 	static get observedAttributes() {
-		return ["data-email", "data-amount"];
+		return ["data-variant-options"];
 	}
 
 	constructor() {
@@ -39,40 +39,39 @@ export default class Payment extends WebComponent {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
+		this.addEventListener("click", this.handleClick);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
+		this.removeEventListener("click", this.handleClick);
 	}
 
 	async updateDisplay() {
-		this.appendChild(this.interpolateDom({ $template: "" }));
-		if (!this.state.elements) {
-			const a = this.closest("app-element");
-			const u = new URL(`${a.dataset.apiUrl}/stripe/create-payment-intent`, location.href);
-			u.searchParams.append("email", this.dataset.email);
-			u.searchParams.append("amount", this.dataset.amount);
-			const j = await (await fetch(u)).json();
-			this.state.elements = a.state.stripe.elements({
-				appearance: {
-					theme: "stripe",
-				},
-				clientSecret: j["client_secret"]
-				//loader: "auto"
-			});
-			this.state.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
-		}
+	const s = this.state;
+		const p = this.closest("product-element").state.product;
+		s.index ??= p.enableVariants ? (() => {
+			const oo = this.dataset.variantOptions.split(",");
+			const i = p.gallery.findIndex(x => oo.includes(x.variantOption.id.toString()));
+			return i !== -1 ? i : 0;
+		})() : 0;
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			image: p.gallery[s.index].image,
+			thumbnails: p.gallery.map((x, i) => ({
+				$template: "thumbnail",
+				active: i === s.index ? "active" : null,
+				image: x.image
+			}))
+		}));
 	}
 
-	handleSubmit = async event => {
-		event.preventDefault();
-		const { error, paymentIntent } = await this.closest("app-element").state.stripe.confirmPayment({
-			elements: this.state.elements,
-			confirmParams: { return_url: `${location.origin}/order-confirmation` }
-		});
-		console.log("error", error);
-		console.log("paymentIntent", paymentIntent);
+	handleClick = async event => {
+		const b = event.target.closest("button");
+		const ul = b?.closest("ul");
+		if (ul) {
+			this.state.index = Array.from(ul.children).findIndex(x => x.contains(b));
+			this.requestDisplay();
+		}
 	}
 }

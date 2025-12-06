@@ -1,0 +1,35 @@
+product-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  ul,
+  li {
+    display: flex;
+  }
+
+  ul {
+    gap: 1rem;
+  }
+
+  li {
+    box-sizing: border-box;
+    flex: calc((100% - 4rem) / 5) 0 0;
+  }
+
+  button {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+
+    &.active {
+      border: 2px solid oklch(0.546 0.245 262.881);
+    }
+  }
+
+  img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+}

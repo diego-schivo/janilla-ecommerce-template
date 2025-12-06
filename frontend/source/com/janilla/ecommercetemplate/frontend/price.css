@@ -1,4 +1,6 @@
 price-element {
+  font-family: GeistMono;
+
   intl-format:not(:first-child)::before {
     content: " - ";
   }

@@ -1,0 +1,21 @@
+:host(address-item) {
+  display: flex;
+  flex-direction: row;
+
+  > div {
+    &:first-of-type {
+      flex: 1;
+    }
+
+    &:nth-of-type(2) {
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  p {
+    font-weight: 500;
+  }
+}

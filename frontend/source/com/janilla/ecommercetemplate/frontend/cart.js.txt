@@ -49,6 +49,34 @@ export default class Cart extends WebComponent {
 		//r.removeEventListener("user-change", this.handleUserChange);
 	}
 
+	async updateDisplay() {
+		const u = this.closest("app-element").state.user;
+		const c = u ? u.cart : JSON.parse(localStorage.getItem("cart"));
+		const cq = c?.items?.reduce((x, y) => x + y.quantity, 0) ?? 0;
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			quantity: cq > 0 ? {
+				$template: "quantity",
+				value: cq
+			} : null,
+			content: cq > 0 ? {
+				$template: "content",
+				items: c?.items?.map(x => {
+					const v = x.product.variants.find(y => y.id === x.variantId);
+					return {
+						$template: "item",
+						...x,
+						variant: v,
+						option: v.options[0].$type.split(".")[0],
+						quantityMinus1: x.quantity - 1,
+						quantityPlus1: x.quantity + 1,
+					};
+				}),
+				total: c?.items?.reduce((x, y) => x + y.quantity * y.unitPrice, 0) ?? 0
+			} : { $template: "empty" }
+		}));
+	}
+
 	handleCartChange = () => {
 		this.requestDisplay();
 	}
@@ -96,33 +124,5 @@ export default class Cart extends WebComponent {
 
 	handleUserChange = () => {
 		this.requestDisplay();
-	}
-
-	async updateDisplay() {
-		const u = this.closest("app-element").state.user;
-		const c = u ? u.cart : JSON.parse(localStorage.getItem("cart"));
-		const cq = c?.items?.reduce((x, y) => x + y.quantity, 0) ?? 0;
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			quantity: cq > 0 ? {
-				$template: "quantity",
-				value: cq
-			} : null,
-			content: cq > 0 ? {
-				$template: "content",
-				items: c?.items?.map(x => {
-					const v = x.product.variants.find(y => y.id === x.variantId);
-					return {
-						$template: "item",
-						...x,
-						variant: v,
-						option: v.options[0].$type.split(".")[0],
-						quantityMinus1: x.quantity - 1,
-						quantityPlus1: x.quantity + 1,
-					};
-				}),
-				total: c?.items?.reduce((x, y) => x + y.quantity * y.unitPrice, 0) ?? 0
-			} : { $template: "empty" }
-		}));
 	}
 }

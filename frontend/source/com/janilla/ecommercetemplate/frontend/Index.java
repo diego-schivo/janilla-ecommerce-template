@@ -28,5 +28,6 @@ import java.util.Map;
 import com.janilla.web.Render;
 
 @Render(template = "index.html")
-public record Index(String apiUrl, @Render(renderer = StateRenderer.class) Map<String, Object> state) {
+public record Index(@Render(template = "stripe") Object stripe, String apiUrl, String stripePublishableKey,
+		@Render(renderer = StateRenderer.class) Map<String, Object> state) {
 }

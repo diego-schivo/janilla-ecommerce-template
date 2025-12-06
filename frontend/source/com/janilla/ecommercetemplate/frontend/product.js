@@ -30,7 +30,7 @@ export default class Product extends WebComponent {
 	}
 
 	static get observedAttributes() {
-		return ["data-slug"];
+		return ["data-slug", "data-search"];
 	}
 
 	constructor() {
@@ -39,33 +39,38 @@ export default class Product extends WebComponent {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("change", this.handleChange);
+		//this.addEventListener("change", this.handleChange);
 		this.addEventListener("click", this.handleClick);
-		this.addEventListener("submit", this.handleSubmit);
+		//this.addEventListener("submit", this.handleSubmit);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("change", this.handleChange);
+		//this.removeEventListener("change", this.handleChange);
 		this.removeEventListener("click", this.handleClick);
-		this.removeEventListener("submit", this.handleSubmit);
+		//this.removeEventListener("submit", this.handleSubmit);
 	}
 
 	async updateDisplay() {
 		const a = this.closest("app-element");
 		const s = this.state;
-		s.product = a.serverState.product;
+		s.product = a.serverState?.product;
+		if (!s.product) {
+			const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
+			u.searchParams.append("slug", this.dataset.slug);
+			s.product = (await (await fetch(u)).json())[0];
+		}
+		const pp = new URLSearchParams(this.dataset.search);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			image: s.product.gallery[0],
-			galleryThumbnails: s.product.gallery.map((x, i) => ({
-				$template: "gallery-thumbnail",
-				active: i === 0 ? "active" : null,
-				image: x
-			}))
+			...(s.product.enableVariants ? {
+				variantOptions: s.product.variantTypes.map(x => pp.get(x.name)).filter(x => x),
+				variant: pp.get("variant")
+			} : {})
 		}));
 	}
 
+	/*
 	handleChange = async event => {
 		const s = this.state;
 		const p = s.product;
@@ -73,6 +78,7 @@ export default class Product extends WebComponent {
 		s.variant = p.variants.find(x => x.active && x.options.every(y => y.name === fd.get(y.$type.split(".")[0])));
 		this.requestDisplay();
 	}
+	*/
 
 	handleClick = async event => {
 		const b = event.target.closest("button");
@@ -91,6 +97,7 @@ export default class Product extends WebComponent {
 		}
 	}
 
+	/*
 	handleSubmit = async event => {
 		event.preventDefault();
 		const s = this.state;
@@ -133,4 +140,5 @@ export default class Product extends WebComponent {
 			localStorage.setItem("cart", JSON.stringify(c));
 		this.dispatchEvent(new CustomEvent("cart-change", { bubbles: true }));
 	}
+	*/
 }

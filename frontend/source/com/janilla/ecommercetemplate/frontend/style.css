@@ -2,6 +2,7 @@
 
 @import "account.css";
 @import "address-edit.css";
+@import "address-item.css";
 @import "addresses.css";
 @import "admin.css";
 @import "admin-variant-options.css";
@@ -9,8 +10,9 @@
 @import "banner.css";
 @import "call-to-action.css";
 @import "card.css";
-@import "cart.css";
+@import "cart-modal.css";
 @import "checkout.css";
+@import "checkout-addresses.css";
 @import "content.css";
 @import "rich-text.css";
 @import "hero.css";
@@ -29,6 +31,7 @@
 @import "price.css";
 @import "product.css";
 @import "product-description.css";
+@import "product-gallery.css";
 @import "select.css";
 @import "shop.css";
 @import "variant-selector.css";

@@ -1,9 +1,21 @@
 <main>
   <article>
-    <h2>Contact</h2>
-    <!--${user}-->
+    <section class="contact">
+      <h2>Contact</h2>
+      <!--${contact}-->
+    </section>
+    <section class="address">
+      <h2>Address</h2>
+      <!--${billingAddress}-->
+      <label class="checkbox">
+        <input type="checkbox" name="billingAddressSameAsShipping" value="true" class="visually-hidden" checked="${billingAddressSameAsShipping}" />
+        <lucide-icon data-name="check"></lucide-icon>
+        Shipping is the same as billing
+      </label>
+      <!--${shippingAddress}-->
+    </section>
     <!--${payment}-->
-    <article>
+    <section class="cart">
       <h2>Your Cart</h2>
       <ul>
         <!--${items}-->
@@ -14,16 +26,18 @@
           <intl-format data-type="amount" data-value="${total}"></intl-format>
         </dd>
       </dl>
-    </article>
+    </section>
   </article>
 </main>
 
 <template id="user">
-  <p>${email}</p>
-  <p>
-    Not you?
-    <a href="/logout">Log out</a>
-  </p>
+  <div>
+    <p>${text}</p>
+    <p>
+      Not you?
+      <a href="/logout">Log out</a>
+    </p>
+  </div>
 </template>
 
 <template id="guest">
@@ -42,6 +56,21 @@
   </form>
 </template>
 
+<template id="address-item">
+  <address-item data-id="${id}">
+    <button slot="actions" name="${name}" class="button secondary">Remove</button>
+  </address-item>
+</template>
+
+<template id="checkout-addresses">
+  <input type="hidden" name="${name}" value="${value}" />
+  <checkout-addresses data-heading="${heading}" data-description="${description}" data-name="${name}"></checkout-addresses>
+</template>
+
+<template id="payment-trigger">
+  <button name="go-to-payment" class="button primary">Go to payment</button>
+</template>
+
 <template id="payment">
   <payment-element data-email="${email}" data-amount="${amount}"></payment-element>
 </template>
@@ -50,7 +79,7 @@
   <li>
     <div>
       <a href="/products/${product.slug}">
-        <img src="${product.gallery[0].uri}" loading="lazy" />
+        <img src="${image.uri}" loading="lazy" />
       </a>
     </div>
     <div>
@@ -59,7 +88,7 @@
       <p>x${quantity}</p>
     </div>
     <div>
-      <intl-format data-type="amount" data-value="${variant.price}"></intl-format>
+      <intl-format data-type="amount" data-value="${variant.priceInUsd}"></intl-format>
     </div>
   </li>
 </template>

@@ -23,7 +23,6 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.util.Set;
-
-public record Color(Set<ColorOption> options) {
+public record AddressData(Title title, String firstName, String lastName, String company, String addressLine1,
+		String addressLine2, String city, String state, String postalCode, Country country, String phone) {
 }

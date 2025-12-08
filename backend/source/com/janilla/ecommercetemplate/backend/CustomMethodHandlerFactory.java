@@ -51,7 +51,7 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 
 	protected static final Set<String> GUEST_POST = Set.of("/api/carts", "/api/form-submissions",
 			"/api/users/first-register", "/api/users/forgot-password", "/api/users/login", "/api/users/reset-password",
-			"/api/stripe/webhooks");
+			"/api/payments/stripe/webhooks");
 
 	protected static final Set<String> USER_LOGIN_LOGOUT = Set.of("/api/users/login", "/api/users/logout");
 

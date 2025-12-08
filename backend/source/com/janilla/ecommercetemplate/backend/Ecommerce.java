@@ -25,5 +25,5 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.List;
 
-public record Ecommerce(List<Product> products, List<Order> orders) {
+public record Ecommerce(List<Product> products, List<Cart> carts, List<Order> orders, List<Transaction> transactions) {
 }

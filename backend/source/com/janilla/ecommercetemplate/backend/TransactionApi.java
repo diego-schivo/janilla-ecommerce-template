@@ -21,9 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-//package com.janilla.ecommercetemplate.backend;
-//
-//import java.util.Set;
-//
-//public record Fabric(Set<FabricOption> options) {
-//}
+package com.janilla.ecommercetemplate.backend;
+
+import java.util.function.Predicate;
+
+import com.janilla.cms.CollectionApi;
+import com.janilla.http.HttpExchange;
+import com.janilla.persistence.Persistence;
+import com.janilla.web.Handle;
+
+@Handle(path = "/api/transactions")
+public class TransactionApi extends CollectionApi<Long, Transaction> {
+
+	public TransactionApi(Predicate<HttpExchange> drafts, Persistence persistence) {
+		super(Transaction.class, drafts, persistence);
+	}
+}

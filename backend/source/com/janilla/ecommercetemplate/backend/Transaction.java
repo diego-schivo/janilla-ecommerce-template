@@ -34,8 +34,21 @@ import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Order(Long id, List<CartItem> items, AddressData shippingAddress, @Index @Types(User.class) Long customer,
-		String customerEmail, List<@Types(Transaction.class) Long> transactions, OrderStatus status, BigDecimal amount,
-		Currency currency, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long> {
+public record Transaction(Long id, List<CartItem> items, PaymentMethod paymentMethod, AddressData billingAddress,
+		Status status, @Types(User.class) Long customer, String customerEmail, @Types(Order.class) Long order,
+		@Types(Cart.class) Long cart, BigDecimal amount, Currency currency, String stripeCustomer,
+		@Index String stripePaymentIntent, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
+		Instant publishedAt) implements Document<Long> {
+
+	public Transaction withStatus(Status status) {
+		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
+				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
+				publishedAt);
+	}
+
+	public Transaction withOrder(Long order) {
+		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
+				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
+				publishedAt);
+	}
 }

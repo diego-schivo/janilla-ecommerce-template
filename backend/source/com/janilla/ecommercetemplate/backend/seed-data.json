@@ -52,6 +52,20 @@
 		},
 		{
 			"$type": "Cart",
+			"id": 2,
+			"items": [
+				{
+					"$type": "CartItem",
+					"product": 1,
+					"quantity": 1
+				}
+			],
+			"status": "ABANDONED",
+			"subtotal": 25,
+			"currency": "USD"
+		},
+		{
+			"$type": "Cart",
 			"id": 3,
 			"items": [
 				{
@@ -242,6 +256,78 @@
 			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
 		}
 	],
+	"orders": [
+		{
+			"id": 1,
+			"items": [
+				{
+					"product": 2,
+					"variant": 1,
+					"quantity": 1
+				},
+				{
+					"product": 2,
+					"variant": 3,
+					"quantity": 1
+				}
+			],
+			"shippingAddress": {
+				"title": "DR",
+				"firstName": "Otto",
+				"lastName": "Octavius",
+				"company": "Oscorp",
+				"addressLine1": "123 Main St",
+				"addressLine2": "Suite 100",
+				"city": "New York",
+				"state": "NY",
+				"postalCode": "10001",
+				"country": "US",
+				"phone": "1234567890"
+			},
+			"customer": 2,
+			"transactions": [
+				2
+			],
+			"status": "COMPLETED",
+			"amount": 74.99,
+			"currency": "USD"
+		},
+		{
+			"id": 2,
+			"items": [
+				{
+					"product": 2,
+					"variant": 1,
+					"quantity": 1
+				},
+				{
+					"product": 2,
+					"variant": 3,
+					"quantity": 1
+				}
+			],
+			"shippingAddress": {
+				"title": "DR",
+				"firstName": "Otto",
+				"lastName": "Octavius",
+				"company": "Oscorp",
+				"addressLine1": "123 Main St",
+				"addressLine2": "Suite 100",
+				"city": "New York",
+				"state": "NY",
+				"postalCode": "10001",
+				"country": "US",
+				"phone": "1234567890"
+			},
+			"customer": 2,
+			"transactions": [
+				2
+			],
+			"status": "PROCESSING",
+			"amount": 74.99,
+			"currency": "USD"
+		}
+	],
 	"pages": [
 		{
 			"$type": "Page",
@@ -425,6 +511,50 @@
 				"$type": "DocumentStatus",
 				"name": "PUBLISHED"
 			}
+		}
+	],
+	"transactions": [
+		{
+			"id": 1,
+			"paymentMethod": "STRIPE",
+			"billingAddress": {
+				"title": "DR",
+				"firstName": "Otto",
+				"lastName": "Octavius",
+				"company": "Oscorp",
+				"addressLine1": "123 Main St",
+				"addressLine2": "Suite 100",
+				"city": "New York",
+				"state": "NY",
+				"postalCode": "10001",
+				"country": "US",
+				"phone": "1234567890"
+			},
+			"status": "PENDING",
+			"customer": 2,
+			"stripeCustomer": "cus_123",
+			"stripePaymentIntent": "pi_123"
+		},
+		{
+			"id": 2,
+			"paymentMethod": "STRIPE",
+			"billingAddress": {
+				"title": "DR",
+				"firstName": "Otto",
+				"lastName": "Octavius",
+				"company": "Oscorp",
+				"addressLine1": "123 Main St",
+				"addressLine2": "Suite 100",
+				"city": "New York",
+				"state": "NY",
+				"postalCode": "10001",
+				"country": "US",
+				"phone": "1234567890"
+			},
+			"status": "SUCCEEDED",
+			"customer": 2,
+			"stripeCustomer": "cus_123",
+			"stripePaymentIntent": "pi_123"
 		}
 	],
 	"users": [

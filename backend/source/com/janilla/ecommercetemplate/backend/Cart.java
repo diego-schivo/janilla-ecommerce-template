@@ -20,6 +20,11 @@ public record Cart(Long id, List<CartItem> items, @Index @Types(User.class) Long
 				documentStatus, publishedAt);
 	}
 
+	public Cart withPurchasedAt(Instant purchasedAt) {
+		return new Cart(id, items, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
 	public Cart withSubtotal(BigDecimal subtotal) {
 		return new Cart(id, items, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
 				documentStatus, publishedAt);

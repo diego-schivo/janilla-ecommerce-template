@@ -34,6 +34,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -124,12 +125,15 @@ public class CustomPersistence extends CmsPersistence {
 		}
 
 		var pp = Reflection.properties(SeedData.class).collect(Collectors.toCollection(ArrayList::new));
-		var i = IntStream.range(0, pp.size()).filter(x -> pp.get(x).name().equals("variants")).findFirst()
-				.orElseThrow();
-		var p = pp.get(i);
-		pp.remove(i);
-		i = IntStream.range(0, pp.size()).filter(x -> pp.get(x).name().equals("carts")).findFirst().orElseThrow();
-		pp.add(i, p);
+		IO.println("pp=" + pp);
+		var ii = Stream.of("products", "variants", "carts").mapToInt(
+				x -> IntStream.range(0, pp.size()).filter(y -> pp.get(y).name().equals(x)).findFirst().orElseThrow())
+				.toArray();
+		var i = Arrays.stream(ii).min().getAsInt();
+		var pp2 = Arrays.stream(ii).mapToObj(pp::get).toList();
+		pp.removeAll(pp2);
+		pp.addAll(i, pp2);
+		IO.println("pp=" + pp);
 		pp.stream().forEach(x -> database.perform(() -> {
 			var t = x.genericType() instanceof ParameterizedType pt ? (Class<?>) pt.getActualTypeArguments()[0]
 					: x.type();

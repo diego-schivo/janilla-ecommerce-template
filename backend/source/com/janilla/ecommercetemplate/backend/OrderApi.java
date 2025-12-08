@@ -68,24 +68,24 @@ public class OrderApi extends CollectionApi<Long, Order> {
 		return crud().read(orderedBy != null ? crud().filter("orderedBy", orderedBy) : crud().list(), d);
 	}
 
-	@Handle(method = "GET", path = "poll")
-	public void poll(String stripePaymentIntentId, HttpResponse response) throws InterruptedException, IOException {
-		response.setStatus(200);
-		response.setHeaderValue("content-type", "text/event-stream");
-		response.setHeaderValue("cache-control", "no-cache");
-		var ch = (WritableByteChannel) response.getBody();
-		var q = StripeApi.ORDERS.computeIfAbsent(stripePaymentIntentId, _ -> new ArrayBlockingQueue<>(1));
-		for (;;) {
-			var o = q.poll(5, TimeUnit.SECONDS);
-			if (o != null) {
-//				IO.println("OutputApi.read, e=" + e);
-				var s = format(new Event("order", o));
-//				IO.println("OutputApi.read, s=" + s);
-				ch.write(ByteBuffer.wrap(s.getBytes()));
-			} else
-				ch.write(ByteBuffer.wrap(format(new Event("ping", Map.of("time", new Date()))).getBytes()));
-		}
-	}
+//	@Handle(method = "GET", path = "poll")
+//	public void poll(String stripePaymentIntentId, HttpResponse response) throws InterruptedException, IOException {
+//		response.setStatus(200);
+//		response.setHeaderValue("content-type", "text/event-stream");
+//		response.setHeaderValue("cache-control", "no-cache");
+//		var ch = (WritableByteChannel) response.getBody();
+//		var q = StripeApi.ORDERS.computeIfAbsent(stripePaymentIntentId, _ -> new ArrayBlockingQueue<>(1));
+//		for (;;) {
+//			var o = q.poll(5, TimeUnit.SECONDS);
+//			if (o != null) {
+////				IO.println("OutputApi.read, e=" + e);
+//				var s = format(new Event("order", o));
+////				IO.println("OutputApi.read, s=" + s);
+//				ch.write(ByteBuffer.wrap(s.getBytes()));
+//			} else
+//				ch.write(ByteBuffer.wrap(format(new Event("ping", Map.of("time", new Date()))).getBytes()));
+//		}
+//	}
 
 	protected static String format(Event event) {
 //		IO.println("event=" + event);

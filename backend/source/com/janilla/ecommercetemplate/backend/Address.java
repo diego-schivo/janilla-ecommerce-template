@@ -30,10 +30,9 @@ import com.janilla.cms.DocumentStatus;
 import com.janilla.cms.Types;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
+import com.janilla.reflect.Flat;
 
 @Store
-public record Address(Long id, @Index @Types(User.class) Long customer, Title title, String firstName, String lastName,
-		String company, String addressLine1, String addressLine2, String city, String state, String postalCode,
-		Country country, String phone, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
-		Instant publishedAt) implements Document<Long> {
+public record Address(Long id, @Index @Types(User.class) Long customer, @Flat AddressData data, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 }

@@ -51,15 +51,22 @@ export default class Payment extends WebComponent {
 		this.appendChild(this.interpolateDom({ $template: "" }));
 		if (!this.state.elements) {
 			const a = this.closest("app-element");
-			const u = new URL(`${a.dataset.apiUrl}/stripe/create-payment-intent`, location.href);
-			u.searchParams.append("email", this.dataset.email);
-			u.searchParams.append("amount", this.dataset.amount);
-			const j = await (await fetch(u)).json();
+			const c = this.closest("checkout-element");
+			const j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/initiate`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({
+					email: this.dataset.email,
+					cart: c.state.cart.id,
+					billingAddress: a.state.user.addresses.find(x => x.id === c.state.billingAddress),
+					shippingAddress: a.state.user.addresses.find(x => x.id === c.state.shippingAddress)
+				})
+			})).json();
 			this.state.elements = a.state.stripe.elements({
 				appearance: {
 					theme: "stripe",
 				},
-				clientSecret: j["client_secret"]
+				clientSecret: j.clientSecret
 				//loader: "auto"
 			});
 			this.state.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
@@ -68,11 +75,48 @@ export default class Payment extends WebComponent {
 
 	handleSubmit = async event => {
 		event.preventDefault();
-		const { error, paymentIntent } = await this.closest("app-element").state.stripe.confirmPayment({
+		const a = this.closest("app-element");
+		const c = this.closest("checkout-element");
+		const ba = a.state.user.addresses.find(x => x.id === c.state.billingAddress);
+		let j = await a.state.stripe.confirmPayment({
+			confirmParams: {
+				return_url: `${location.origin}/order-confirmation`,
+				payment_method_data: {
+					billing_details: {
+						email: a.state.user.email,
+						phone: ba?.phone,
+						address: {
+							line1: ba?.addressLine1,
+							line2: ba?.addressLine2,
+							city: ba?.city,
+							state: ba?.state,
+							postal_code: ba?.postalCode,
+							country: ba?.country,
+						},
+					},
+				}
+			},
 			elements: this.state.elements,
-			confirmParams: { return_url: `${location.origin}/order-confirmation` }
+			redirect: "if_required"
 		});
-		console.log("error", error);
-		console.log("paymentIntent", paymentIntent);
+		if (j.paymentIntent?.status === "succeeded") {
+			j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({
+					email: this.dataset.email,
+					paymentIntent: j.paymentIntent.id
+				})
+			})).json();
+			if (j?.order) {
+				await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
+				localStorage.removeItem("cart");
+				const u = new URL(`/orders/${j.order}`, location.href);
+				if (this.dataset.email)
+					u.searchParams.append("email", this.dataset.email);
+				history.pushState({}, "", u.pathname + u.search);
+				dispatchEvent(new CustomEvent("popstate"));
+			}
+		}
 	}
 }

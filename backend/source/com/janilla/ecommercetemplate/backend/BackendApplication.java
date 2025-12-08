@@ -126,12 +126,7 @@ public class BackendApplication {
 		{
 			invocables = types().stream().flatMap(x -> Arrays.stream(x.getMethods())
 					.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y))).toList();
-			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of(
-//					"methods",
-//					types().stream().flatMap(x -> Arrays.stream(x.getMethods())
-//							.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y)))
-//							.toList(),
-					"files", List.of()));
+			var f = diFactory.create(ApplicationHandlerFactory.class, Map.of("files", List.of()));
 			handler = x -> {
 				var h = f.createHandler(Objects.requireNonNullElse(x.exception(), x.request()));
 				if (h == null)

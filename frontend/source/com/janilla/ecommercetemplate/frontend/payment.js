@@ -59,7 +59,9 @@ export default class Payment extends WebComponent {
 					email: this.dataset.email,
 					cart: c.state.cart.id,
 					billingAddress: a.state.user.addresses.find(x => x.id === c.state.billingAddress),
-					shippingAddress: a.state.user.addresses.find(x => x.id === c.state.shippingAddress)
+					shippingAddress: a.state.user.addresses.find(x => x.id === (c.state.billingAddressSameAsShipping
+						? c.state.billingAddress
+						: c.state.shippingAddress))
 				})
 			})).json();
 			this.state.elements = a.state.stripe.elements({

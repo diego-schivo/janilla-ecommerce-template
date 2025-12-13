@@ -6,14 +6,15 @@ app-element:has(product-element) {
 
 product-element {
   a:has(> lucide-icon) {
-    color: gray;
+    align-items: center;
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
     font-weight: 500;
     gap: 0.5rem;
     letter-spacing: 0.1em;
-    padding-left: 0.75rem;
+    padding: 0.5rem 0.75rem;
     text-transform: uppercase;
     text-decoration: none;
   }

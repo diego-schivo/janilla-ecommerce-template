@@ -38,8 +38,6 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -110,13 +108,15 @@ public class StripeApi extends PaymentApi {
 		{
 			var rq = new HttpRequest("POST", URI.create("https://api.stripe.com/v1/payment_intents"));
 			rq.setBasicAuthorization(secretKey + ":");
-			var bb = new UriQueryBuilder()
+			var q = new UriQueryBuilder()
 					.append("amount", String.valueOf(cart.subtotal().multiply(BigDecimal.valueOf(100)).longValue()))
 					.append("automatic_payment_methods[enabled]", "true")
 					.append("currency", cart.currency().toString().toLowerCase()).append("customer", c.id())
 					.append("metadata[cartId]", cart.id().toString())
 					.append("metadata[cartItems]", Json.format(cart.items(), true))
-					.append("metadata[shippingAddress]", Json.format(shippingAddress, true)).toString().getBytes();
+					.append("metadata[shippingAddress]", Json.format(shippingAddress, true)).toString();
+			IO.println("q=" + q);
+			var bb = q.getBytes();
 			rq.setHeaderValue("content-type", "application/x-www-form-urlencoded");
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));

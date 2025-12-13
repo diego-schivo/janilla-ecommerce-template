@@ -1,4 +1,21 @@
-address-edit {
+dialog[open]:has(address-edit) {
+  background: rgb(10, 10, 10);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  left: 50%;
+  margin: 0;
+  max-height: 90vh;
+  max-width: calc(100% - 2rem);
+  overflow: auto;
+  padding: 1.5rem;
+  position: fixed;
+  top: 50%;
+  translate: -50% -50%;
+  width: 100%;
+}
+
+dialog address-edit {
   header {
     display: flex;
     flex-direction: column;

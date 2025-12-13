@@ -44,10 +44,10 @@ public class PageApi extends CollectionApi<Long, Page> {
 			throw new IllegalStateException();
 	}
 
-	@Override
-	public List<Page> read(Long skip, Long limit) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public List<Page> read(Long skip, Long limit) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Handle(method = "GET")
 	public List<Page> read(@Bind("slug") String slug, HttpExchange exchange) {

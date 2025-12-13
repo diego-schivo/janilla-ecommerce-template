@@ -22,7 +22,7 @@ variant-selector {
 
   label {
     border-radius: 0.25rem;
-    color: gray;
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -35,8 +35,8 @@ variant-selector {
     }
 
     &:has(:checked) {
-      background: darkgray;
-      color: white;
+      background: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
+      color: rgb(248, 250, 252);
     }
   }
 }

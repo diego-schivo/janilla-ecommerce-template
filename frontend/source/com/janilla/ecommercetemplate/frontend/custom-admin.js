@@ -142,7 +142,7 @@ export default class CustomAdmin extends Admin {
 				};
 			case "Product":
 				return {
-					Content: ["description", "gallery", "content"],
+					Content: ["description", "gallery", "layout"],
 					ProductDetails: ["enableVariants", "variantTypes", "variants", "stock", "price"],
 					SEO: ["meta"]
 				};

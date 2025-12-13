@@ -1,0 +1,72 @@
+product-item {
+  align-items: center;
+  display: flex;
+
+  header {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  section {
+    all: unset;
+    display: flex;
+
+    &:has(img) {
+      flex-basis: 40%;
+      height: 5rem;
+      margin-right: 1rem;
+      order: -1;
+    }
+  }
+
+  a {
+    text-decoration: none;
+
+    &:has(img) {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      display: block;
+      overflow: hidden;
+      padding: 0.5rem;
+    }
+  }
+
+  img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+
+  .option {
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    font-family: GeistMono;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+  }
+
+  dl {
+    all: unset;
+    text-align: right;
+  }
+
+  dt {
+    all: unset;
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  dd {
+    all: unset;
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    font-family: GeistMono;
+    font-size: 0.875rem;
+  }
+}

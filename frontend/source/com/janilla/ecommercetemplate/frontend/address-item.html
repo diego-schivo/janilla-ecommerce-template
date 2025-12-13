@@ -8,10 +8,14 @@
     ${country.name}
   </p>
 </div>
-<div>
-  <slot name="before-actions"></slot>
-  <slot name="actions">
-    <button name="edit" class="button secondary">Edit</button>
-  </slot>
-  <slot name="after-actions"></slot>
-</div>
+<!--${actions}-->
+
+<template id="actions">
+  <div>
+    <slot name="before-actions"></slot>
+    <slot name="actions">
+      <button name="edit" class="button secondary">Edit</button>
+    </slot>
+    <slot name="after-actions"></slot>
+  </div>
+</template>

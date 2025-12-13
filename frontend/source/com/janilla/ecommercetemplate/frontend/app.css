@@ -7,7 +7,6 @@ app-element {
     gap: 4rem;
     min-height: 100vh;
 
-    > header,
     > footer > div {
       @media (min-width: 1441px) {
         box-sizing: border-box;
@@ -20,46 +19,6 @@ app-element {
 
       a:not(:hover) {
         text-decoration: none;
-      }
-    }
-
-    > header {
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1rem 2rem 0.5rem;
-      position: relative;
-      z-index: 20;
-
-      &,
-      > div {
-        display: flex;
-      }
-      
-      mobile-menu,
-      > div {
-        flex: 1;
-      }
-
-      > div {
-        justify-content: end;
-      }
-
-      > a {
-        color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
-        font-size: 0.875rem;
-        font-weight: 500;
-        line-height: 1.25rem;
-
-        img {
-          height: 34px;
-          object-fit: cover;
-          object-position: left;
-          width: 34px;
-        }
-      }
-
-      lucide-icon {
-        width: 1rem;
       }
     }
 

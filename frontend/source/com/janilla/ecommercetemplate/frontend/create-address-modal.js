@@ -21,23 +21,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+import WebComponent from "./web-component.js";
 
-import java.time.Instant;
-import java.util.List;
+export default class CreateAddressModal extends WebComponent {
 
-import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
-import com.janilla.cms.Types;
-import com.janilla.cms.Versions;
-import com.janilla.persistence.Index;
-import com.janilla.persistence.Store;
+    static get templateNames() {
+        return ["create-address-modal"];
+    }
 
-@Store
-//@Index(sort = "-createdAt")
-@Versions(drafts = true)
-public record Page(Long id, String title, Hero hero, List<@Types( {
-		Archive.class, CallToAction.class, Content.class, FormBlock.class, MediaBlock.class }) ?> layout, Meta meta,
-		@Index String slug, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long>{
+    static get observedAttributes() {
+        return ["data-disabled"];
+    }
+
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+    }
+
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...this.dataset
+        }));
+    }
+
+    handleClick = event => {
+        const x = event.target.closest("button");
+        switch (x?.name) {
+            case "show":
+                this.querySelector("dialog").showModal();
+                break;
+            case "close":
+                this.querySelector("dialog").close();
+                break;
+        }
+    }
 }

@@ -25,120 +25,73 @@ import WebComponent from "./web-component.js";
 
 export default class Product extends WebComponent {
 
-	static get templateNames() {
-		return ["product"];
-	}
+    static get templateNames() {
+        return ["product"];
+    }
 
-	static get observedAttributes() {
-		return ["data-slug", "data-search"];
-	}
+    static get observedAttributes() {
+        return ["data-slug", "data-search"];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		//this.addEventListener("change", this.handleChange);
-		this.addEventListener("click", this.handleClick);
-		//this.addEventListener("submit", this.handleSubmit);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		//this.removeEventListener("change", this.handleChange);
-		this.removeEventListener("click", this.handleClick);
-		//this.removeEventListener("submit", this.handleSubmit);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+    }
 
-	async updateDisplay() {
-		const a = this.closest("app-element");
-		const s = this.state;
-		s.product = a.serverState?.product;
-		if (!s.product) {
-			const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
-			u.searchParams.append("slug", this.dataset.slug);
-			s.product = (await (await fetch(u)).json())[0];
-		}
-		const pp = new URLSearchParams(this.dataset.search);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...(s.product.enableVariants ? {
-				variantOptions: s.product.variantTypes.map(x => pp.get(x.name)).filter(x => x),
-				variant: pp.get("variant")
-			} : {})
-		}));
-	}
+    async updateDisplay() {
+        const a = this.closest("app-element");
+        const s = this.state;
+        s.product = a.serverState?.product;
+        if (!s.product) {
+            const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
+            u.searchParams.append("slug", this.dataset.slug);
+            s.product = (await (await fetch(u)).json())[0];
+        }
+        const pp = new URLSearchParams(this.dataset.search);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...(s.product.enableVariants ? {
+                variantOptions: s.product.variantTypes.map(x => pp.get(x.name)).filter(x => x),
+                variant: pp.get("variant")
+            } : {}),
+            layout: s.product.layout?.map((x, i) => ({
+                $template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
+                path: `layout.${i}`
+            }))
+        }));
+    }
 
-	/*
-	handleChange = async event => {
-		const s = this.state;
-		const p = s.product;
-		const fd = new FormData(event.target.form);
-		s.variant = p.variants.find(x => x.active && x.options.every(y => y.name === fd.get(y.$type.split(".")[0])));
-		this.requestDisplay();
-	}
-	*/
+    handleClick = async event => {
+        const b = event.target.closest("button");
+        const ul1 = b?.closest("#gallery-arrows ul");
+        const s = this.state;
+        if (ul1) {
+            let i = s.galleryIndex;
+            i += [-1, 1][Array.prototype.findIndex.call(ul1.children, x => x.contains(b))];
+            s.galleryIndex = (s.product.gallery.length + i) % s.product.gallery.length;
+            this.requestDisplay();
+        }
+        const ul2 = b?.closest("#gallery-thumbnails ul");
+        if (ul2) {
+            s.galleryIndex = Array.prototype.findIndex.call(ul2.children, x => x.contains(b));
+            this.requestDisplay();
+        }
+    }
 
-	handleClick = async event => {
-		const b = event.target.closest("button");
-		const ul1 = b?.closest("#gallery-arrows ul");
-		const s = this.state;
-		if (ul1) {
-			let i = s.galleryIndex;
-			i += [-1, 1][Array.prototype.findIndex.call(ul1.children, x => x.contains(b))];
-			s.galleryIndex = (s.product.gallery.length + i) % s.product.gallery.length;
-			this.requestDisplay();
-		}
-		const ul2 = b?.closest("#gallery-thumbnails ul");
-		if (ul2) {
-			s.galleryIndex = Array.prototype.findIndex.call(ul2.children, x => x.contains(b));
-			this.requestDisplay();
-		}
-	}
-
-	/*
-	handleSubmit = async event => {
-		event.preventDefault();
-		const s = this.state;
-		const p = s.product;
-		const v = s.variant;
-		const u = this.closest("app-element").state.user;
-		const c = (u ? u.cart : JSON.parse(localStorage.getItem("cart") ?? "null")) ?? { "items": [] };
-		const ci = c.items.find(x => x.product.id === p.id && x.variant === v.id);
-		if (ci)
-			ci.quantity++;
-		else
-			c.items.push({
-				product: p,
-				variantId: v.id,
-				unitPrice: v.price,
-				quantity: 1
-			});
-		if (u) {
-			const r = await fetch(`/api/users/${u.id}`, {
-				method: "PATCH",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					$type: "User",
-					cart: {
-						$type: "User.Cart",
-						items: c.items.map(x => ({
-							$type: "User.Cart.Item",
-							...x,
-							product: x.product.id
-						}))
-					}
-				})
-			});
-			if (r.ok)
-				this.dispatchEvent(new CustomEvent("user-change", {
-					bubbles: true,
-					detail: { user: await r.json() }
-				}));
-		} else
-			localStorage.setItem("cart", JSON.stringify(c));
-		this.dispatchEvent(new CustomEvent("cart-change", { bubbles: true }));
-	}
-	*/
+    data(path) {
+        return path.split(".").reduce((x, n) => Array.isArray(x)
+            ? x[parseInt(n)]
+            : typeof x === "object" && x !== null
+                ? x[n]
+                : null, this.state.product);
+    }
 }

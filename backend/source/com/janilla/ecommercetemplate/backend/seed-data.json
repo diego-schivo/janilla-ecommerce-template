@@ -490,6 +490,27 @@
 					"variantOption": 6
 				}
 			],
+			"layout": [
+				{
+					"$type": "MediaBlock",
+					"media": 3
+				},
+				{
+					"$type": "Content",
+					"columns": [
+						{
+							"$type": "Column",
+							"size": "HALF",
+							"richText": "<ul><li>This is 100% cotton unisex fitted tee with screen printed design. Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document<br /></li><li><ul><li>Product Type: t-shirt</li><li>Material: 100% cotton</li><li>Colour: black</li><li>Style: men (unisex)</li></ul></li></ul>"
+						},
+						{
+							"$type": "Column",
+							"size": "HALF",
+							"richText": "<p>Size chart</p><div><table><tr><td></td><td><strong>length (IN)</strong></td><td><strong>length (CM)</strong></td><td><strong>chest (IN)</strong></td><td><strong>chest (CM)</strong></td></tr><tr><td>s</td><td>26-28</td><td>66-68</td><td>34-36</td><td>86-91</td></tr><tr><td>m</td><td>27-29</td><td>70-72</td><td>19-21</td><td>50-52</td></tr><tr><td>l</td><td>29-31</td><td>75-77</td><td>21-23</td><td>55-57</td></tr><tr><td>xl</td><td>30-32</td><td>77-79</td><td>23-25</td><td>60-62</td></tr></table></div>"
+						}
+					]
+				}
+			],
 			"enableVariants": true,
 			"variantTypes": [
 				1,

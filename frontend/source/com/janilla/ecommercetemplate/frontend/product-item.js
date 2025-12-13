@@ -23,62 +23,28 @@
  */
 import WebComponent from "./web-component.js";
 
-export default class AddressEdit extends WebComponent {
+export default class ProductItem extends WebComponent {
 
 	static get templateNames() {
-		return ["address-edit"];
+		return ["product-item"];
 	}
 
 	static get observedAttributes() {
-		return ["data-id"];
+		return ["data-item"];
 	}
 
 	constructor() {
 		super();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
-	}
-
 	async updateDisplay() {
-		const ae = this.closest("app-element");
-		const u = ae.state.user;
-		const a = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : u ? { customer: u.id } : {};
+		const s = this.state;
+		s.item ??= JSON.parse(this.dataset.item);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			title: a?.id ? "Edit address" : "Add a new address",
-			form: {
-				$template: "form",
-				...a,
-				titleValues: ae.state.enums["Title"],
-				countryValues: ae.state.enums["Country"]
-			}
+			...s.item,
+			image: s.item.product.gallery.find(y => s.item.variant.options.some(z => z.id === y.variantOption.id)).image,
+			option: s.item.variant.options.map(y => y.label).join(", ")
 		}));
-	}
-
-	handleSubmit = async event => {
-		event.preventDefault();
-		const a = this.closest("app-element");
-		const o = {
-			customer: a.state.user.id,
-			...Object.fromEntries(new FormData(event.target))
-		};
-		const r = await fetch(`${a.dataset.apiUrl}/addresses${this.dataset.id ? `/${this.dataset.id}` : ""}`, {
-			method: this.dataset.id ? "PUT" : "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify(o)
-		});
-		if (r.ok)
-			this.dispatchEvent(new CustomEvent("address-change", {
-				bubbles: true,
-				detail: { address: await r.json() }
-			}));
 	}
 }

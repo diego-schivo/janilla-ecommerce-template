@@ -22,7 +22,7 @@ addresses-element {
   p {
     flex-grow: 1;
   }
-
+/*
   dialog[open] {
     background: rgb(10, 10, 10);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -38,4 +38,5 @@ addresses-element {
     translate: -50% -50%;
     width: 100%;
   }
+*/
 }

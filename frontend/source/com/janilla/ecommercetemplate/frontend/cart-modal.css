@@ -1,7 +1,7 @@
-cart-modal {
-  > button {
+header-element cart-modal {
+  button[name="show"] {
     background: transparent;
-    color: gray;
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
@@ -19,6 +19,7 @@ cart-modal {
 
   dialog {
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+    margin-right: 0;
     translate: 100%;
   }
 
@@ -33,6 +34,7 @@ cart-modal {
   }
 
   header {
+    all: unset;
     display: flex;
     flex-direction: column;
     gap: 0.375rem;

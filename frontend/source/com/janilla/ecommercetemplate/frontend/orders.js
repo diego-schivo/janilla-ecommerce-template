@@ -29,28 +29,25 @@ export default class Orders extends WebComponent {
 		return ["orders"];
 	}
 
+	static get observedAttributes() {
+		return [];
+	}
+
 	constructor() {
 		super();
 	}
 
-	async computeState() {
-		const s = this.state;
-		delete s.orders;
-		const a = this.closest("app-element");
-		s.orders = await this.closest("app-element").fetchData(`${a.dataset.apiUrl}/orders`);
-		this.requestDisplay();
-	}
-
 	async updateDisplay() {
+		const a = this.closest("app-element");
 		const s = this.state;
-		s.computeState ??= this.computeState();
+		s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			content: s.orders?.length ? {
 				$template: "list",
 				items: s.orders.map(x => ({
 					$template: "item",
-					...x
+					item: JSON.stringify(x)
 				}))
 			} : { $template: "empty" }
 		}));

@@ -125,7 +125,7 @@ public class CustomPersistence extends CmsPersistence {
 		}
 
 		var pp = Reflection.properties(SeedData.class).collect(Collectors.toCollection(ArrayList::new));
-		IO.println("pp=" + pp);
+//		IO.println("pp=" + pp);
 		var ii = Stream.of("products", "variants", "carts").mapToInt(
 				x -> IntStream.range(0, pp.size()).filter(y -> pp.get(y).name().equals(x)).findFirst().orElseThrow())
 				.toArray();
@@ -133,7 +133,7 @@ public class CustomPersistence extends CmsPersistence {
 		var pp2 = Arrays.stream(ii).mapToObj(pp::get).toList();
 		pp.removeAll(pp2);
 		pp.addAll(i, pp2);
-		IO.println("pp=" + pp);
+//		IO.println("pp=" + pp);
 		pp.stream().forEach(x -> database.perform(() -> {
 			var t = x.genericType() instanceof ParameterizedType pt ? (Class<?>) pt.getActualTypeArguments()[0]
 					: x.type();

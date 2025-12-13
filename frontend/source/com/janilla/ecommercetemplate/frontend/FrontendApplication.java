@@ -27,13 +27,11 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,8 +48,6 @@ import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.Net;
 import com.janilla.web.ApplicationHandlerFactory;
-import com.janilla.web.Bind;
-import com.janilla.web.Handle;
 import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
 import com.janilla.web.RenderableFactory;
@@ -111,12 +107,24 @@ public class FrontendApplication {
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
 		configuration = diFactory.create(Properties.class, Collections.singletonMap("file", configurationFile));
+
+		{
+			SSLContext c;
+			try (var x = Net.class.getResourceAsStream("testkeys")) {
+				c = Net.getSSLContext(Map.entry("JKS", x), "passphrase".toCharArray());
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+			httpClient = diFactory.create(HttpClient.class, Map.of("sslContext", c));
+		}
+		dataFetching = diFactory.create(DataFetching.class);
+
 		invocables = types().stream().flatMap(x -> Arrays.stream(x.getMethods())
 				.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y))).toList();
 		renderableFactory = diFactory.create(RenderableFactory.class);
-		files = Stream.of("com.janilla.frontend", FrontendApplication.class.getPackageName())
+		files = Stream
+				.of("com.janilla.frontend", "com.janilla.admin.frontend", FrontendApplication.class.getPackageName())
 				.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList();
-
 		{
 			var f = diFactory.create(ApplicationHandlerFactory.class);
 			handler = x -> {
@@ -126,19 +134,6 @@ public class FrontendApplication {
 				return h.handle(x);
 			};
 		}
-
-		{
-			SSLContext c;
-			try (var x = Net.class.getResourceAsStream("testkeys")) {
-				c = Net.getSSLContext(Map.entry("JKS", x), "passphrase".toCharArray());
-			} catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
-//			httpClient = new HttpClient(c);
-			httpClient = diFactory.create(HttpClient.class, Map.of("sslContext", c));
-		}
-
-		dataFetching = diFactory.create(DataFetching.class);
 	}
 
 	public Properties configuration() {
@@ -177,109 +172,11 @@ public class FrontendApplication {
 		return diFactory.types();
 	}
 
-	@Handle(method = "GET", path = "(/account|/account/addresses)")
-	public Object account(String path, FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.account, path=" + path);
-		if (exchange.sessionUser() == null)
-			return URI.create("/login");
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
-	}
-
-	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
-	public Object admin(String path, FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.admin, path=" + path);
-		if (path == null || path.isEmpty())
-			path = "/";
-		switch (path) {
-		case "/":
-			if (exchange.sessionUser() == null)
-				return URI.create("/admin/login");
-			break;
-		case "/login":
-			if (((List<?>) dataFetching.users(0l, 1l)).isEmpty())
-				return URI.create("/admin/create-first-user");
-			break;
-		}
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"),
-				Collections.singletonMap("user", exchange.sessionUser()));
-	}
-
-	@Handle(method = "GET", path = "/checkout")
-	public Index checkout(FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.checkout");
-		var m = state(exchange);
-		return new Index(new Object(), configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-	}
-
-	@Handle(method = "GET", path = "/login")
-	public Object login(FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.login");
-		if (exchange.sessionUser() != null)
-			return URI.create("/account");
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
-	}
-
-	@Handle(method = "GET", path = "/logout")
-	public Object logout(FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.logout");
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
-	}
-
-	@Handle(method = "GET", path = "/order-confirmation")
-	public Index orderConfirmation(FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.orderConfirmation");
-		var m = state(exchange);
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-	}
-
-	@Handle(method = "GET", path = "/([\\w\\d-]*)")
-	public Index page(String slug, FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.page, slug=" + slug);
-		if (slug == null || slug.isEmpty())
-			slug = "home";
-		var pp = dataFetching.pages(slug, exchange.tokenCookie());
-		if (pp.isEmpty() && !slug.equals("home"))
-			throw new NotFoundException("slug=" + slug);
-		var m = state(exchange);
-		m.put("page", !pp.isEmpty() ? pp.getFirst() : null);
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-	}
-
-	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
-	public Index product(String slug, FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.product, slug=" + slug);
-		var pp = dataFetching.products(slug, null, null, null, exchange.tokenCookie());
-		if (pp.isEmpty())
-			throw new NotFoundException("slug=" + slug);
-		var m = state(exchange);
-		m.put("product", pp.getFirst());
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-	}
-
-	@Handle(method = "GET", path = "/shop")
-	public Index shop(@Bind("q") String query, Long category, String sort, FrontendExchange exchange) {
-		IO.println("EcommerceTemplateFrontend.shop, query=" + query + ", category=" + category);
-		var m = state(exchange);
-		m.put("categories", dataFetching.categories());
-		m.put("products", dataFetching.products(null, query, category, sort, exchange.tokenCookie()));
-		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-	}
-
-	protected Map<String, Object> state(FrontendExchange exchange) {
-		var x = new LinkedHashMap<String, Object>();
-		x.put("user", exchange.sessionUser());
-		x.put("header", dataFetching.header());
-		x.put("footer", dataFetching.footer());
-		x.put("enums", dataFetching.enums());
-		return x;
-	}
+//	@Handle(method = "GET", path = "/order-confirmation")
+//	public Index orderConfirmation(FrontendExchange exchange) {
+//		IO.println("EcommerceTemplateFrontend.orderConfirmation");
+//		var m = state(exchange);
+//		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
+//				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
+//	}
 }

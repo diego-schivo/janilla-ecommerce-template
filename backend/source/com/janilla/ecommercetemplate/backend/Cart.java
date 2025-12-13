@@ -11,22 +11,27 @@ import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Cart(Long id, List<CartItem> items, @Index @Types(User.class) Long customer, Instant purchasedAt,
-		CartStatus status, BigDecimal subtotal, Currency currency, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public record Cart(Long id, List<CartItem> items, String secret, @Index @Types(User.class) Long customer,
+		Instant purchasedAt, CartStatus status, BigDecimal subtotal, Currency currency, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 
 	public Cart withCustomer(Long customer) {
-		return new Cart(id, items, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
 				documentStatus, publishedAt);
 	}
 
 	public Cart withPurchasedAt(Instant purchasedAt) {
-		return new Cart(id, items, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
+	public Cart withSecret(String secret) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
 				documentStatus, publishedAt);
 	}
 
 	public Cart withSubtotal(BigDecimal subtotal) {
-		return new Cart(id, items, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
 				documentStatus, publishedAt);
 	}
 }

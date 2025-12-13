@@ -49,16 +49,16 @@ public class ProductApi extends CollectionApi<Long, Product> {
 			throw new IllegalStateException();
 	}
 
-	@Override
-	public List<Product> read(Long skip, Long limit) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public List<Product> read(Long skip, Long limit) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Handle(method = "GET")
 	public List<Product> read(String slug, @Bind("q") String query, @Bind("category") Long[] categories, String sort,
 			HttpExchange exchange) {
-//		IO.println(
-//				"ProductApi.read, slug=" + slug + ", query=" + query + ", categories=" + categories + ", sort=" + sort);
+		IO.println(
+				"ProductApi.read, slug=" + slug + ", query=" + query + ", categories=" + categories + ", sort=" + sort);
 		Stream<Product> pp;
 		{
 			var d = drafts.test(exchange);

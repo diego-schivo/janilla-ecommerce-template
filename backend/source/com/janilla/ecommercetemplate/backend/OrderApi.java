@@ -23,23 +23,18 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.WritableByteChannel;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import com.janilla.cms.CollectionApi;
 import com.janilla.http.HttpExchange;
-import com.janilla.http.HttpResponse;
 import com.janilla.json.Json;
 import com.janilla.persistence.Persistence;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
+import com.janilla.web.UnauthorizedException;
 
 @Handle(path = "/api/orders")
 public class OrderApi extends CollectionApi<Long, Order> {
@@ -48,24 +43,40 @@ public class OrderApi extends CollectionApi<Long, Order> {
 		super(Order.class, drafts, persistence);
 	}
 
-	@Override
-	public List<Order> read(Long skip, Long limit) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public List<Order> read(Long skip, Long limit) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Handle(method = "GET")
-	public List<Order> read(Long orderedBy, BackendExchange exchange) {
+	public List<Order> read(Long customer, BackendExchange exchange) {
 		var u = exchange.sessionUser();
-		if (u.hasRole(UserRole.ADMIN))
-			;
-		else if (u.hasRole(UserRole.CUSTOMER)) {
-			if (orderedBy == null)
-				orderedBy = u.id();
-			else if (orderedBy != u.id())
+		if (u == null || !(u.hasRole(UserRole.ADMIN) || u.hasRole(UserRole.CUSTOMER)))
+			throw new UnauthorizedException();
+
+		if (u.hasRole(UserRole.CUSTOMER)) {
+			if (customer == null)
+				customer = u.id();
+			else if (!customer.equals(u.id()))
 				throw new ForbiddenException();
 		}
-		var d = drafts.test(exchange);
-		return crud().read(orderedBy != null ? crud().filter("orderedBy", orderedBy) : crud().list(), d);
+
+		var oo = new ArrayList<>(crud().read(customer != null ? crud().filter("customer", customer) : crud().list(),
+				drafts.test(exchange)));
+		Collections.reverse(oo);
+		return oo;
+	}
+
+	@Override
+	public Order read(Long id, HttpExchange exchange) {
+		var u = ((BackendExchange) exchange).sessionUser();
+		if (u == null || !(u.hasRole(UserRole.ADMIN) || u.hasRole(UserRole.CUSTOMER)))
+			throw new UnauthorizedException();
+
+		var o = super.read(id, exchange);
+		if (u.hasRole(UserRole.CUSTOMER) && !u.id().equals(o.customer()))
+			throw new ForbiddenException();
+		return o;
 	}
 
 //	@Handle(method = "GET", path = "poll")
@@ -78,9 +89,10 @@ public class OrderApi extends CollectionApi<Long, Order> {
 //		for (;;) {
 //			var o = q.poll(5, TimeUnit.SECONDS);
 //			if (o != null) {
-////				IO.println("OutputApi.read, e=" + e);
+	////				IO.println("OutputApi.read, e=" + e);
+
 //				var s = format(new Event("order", o));
-////				IO.println("OutputApi.read, s=" + s);
+	////				IO.println("OutputApi.read, s=" + s);
 //				ch.write(ByteBuffer.wrap(s.getBytes()));
 //			} else
 //				ch.write(ByteBuffer.wrap(format(new Event("ping", Map.of("time", new Date()))).getBytes()));

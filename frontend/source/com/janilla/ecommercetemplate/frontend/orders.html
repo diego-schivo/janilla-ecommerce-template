@@ -17,11 +17,6 @@
 
 <template id="item">
   <li>
-    <article>
-      <h3>#${id}</h3>
-      <time datetime="${createdAt}">${createdAt}</time>
-      <span>${status}</span>
-      <span></span>
-    </article>
+    <order-item data-item="${item}"></order-item>
   </li>
 </template>

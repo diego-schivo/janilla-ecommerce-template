@@ -28,18 +28,15 @@ import java.util.function.Predicate;
 import com.janilla.cms.CollectionApi;
 import com.janilla.http.HttpExchange;
 import com.janilla.persistence.Persistence;
+import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
+import com.janilla.web.UnauthorizedException;
 
 @Handle(path = "/api/carts")
 public class CartApi extends CollectionApi<Long, Cart> {
 
 	public CartApi(Predicate<HttpExchange> drafts, Persistence persistence) {
 		super(Cart.class, drafts, persistence);
-	}
-
-	@Override
-	public Cart create(Cart entity) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Handle(method = "POST")
@@ -49,5 +46,16 @@ public class CartApi extends CollectionApi<Long, Cart> {
 		if (u != null)
 			e = entity.withCustomer(u.id());
 		return super.create(e);
+	}
+
+	@Handle(method = "GET", path = "(\\d+)")
+	public Cart read(Long id, String secret, BackendExchange exchange) {
+		var u = exchange.sessionUser();
+		if (u == null && (secret == null || secret.isBlank()))
+			throw new UnauthorizedException();
+		var c = super.read(id, exchange);
+		if (u == null && c != null && !c.secret().equals(secret))
+			throw new ForbiddenException();
+		return c;
 	}
 }

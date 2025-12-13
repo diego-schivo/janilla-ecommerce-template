@@ -86,7 +86,8 @@ export default class VariantSelector extends WebComponent {
 		else
 			u.searchParams.delete("variant");
 
-		history.pushState({}, "", u.pathname + u.search);
-		dispatchEvent(new CustomEvent("popstate"));
+		//history.pushState({}, "", u.pathname + u.search);
+		//dispatchEvent(new CustomEvent("popstate"));
+		this.closest("app-element").navigate(u)
 	}
 }

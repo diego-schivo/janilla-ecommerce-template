@@ -1,5 +1,5 @@
 mobile-menu {
-  > button {
+  button[name="show"] {
     background: transparent;
     border: 1px solid oklch(0.371 0 0);
     border-radius: 0.375rem;
@@ -8,42 +8,57 @@ mobile-menu {
   }
 
   dialog {
-    background: rgb(10, 10, 10);
-    border-right: 1px solid darkgray;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     margin-left: 0;
+    translate: -100%;
+
+    section {
+      display: flex;
+      flex-direction: column;
+    }
 
     ul {
       display: flex;
       flex-direction: column;
-
-      &:not(:last-child) {
-        font-size: 0.875rem;
-        font-weight: 500;
-        gap: 1.25rem;
-        line-height: 1.5;
-      }
-
-      &:last-child {
-        gap: 0.5rem;
-      }
     }
 
     li:has(.button) {
       margin-top: 1.5rem;
     }
+
+    .button {
+      height: 2.25rem !important;
+    }
   }
 
-  h2 {
-    &:first-child {
+  .store {
+    gap: 3rem;
+
+    h2 {
       font-size: 1rem;
-      margin-bottom: 2rem;
     }
 
-    &:not(:first-child) {
+    ul {
+      font-size: 0.875rem;
+      font-weight: 500;
+      gap: 1.25rem;
+      line-height: 1.5;
+    }
+  }
+
+  .account {
+    gap: 0.5rem;
+
+	h2 {
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 1.25rem;
+      font-weight: 400;
       margin-top: 2.5rem;
       padding-bottom: 1rem;
+    }
+
+    ul {
+      gap: 0.5rem;
     }
   }
 }

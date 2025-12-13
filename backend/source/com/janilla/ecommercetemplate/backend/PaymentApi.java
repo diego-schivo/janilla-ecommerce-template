@@ -48,9 +48,9 @@ public abstract class PaymentApi {
 	@Handle(method = "POST", path = "initiate")
 	public InitiateResult initiate(InitiateData data, BackendExchange exchange) {
 		var u = exchange.sessionUser();
-		return initiate(u, u != null ? u.email() : data.email(),
-				persistence.crud(Cart.class).read(u != null ? u.carts().getFirst() : data.cart()),
-				data.billingAddress(), data.shippingAddress());
+		return initiate(u, u != null ? u.email() : data.email(), persistence.crud(Cart.class).read(
+//						u != null ? u.carts().getFirst() : 
+				data.cart()), data.billingAddress(), data.shippingAddress());
 	}
 
 	public record ConfirmOrderData(String email, String paymentIntent) {

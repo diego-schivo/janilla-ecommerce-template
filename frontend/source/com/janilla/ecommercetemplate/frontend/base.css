@@ -112,56 +112,6 @@ ul {
   margin: 0;
 }
 
-/*
-dialog {
-  background: rgb(10, 10, 10);
-  border: none;
-  box-sizing: border-box;
-  display: flex;
-  height: 100vh;
-  margin-right: 0;
-  max-height: none;
-  max-width: none;
-  padding: 1rem;
-  position: fixed;
-  top: 0;
-  transition: translate 0.5s ease-in-out;
-  translate: -100%;
-  width: 75vw;
-  z-index: 101;
-
-  &[open],
-  > div {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &[open] {
-    translate: 0;
-  }
-
-  > button {
-    background: transparent;
-    color: rgb(248, 250, 252);
-    height: auto;
-    padding: 0;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-
-    &,
-    &:hover {
-      background: transparent;
-    }
-  }
-
-  > div {
-    flex: 1;
-    gap: 1rem;
-  }
-}
-*/
-
 ::backdrop {
   background: oklab(0 0 0 / 0.8);
 }

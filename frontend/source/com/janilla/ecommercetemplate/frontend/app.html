@@ -4,26 +4,15 @@
 <template id="public">
   <!--${adminBar}-->
   <div style="color-scheme: ${colorScheme}">
-    <!--${header}-->
+    <header-element></header-element>
     <!--${content}-->
     <!--${footer}-->
+    <toaster-element></toaster-element>
   </div>
 </template>
 
 <template id="admin-bar">
   <admin-bar data-user-email="${userEmail}"></admin-bar>
-</template>
-
-<template id="header">
-  <header>
-    <mobile-menu data-user="${user}"></mobile-menu>
-    <a href="/">
-      <img src="/images/janilla-logo-light.svg" loading="lazy" />
-    </a>
-    <div>
-      <cart-modal></cart-modal>
-    </div>
-  </header>
 </template>
 
 <template id="list-item">
@@ -49,7 +38,7 @@
 </template>
 
 <template id="checkout">
-  <checkout-element data-user-email="${userEmail}"></checkout-element>
+  <checkout-element></checkout-element>
 </template>
 
 <template id="login">

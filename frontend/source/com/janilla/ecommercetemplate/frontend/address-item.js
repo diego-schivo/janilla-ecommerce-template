@@ -30,7 +30,7 @@ export default class AddressItem extends WebComponent {
 	}
 
 	static get observedAttributes() {
-		return ["data-id"];
+		return ["data-id", "data-object", "data-hide-actions"];
 	}
 
 	constructor() {
@@ -41,10 +41,13 @@ export default class AddressItem extends WebComponent {
 	async updateDisplay() {
 		const s = this.state;
 		const a = this.closest("app-element");
-		s.address ??= a.state.user.addresses.find(x => x.id == this.dataset.id);
+		s.address ??= this.dataset.object
+			? JSON.parse(this.dataset.object)
+			: a.state.user.addresses.find(x => x.id == this.dataset.id);
 		this.shadowRoot.appendChild(this.interpolateDom({
 			$template: "",
-			...s.address
+			...s.address,
+			actions: this.dataset.hideActions === undefined ? { $template: "actions" } : null
 		}));
 	}
 }

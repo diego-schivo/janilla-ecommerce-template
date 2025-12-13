@@ -25,45 +25,30 @@ import WebComponent from "./web-component.js";
 
 export default class Order extends WebComponent {
 
-	static get observedAttributes() {
-		return ["data-id"];
-	}
-
 	static get templateNames() {
 		return ["order"];
+	}
+
+	static get observedAttributes() {
+		return ["data-id"];
 	}
 
 	constructor() {
 		super();
 	}
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		while (this.firstChild)
-			this.removeChild(this.lastChild);
-	}
-
-	attributeChangedCallback(name, oldValue, newValue) {
-		const s = this.state;
-		if (newValue !== oldValue && s?.computeState)
-			delete s.computeState;
-		super.attributeChangedCallback(name, oldValue, newValue);
-	}
-
-	async computeState() {
-		const s = this.state;
-		delete s.order;
-		s.order = await this.closest("app-element").fetchData(`/api/orders/${this.dataset.id}`);
-		this.requestDisplay();
-	}
-
 	async updateDisplay() {
+		const a = this.closest("app-element");
 		const s = this.state;
-		s.computeState ??= this.computeState();
-		//this.closest("app-element").updateSeo(s.order?.meta);
+		s.order ??= a.serverState?.order ?? await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			...s.order
+			...s.order,
+			items: s.order.items.map(x => ({
+				$template: "item",
+				item: JSON.stringify(x)
+			})),
+			shippingAddress: JSON.stringify(s.order.shippingAddress)
 		}));
 	}
 }

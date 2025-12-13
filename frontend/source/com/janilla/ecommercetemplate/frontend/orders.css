@@ -1,2 +1,21 @@
 orders-element {
+  article {
+    background: rgb(15, 15, 15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 }

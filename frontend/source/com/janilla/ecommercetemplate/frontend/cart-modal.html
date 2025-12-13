@@ -1,9 +1,5 @@
-<button name="open">Cart <!--${quantity}--></button>
+<button name="show">Cart <!--${quantity}--></button>
 <dialog>
-  <button name="close">
-    <lucide-icon data-name="x"></lucide-icon>
-    <span class="visually-hidden">Close</span>
-  </button>
   <article>
     <header>
       <h2>My Cart</h2>
@@ -12,6 +8,10 @@
     <!--${content}-->
     <!--${footer}-->
   </article>
+  <button name="close">
+    <lucide-icon data-name="x"></lucide-icon>
+    <span class="visually-hidden">Close</span>
+  </button>
 </dialog>
 
 <template id="quantity">

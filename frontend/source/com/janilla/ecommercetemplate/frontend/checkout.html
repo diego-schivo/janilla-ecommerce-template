@@ -42,9 +42,8 @@
 
 <template id="guest">
   <p>
-    <a href="/login" class="button secondary">Log in</a>
-    or
-    <a href="/create-account">create an account</a>
+    <a href="/login" class="button secondary">Log in</a><br />
+    or <a href="/create-account">create an account</a>
   </p>
   <form>
     <p>Enter your email to checkout as a guest.</p>
@@ -52,7 +51,7 @@
       Email Address
       <input type="email" name="email" value="${value}" />
     </label>
-    <button class="primary" disabled="${disabled}">Continue as guest</button>
+    <button name="continue-as-guest" class="button primary" disabled="${disabled}">Continue as guest</button>
   </form>
 </template>
 
@@ -65,6 +64,10 @@
 <template id="checkout-addresses">
   <input type="hidden" name="${name}" value="${value}" />
   <checkout-addresses data-heading="${heading}" data-description="${description}" data-name="${name}"></checkout-addresses>
+</template>
+
+<template id="create-address-modal">
+  <create-address-modal data-disabled="${disabled}"></create-address-modal>
 </template>
 
 <template id="payment-trigger">

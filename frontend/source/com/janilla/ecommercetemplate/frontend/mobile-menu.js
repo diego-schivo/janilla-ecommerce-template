@@ -30,7 +30,7 @@ export default class MobileMenu extends WebComponent {
 	}
 
 	static get observedAttributes() {
-		return ["data-user"];
+		return [];
 	}
 
 	constructor() {
@@ -48,10 +48,10 @@ export default class MobileMenu extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const as = this.closest("app-element").state;
+		const a = this.closest("app-element");
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			navItems: as.header?.navItems?.map(x => ({
+			navItems: a.state.header?.navItems?.map(x => ({
 				$template: "list-item",
 				content: {
 					$template: "link",
@@ -61,7 +61,7 @@ export default class MobileMenu extends WebComponent {
 					target: x.newTab ? "_blank" : null
 				}
 			})),
-			navItems2: (this.dataset.user !== undefined ? [{
+			navItems2: (a.state.user ? [{
 				href: "/orders",
 				text: "Orders"
 			}, {
@@ -89,10 +89,14 @@ export default class MobileMenu extends WebComponent {
 	}
 
 	handleClick = event => {
-		const b = event.target.closest("button");
-		if (b?.nextElementSibling?.matches("dialog"))
-			b.nextElementSibling.showModal();
-		else if (b?.parentElement?.matches("dialog"))
-			b.parentElement.close();
+		const x = event.target.closest("button");
+		switch (x?.name) {
+			case "show":
+				this.querySelector("dialog").showModal();
+				break;
+			case "close":
+				this.querySelector("dialog").close();
+				break;
+		}
 	}
 }

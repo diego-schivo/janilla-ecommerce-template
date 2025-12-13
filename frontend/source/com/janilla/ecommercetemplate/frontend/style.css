@@ -14,7 +14,8 @@
 @import "checkout.css";
 @import "checkout-addresses.css";
 @import "content.css";
-@import "rich-text.css";
+@import "create-address-modal.css";
+@import "header.css";
 @import "hero.css";
 @import "link.css";
 @import "login.css";
@@ -25,6 +26,7 @@
 @import "not-found.css";
 @import "order.css";
 @import "order-confirmation.css";
+@import "order-item.css";
 @import "orders.css";
 @import "page.css";
 @import "payment.css";
@@ -32,6 +34,8 @@
 @import "product.css";
 @import "product-description.css";
 @import "product-gallery.css";
+@import "product-item.css";
+@import "rich-text.css";
 @import "select.css";
 @import "shop.css";
 @import "variant-selector.css";

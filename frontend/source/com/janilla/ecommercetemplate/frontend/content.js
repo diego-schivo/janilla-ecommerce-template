@@ -34,7 +34,7 @@ export default class Content extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const d = this.closest("page-element").data(this.dataset.path);
+		const d = this.closest("page-element, product-element").data(this.dataset.path);
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			sections: d.columns.map(x => ({

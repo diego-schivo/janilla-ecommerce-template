@@ -25,31 +25,31 @@ import WebComponent from "./web-component.js";
 
 export default class Orders extends WebComponent {
 
-	static get templateNames() {
-		return ["orders"];
-	}
+    static get templateNames() {
+        return ["orders"];
+    }
 
-	static get observedAttributes() {
-		return [];
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	async updateDisplay() {
-		const a = this.closest("app-element");
-		const s = this.state;
-		s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			content: s.orders?.length ? {
-				$template: "list",
-				items: s.orders.map(x => ({
-					$template: "item",
-					item: JSON.stringify(x)
-				}))
-			} : { $template: "empty" }
-		}));
-	}
+    async updateDisplay() {
+        const s = this.state;
+        const a = this.closest("app-element");
+        s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            content: s.orders?.length ? {
+                $template: "list",
+                items: s.orders.map(x => ({
+                    $template: "item",
+                    item: JSON.stringify(x)
+                }))
+            } : { $template: "empty" }
+        }));
+    }
 }

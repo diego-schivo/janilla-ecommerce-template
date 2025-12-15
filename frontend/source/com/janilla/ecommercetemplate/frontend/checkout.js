@@ -56,8 +56,7 @@ export default class Checkout extends WebComponent {
     async updateDisplay() {
         const a = this.closest("app-element");
         const s = this.state;
-        s.email ??= a.state.user?.email;
-		s.emailEditable ??= !a.state.user;
+        s.guestEmailEditable ??= !a.state.user;
         if (s.billingAddress === undefined) {
             const aa = a.state.user?.addresses;
             s.billingAddress = aa?.length ? aa[aa.length - 1].id : null;
@@ -73,15 +72,17 @@ export default class Checkout extends WebComponent {
             $template: "",
             contact: a.state.user ? {
                 $template: "user",
-                text: s.email
+                text: a.state.user.email
             } : {
                 $template: "guest",
-                value: s.email,
-                disabled: !s.email || !s.emailEditable
+                value: s.guestEmail,
+                disabled: !s.guestEmail || !s.guestEmailEditable
             },
             billingAddress: s.billingAddress ? {
                 $template: "address-item",
-                id: s.billingAddress,
+                ...(typeof s.billingAddress === "object"
+                    ? { data: JSON.stringify(s.billingAddress) }
+                    : { id: s.billingAddress }),
                 name: "billingAddress"
             } : a.state.user ? {
                 $template: "checkout-addresses",
@@ -90,23 +91,33 @@ export default class Checkout extends WebComponent {
                 name: "billingAddress"
             } : {
                 $template: "create-address-modal",
-                disabled: !s.email || s.emailEditable
+                name: "billingAddress",
+                disabled: !s.guestEmail || s.guestEmailEditable
             },
             billingAddressSameAsShipping: s.billingAddressSameAsShipping,
             shippingAddress: s.billingAddressSameAsShipping ? null : s.shippingAddress ? {
                 $template: "address-item",
-                id: s.shippingAddress,
+                ...(typeof s.shippingAddress === "object"
+                    ? { data: JSON.stringify(s.shippingAddress) }
+                    : { id: s.shippingAddress }),
                 name: "shippingAddress"
-            } : {
+            } : a.state.user ? {
                 $template: "checkout-addresses",
                 heading: "Shipping address",
                 description: "Please select a shipping address.",
                 name: "shippingAddress"
+            } : {
+                $template: "create-address-modal",
+                name: "shippingAddress",
+                disabled: !s.guestEmail || s.guestEmailEditable
             },
-            payment: !s.paymentData ? { $template: "payment-trigger" } : {
-                $template: "payment",
-                email: s.email,
-                amount: s.cart.subtotal * 100
+            payment: !s.paymentData ? {
+                $template: "payment-trigger",
+                disabled: !s.billingAddress
+            } : {
+                $template: "payment"
+                //guestEmail: s.guestEmail,
+                //amount: s.cart.subtotal * 100
             },
             items: s.cart.items.map(x => ({
                 $template: "item",
@@ -137,7 +148,7 @@ export default class Checkout extends WebComponent {
         }
     }
 
-    handleClick = event => {
+    handleClick = async event => {
         const el = event.target;
         const s = this.state;
         switch (el?.name) {
@@ -146,12 +157,29 @@ export default class Checkout extends WebComponent {
                 this.requestDisplay();
                 break;
             case "continue-as-guest":
-                s.emailEditable = false;
+                s.guestEmailEditable = false;
                 this.requestDisplay();
                 break;
             case "go-to-payment":
-                s.paymentData = {};
-                this.requestDisplay();
+                const a = this.closest("app-element");
+                const [ba, sa] = [s.billingAddress, s.billingAddressSameAsShipping ? s.billingAddress : s.shippingAddress]
+                    .map(x => typeof x === "object" ? x : a.state.user.addresses.find(y => y.id === x));
+                const r = await fetch(`${a.dataset.apiUrl}/payments/stripe/initiate`, {
+                    method: "POST",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify({
+                        guestEmail: s.guestEmail,
+                        cart: s.cart.id,
+                        billingAddress: ba,
+                        shippingAddress: sa
+                    })
+                });
+                const j = await r.json();
+                if (r.ok) {
+                    s.paymentData = j;
+                    this.requestDisplay();
+                } else
+                    a.error(j);
                 break;
             case "shippingAddress":
                 s.shippingAddress = null;
@@ -161,17 +189,34 @@ export default class Checkout extends WebComponent {
     }
 
     handleInput = event => {
-        if (event.target.matches('[name="email"]')) {
-            this.state.email = event.target.value;
+        const t = event.target;
+        const s = this.state;
+        if (t.matches('[name="guestEmail"]')) {
+            s.guestEmail = t.value;
             this.requestDisplay();
         }
     }
 
     handleSubmit = event => {
-        if (!event.target.matches("#payment-form")) {
+        const f = event.target;
+        const s = this.state;
+
+        if (f.closest(".contact")) {
             event.preventDefault();
-            const fd = new FormData(event.target);
-            this.state.email = fd.get("email");
+            const d = new FormData(f);
+            s.guestEmail = d.get("guestEmail");
+            this.requestDisplay();
+        }
+
+        if (f.closest('.address [data-name="billingAddress"]')) {
+            event.preventDefault();
+            s.billingAddress = Object.fromEntries(new FormData(f));
+            this.requestDisplay();
+        }
+
+        if (f.closest('.address [data-name="shippingAddress"]')) {
+            event.preventDefault();
+            s.shippingAddress = Object.fromEntries(new FormData(f));
             this.requestDisplay();
         }
     }

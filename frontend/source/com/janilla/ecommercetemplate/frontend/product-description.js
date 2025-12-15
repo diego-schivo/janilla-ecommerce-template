@@ -78,10 +78,10 @@ export default class ProductDescription extends WebComponent {
         const v = p.variants.find(x => x.id == this.dataset.variant);
         const a = this.closest("app-element");
         const c = localStorage.getItem("cart");
-        const u = new URL(`${a.dataset.apiUrl}/carts/${c}`, location.href);
+        const u = new URL(c ? `${a.dataset.apiUrl}/carts/${c}` : `${a.dataset.apiUrl}/carts`, location.href);
         if (!a.state.user)
             u.searchParams.append("secret", localStorage.getItem("cart_secret"));
-        const o = await (await fetch(u)).json();
+        const o = c ? await (await fetch(u)).json() : null;
         const ii = o ? o.items.map(x => ({
             ...x,
             product: x.product.id,
@@ -97,7 +97,7 @@ export default class ProductDescription extends WebComponent {
                 variant: v.id,
                 quantity: 1
             });
-        const r = await fetch(o ? `${u}/${c}` : u, {
+        const r = await fetch(u, {
             method: o ? "PATCH" : "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify(o ? { items: ii } : {

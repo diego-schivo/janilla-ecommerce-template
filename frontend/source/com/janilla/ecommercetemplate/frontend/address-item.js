@@ -25,29 +25,54 @@ import WebComponent from "./web-component.js";
 
 export default class AddressItem extends WebComponent {
 
-	static get templateNames() {
-		return ["address-item"];
-	}
+    static get templateNames() {
+        return ["address-item"];
+    }
 
-	static get observedAttributes() {
-		return ["data-id", "data-object", "data-hide-actions"];
-	}
+    static get observedAttributes() {
+        return ["data-id", "data-data", "data-hide-actions"];
+    }
 
-	constructor() {
-		super();
-		this.attachShadow({ mode: "open" });
-	}
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+    }
 
-	async updateDisplay() {
-		const s = this.state;
-		const a = this.closest("app-element");
-		s.address ??= this.dataset.object
-			? JSON.parse(this.dataset.object)
-			: a.state.user.addresses.find(x => x.id == this.dataset.id);
-		this.shadowRoot.appendChild(this.interpolateDom({
-			$template: "",
-			...s.address,
-			actions: this.dataset.hideActions === undefined ? { $template: "actions" } : null
-		}));
-	}
+    async updateDisplay() {
+        const s = this.state;
+        const a = this.closest("app-element");
+        s.address ??= this.dataset.data
+            ? JSON.parse(this.dataset.data)
+            : a.state.user.addresses.find(x => x.id == this.dataset.id);
+        this.shadowRoot.appendChild(this.interpolateDom({
+            $template: "",
+            lines: [
+                [
+                    [s.address.title]
+                        .map(x => typeof x === "object" ? x?.name : x)
+                        .map(x => x !== "OTHER" ? x : null)
+                    [0],
+                    s.address.firstName,
+                    s.address.lastName
+                ].filter(x => x).join(" "),
+                s.address.phone,
+                [
+                    s.address.addressLine1,
+                    s.address.addressLine2
+                ].filter(x => x).join(", "),
+                [
+                    s.address.city,
+                    s.address.state,
+                    s.address.postalCode
+                ].filter(x => x).join(", "),
+                [s.address.country]
+                    .map(x => typeof x === "object" ? x?.name : x)
+                [0],
+            ].filter(x => x).map(x => ({
+                $template: "line",
+                text: x
+            })),
+            actions: this.dataset.hideActions === undefined ? { $template: "actions" } : null
+        }));
+    }
 }

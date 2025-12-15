@@ -21,31 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
-
-import java.net.SocketAddress;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-
-import com.janilla.http.HttpExchange;
-import com.janilla.http.HttpHandler;
-import com.janilla.http.HttpRequest;
-import com.janilla.http.HttpResponse;
-import com.janilla.http.HttpServer;
-import com.janilla.ioc.DiFactory;
-
-public class CustomHttpServer extends HttpServer {
-
-	protected final DiFactory diFactory;
-
-	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler, DiFactory diFactory) {
-		super(sslContext, endpoint, handler);
-		this.diFactory = diFactory;
-	}
-
-	@Override
-	protected HttpExchange createExchange(HttpRequest request, HttpResponse response) {
-		return diFactory.create(HttpExchange.class, Map.of("request", request, "response", response));
-	}
-}
+//package com.janilla.ecommercetemplate.backend;
+//
+//import java.net.SocketAddress;
+//import java.util.Map;
+//
+//import javax.net.ssl.SSLContext;
+//
+//import com.janilla.http.HttpExchange;
+//import com.janilla.http.HttpHandler;
+//import com.janilla.http.HttpRequest;
+//import com.janilla.http.HttpResponse;
+//import com.janilla.http.HttpServer;
+//import com.janilla.ioc.DiFactory;
+//
+//public class CustomHttpServer extends HttpServer {
+//
+//	protected final DiFactory diFactory;
+//
+//	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler, DiFactory diFactory) {
+//		super(sslContext, endpoint, handler);
+//		this.diFactory = diFactory;
+//	}
+//
+//	@Override
+//	protected HttpExchange createExchange(HttpRequest request, HttpResponse response) {
+//		return diFactory.create(HttpExchange.class, Map.of("request", request, "response", response));
+//	}
+//}

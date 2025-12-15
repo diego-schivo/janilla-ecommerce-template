@@ -25,67 +25,82 @@ import WebComponent from "./web-component.js";
 
 export default class Addresses extends WebComponent {
 
-	static get templateNames() {
-		return ["addresses"];
-	}
+    static get templateNames() {
+        return ["addresses"];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("address-change", this.handleAddressChange);
-		this.addEventListener("click", this.handleClick);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+        this.addEventListener("submit", this.handleSubmit);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("address-change", this.handleAddressChange);
-		this.removeEventListener("click", this.handleClick);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+        this.removeEventListener("submit", this.handleSubmit);
+    }
 
-	async updateDisplay() {
-		const s = this.state;
-		const u = this.closest("app-element").state.user;
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			items: u.addresses.map(x => ({
-				$template: "item",
-				...x
-			})),
-			dialog: s.dialog ? {
-				$template: "dialog",
-				...s.dialog
-			} : null
-		}));
-	}
+    async updateDisplay() {
+        const s = this.state;
+        const u = this.closest("app-element").state.user;
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            items: u.addresses.map(x => ({
+                $template: "item",
+                ...x
+            })),
+            dialog: s.dialog ? {
+                $template: "dialog",
+                ...s.dialog
+            } : null
+        }));
+    }
 
-	handleAddressChange = event => {
-		event.stopPropagation();
-		this.dispatchEvent(new CustomEvent("user-change", {
-			bubbles: true,
-			detail: { user: event.detail.address.customer }
-		}));
-		delete this.state.dialog;
-		this.requestDisplay();
-	}
+    handleClick = event => {
+        const b = event.target.closest("button");
+        const s = this.state;
+        switch (b?.name) {
+            case "add":
+            case "edit":
+                event.stopPropagation();
+                s.dialog = { id: b.value };
+                this.requestDisplay();
+                break;
+            case "close":
+                event.stopPropagation();
+                delete s.dialog;
+                this.requestDisplay();
+                break;
+        }
+    }
 
-	handleClick = event => {
-		const b = event.target.closest("button");
-		const s = this.state;
-		switch (b?.name) {
-			case "add":
-			case "edit":
-				event.stopPropagation();
-				s.dialog = { id: b.value };
-				this.requestDisplay();
-				break;
-			case "close":
-				event.stopPropagation();
-				delete s.dialog;
-				this.requestDisplay();
-				break;
-		}
-	}
+    handleSubmit = async event => {
+        event.preventDefault();
+        const f = event.target;
+        const a = this.closest("app-element");
+        const o = {
+            customer: a.state.user.id,
+            ...Object.fromEntries(new FormData(f))
+        };
+        const s = this.state;
+        const r = await fetch(`${a.dataset.apiUrl}/addresses${s.dialog.id ? `/${s.dialog.id}` : ""}`, {
+            method: s.dialog.id ? "PUT" : "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(o)
+        });
+        const j = await r.json();
+        if (r.ok) {
+            delete this.state.dialog;
+            this.requestDisplay();
+            this.dispatchEvent(new CustomEvent("user-change", {
+                bubbles: true,
+                detail: { user: j.customer }
+            }));
+        }
+    }
 }

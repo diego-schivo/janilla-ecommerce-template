@@ -40,11 +40,13 @@ export default class MobileMenu extends WebComponent {
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener("click", this.handleClick);
+		this.closest("app-element").addEventListener("userchanged", this.handleUserChanged);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.removeEventListener("click", this.handleClick);
+		this.closest("app-element").removeEventListener("userchanged", this.handleUserChanged);
 	}
 
 	async updateDisplay() {
@@ -98,5 +100,9 @@ export default class MobileMenu extends WebComponent {
 				this.querySelector("dialog").close();
 				break;
 		}
+	}
+
+	handleUserChanged = () => {
+	    this.requestDisplay();
 	}
 }

@@ -25,58 +25,71 @@ import WebComponent from "./web-component.js";
 
 export default class Account extends WebComponent {
 
-	static get templateNames() {
-		return ["account"];
-	}
+    static get templateNames() {
+        return ["account"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("input", this.handleInput);
-		this.addEventListener("submit", this.handleSubmit);
-	}
+    constructor() {
+        super();
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("input", this.handleInput);
-		this.removeEventListener("submit", this.handleSubmit);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("input", this.handleInput);
+        this.addEventListener("submit", this.handleSubmit);
+    }
 
-	async updateDisplay() {
-		const u = this.closest("app-element").state.user;
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			user: u
-		}));
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("input", this.handleInput);
+        this.removeEventListener("submit", this.handleSubmit);
+    }
 
-	handleInput = event => {
-		const o = Object.fromEntries(new FormData(event.target.form));
-		const u = this.closest("app-element").state.user;
-		this.querySelector("button").disabled = o.email === u.email && o.name === u.name;
-	}
+    async updateDisplay() {
+        const s = this.state;
+        const a = this.closest("app-element");
+        s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            user: a.user,
+            orders: s.orders?.length ? {
+                $template: "list",
+                items: s.orders.map(x => ({
+                    $template: "item",
+                    item: JSON.stringify(x)
+                }))
+            } : { $template: "empty" }
+        }));
+    }
 
-	handleSubmit = async event => {
-		event.preventDefault();
-		const u = this.closest("app-element").state.user;
-		const o = Object.fromEntries(new FormData(event.target));
-		const r = await fetch(`/api/users/${u.id}`, {
-			method: "PATCH",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({
-				$type: "User",
-				...o
-			})
-		});
-		if (r.ok) {
-			this.dispatchEvent(new CustomEvent("user-change", {
-				bubbles: true,
-				detail: { user: await r.json() }
-			}));
-			this.requestDisplay();
-		}
-	}
+    handleInput = event => {
+        const o = Object.fromEntries(new FormData(event.target.form));
+        const u = this.closest("app-element").state.user;
+        this.querySelector("button").disabled = o.email === u.email && o.name === u.name;
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+        const u = this.closest("app-element").state.user;
+        const o = Object.fromEntries(new FormData(event.target));
+        const r = await fetch(`/api/users/${u.id}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                $type: "User",
+                ...o
+            })
+        });
+        if (r.ok) {
+            this.dispatchEvent(new CustomEvent("user-change", {
+                bubbles: true,
+                detail: { user: await r.json() }
+            }));
+            this.requestDisplay();
+        }
+    }
 }

@@ -42,6 +42,15 @@ export default class App extends WebComponent {
         if (!history.state)
             history.replaceState({}, "");
     }
+	
+	get user() {
+		return this.state.user;
+	}
+
+    set user(user) {
+        this.state.user = user;
+		this.dispatchEvent(new CustomEvent("userchanged", { detail: user }));
+    }
 
     connectedCallback() {
         const el = this.children.length === 1 ? this.firstElementChild : null;
@@ -54,7 +63,6 @@ export default class App extends WebComponent {
         this.addEventListener("click", this.handleClick);
         addEventListener("popstate", this.handlePopState);
         this.addEventListener("submit", this.handleSubmit);
-        this.addEventListener("user-change", this.handleUserChange);
     }
 
     disconnectedCallback() {
@@ -63,7 +71,6 @@ export default class App extends WebComponent {
         this.removeEventListener("click", this.handleClick);
         removeEventListener("popstate", this.handlePopState);
         this.removeEventListener("submit", this.handleSubmit);
-        this.removeEventListener("user-change", this.handleUserChange);
     }
 
     async updateDisplay() {
@@ -78,7 +85,7 @@ export default class App extends WebComponent {
         if (s.user) {
             if (p === "/logout") {
                 await fetch(`${this.dataset.apiUrl}/users/logout`, { method: "POST" });
-                delete s.user;
+                this.user = null;
             }
         } else if (["/account"].includes(p) || p.startsWith("/account/")) {
             // location.href = "/login";
@@ -133,13 +140,16 @@ export default class App extends WebComponent {
                             return { $template: "addresses" };
                         case "/checkout":
                             if (!Array.from(document.head.querySelectorAll("script"))
-                                .some(x => x.getAttribute("src") === "https://js.stripe.com/clover/stripe.js")) {
+                                .some(x => x.src === "https://js.stripe.com/clover/stripe.js")) {
                                 const el = document.createElement("script");
-                                el.setAttribute("src", "https://js.stripe.com/clover/stripe.js");
+                                el.onload = () => {
+                                    if (!s.stripe && typeof Stripe !== "undefined")
+                                        s.stripe = Stripe(this.dataset.stripePublishableKey);
+                                }
                                 document.head.append(el);
-                            }
-                            if (!Object.hasOwn(s, "stripe"))
-                                s.stripe = typeof Stripe !== "undefined" ? Stripe(this.dataset.stripePublishableKey) : null;
+                                el.src = "https://js.stripe.com/clover/stripe.js";
+                            } else if (!s.stripe && typeof Stripe !== "undefined")
+                                s.stripe = Stripe(this.dataset.stripePublishableKey);
                             return { $template: "checkout" };
                         case "/login":
                             return { $template: "login" };
@@ -263,13 +273,6 @@ export default class App extends WebComponent {
             history.pushState({}, "", `/search?${usp}`);
             dispatchEvent(new CustomEvent("popstate"));
         }
-    }
-
-    handleUserChange = event => {
-        if (event.detail?.user)
-            this.state.user = event.detail.user;
-        else
-            delete this.state.user;
     }
 
     updateSeo(meta) {

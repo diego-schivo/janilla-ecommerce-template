@@ -25,7 +25,23 @@
       Each order is associated with an payment.
       As you place more orders, they will appear in your orders list.
     </p>
-    <p>You have no orders.</p>
+    <!--${orders}-->
     <a href="/orders" class="button primary">View all orders</a>
   </article>
 </main>
+
+<template id="empty">
+  <p>You have no orders.</p>
+</template>
+
+<template id="list">
+  <ul>
+    <!--${items}-->
+  </ul>
+</template>
+
+<template id="item">
+  <li>
+    <order-item data-item="${item}"></order-item>
+  </li>
+</template>

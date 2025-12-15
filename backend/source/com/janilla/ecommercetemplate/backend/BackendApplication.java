@@ -56,6 +56,7 @@ import com.janilla.web.ApplicationHandlerFactory;
 import com.janilla.web.Handle;
 import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
+import com.janilla.web.RenderableFactory;
 
 public class BackendApplication {
 
@@ -106,6 +107,8 @@ public class BackendApplication {
 
 	protected final Persistence persistence;
 
+	protected final RenderableFactory renderableFactory;
+
 	protected final TypeResolver typeResolver;
 
 	public BackendApplication(DiFactory diFactory, Path configurationFile) {
@@ -122,6 +125,8 @@ public class BackendApplication {
 			var b = diFactory.create(ApplicationPersistenceBuilder.class, Map.of("databaseFile", Path.of(f)));
 			persistence = b.build();
 		}
+
+		renderableFactory = diFactory.create(RenderableFactory.class);
 
 		{
 			invocables = types().stream()
@@ -161,6 +166,10 @@ public class BackendApplication {
 
 	public Persistence persistence() {
 		return persistence;
+	}
+
+	public RenderableFactory renderableFactory() {
+		return renderableFactory;
 	}
 
 	public TypeResolver typeResolver() {

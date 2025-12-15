@@ -37,6 +37,7 @@ import com.janilla.http.HttpRequest;
 import com.janilla.http.HttpResponse;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.Context;
+import com.janilla.ioc.DiFactory;
 
 @Context("fullstack")
 public class CustomHttpServer extends HttpServer {
@@ -45,9 +46,9 @@ public class CustomHttpServer extends HttpServer {
 
 	protected final FrontendApplication frontend;
 
-	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler,
+	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler, DiFactory diFactory,
 			BackendApplication backend, FrontendApplication frontend) {
-		super(sslContext, endpoint, handler);
+		super(sslContext, endpoint, handler, diFactory);
 		this.backend = backend;
 		this.frontend = frontend;
 	}

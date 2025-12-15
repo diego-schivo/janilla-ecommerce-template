@@ -43,11 +43,6 @@ public class OrderApi extends CollectionApi<Long, Order> {
 		super(Order.class, drafts, persistence);
 	}
 
-//	@Override
-//	public List<Order> read(Long skip, Long limit) {
-//		throw new UnsupportedOperationException();
-//	}
-
 	@Handle(method = "GET")
 	public List<Order> read(Long customer, BackendExchange exchange) {
 		var u = exchange.sessionUser();

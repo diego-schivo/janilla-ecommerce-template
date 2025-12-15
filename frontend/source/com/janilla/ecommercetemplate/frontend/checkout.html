@@ -49,14 +49,14 @@
     <p>Enter your email to checkout as a guest.</p>
     <label>
       Email Address
-      <input type="email" name="email" value="${value}" />
+      <input type="email" name="guestEmail" value="${value}" />
     </label>
     <button name="continue-as-guest" class="button primary" disabled="${disabled}">Continue as guest</button>
   </form>
 </template>
 
 <template id="address-item">
-  <address-item data-id="${id}">
+  <address-item data-id="${id}" data-data="${data}">
     <button slot="actions" name="${name}" class="button secondary">Remove</button>
   </address-item>
 </template>
@@ -67,15 +67,15 @@
 </template>
 
 <template id="create-address-modal">
-  <create-address-modal data-disabled="${disabled}"></create-address-modal>
+  <create-address-modal data-name="${name}" data-disabled="${disabled}"></create-address-modal>
 </template>
 
 <template id="payment-trigger">
-  <button name="go-to-payment" class="button primary">Go to payment</button>
+  <button name="go-to-payment" class="button primary" disabled="${disabled}">Go to payment</button>
 </template>
 
 <template id="payment">
-  <payment-element data-email="${email}" data-amount="${amount}"></payment-element>
+  <payment-element data-guest-email="${guestEmail}" data-amount="${amount}"></payment-element>
 </template>
 
 <template id="item">

@@ -39,7 +39,7 @@ public abstract class PaymentApi {
 		this.persistence = persistence;
 	}
 
-	public record InitiateData(String email, Long cart, AddressData billingAddress, AddressData shippingAddress) {
+	public record InitiateData(String guestEmail, Long cart, AddressData billingAddress, AddressData shippingAddress) {
 	}
 
 	public record InitiateResult(String paymentIntent, String clientSecret) {
@@ -47,13 +47,13 @@ public abstract class PaymentApi {
 
 	@Handle(method = "POST", path = "initiate")
 	public InitiateResult initiate(InitiateData data, BackendExchange exchange) {
+		IO.println("PaymentApi.initiate, data=" + data);
 		var u = exchange.sessionUser();
-		return initiate(u, u != null ? u.email() : data.email(), persistence.crud(Cart.class).read(
-//						u != null ? u.carts().getFirst() : 
-				data.cart()), data.billingAddress(), data.shippingAddress());
+		return initiate(u, data.guestEmail(), persistence.crud(Cart.class).read(data.cart()), data.billingAddress(),
+				data.shippingAddress());
 	}
 
-	public record ConfirmOrderData(String email, String paymentIntent) {
+	public record ConfirmOrderData(String guestEmail, String paymentIntent) {
 	}
 
 	public record ConfirmOrderResult(Long order, Long transaction) {
@@ -61,12 +61,13 @@ public abstract class PaymentApi {
 
 	@Handle(method = "POST", path = "confirm-order")
 	public ConfirmOrderResult confirmOrder(ConfirmOrderData data, BackendExchange exchange) {
+		IO.println("PaymentApi.confirmOrder, data=" + data);
 		var u = exchange.sessionUser();
-		return confirmOrder(u, u != null ? u.email() : data.email(), data.paymentIntent());
+		return confirmOrder(u, data.guestEmail(), data.paymentIntent());
 	}
 
-	protected abstract InitiateResult initiate(User user, String email, Cart cart, AddressData billingAddress,
+	protected abstract InitiateResult initiate(User user, String guestEmail, Cart cart, AddressData billingAddress,
 			AddressData shippingAddress);
 
-	protected abstract ConfirmOrderResult confirmOrder(User user, String email, String paymentIntent);
+	protected abstract ConfirmOrderResult confirmOrder(User user, String guestEmail, String paymentIntent);
 }

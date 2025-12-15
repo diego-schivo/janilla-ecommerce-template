@@ -50,6 +50,7 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 
 	protected static final Set<String> GUEST_POST = Set.of("/api/carts", "/api/form-submissions",
 			"/api/users/first-register", "/api/users/forgot-password", "/api/users/login", "/api/users/reset-password",
+//			"/api/payments/stripe/initiate", "/api/payments/stripe/confirm-order", 
 			"/api/payments/stripe/webhooks");
 
 	protected static final Set<String> USER_LOGIN_LOGOUT = Set.of("/api/users/login", "/api/users/logout");
@@ -73,6 +74,9 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 		var rq = exchange.request();
 		if (rq.getPath().startsWith("/api/"))
 			switch (rq.getMethod()) {
+			case "DELETE":
+				if (rq.getPath().startsWith("/api/carts/"))
+					break;
 			case "GET", "OPTIONS":
 				break;
 			case "PATCH":

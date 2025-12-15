@@ -25,45 +25,47 @@ import WebComponent from "./web-component.js";
 
 export default class Login extends WebComponent {
 
-	static get templateNames() {
-		return ["login"];
-	}
+    static get templateNames() {
+        return ["login"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
-	}
+    constructor() {
+        super();
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("submit", this.handleSubmit);
+    }
 
-	async updateDisplay() {
-		document.title = "Login";
-		this.closest("app-element").updateSeo(null);
-		this.appendChild(this.interpolateDom({ $template: "" }));
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("submit", this.handleSubmit);
+    }
 
-	handleSubmit = async event => {
-		event.preventDefault();
-		const a = this.closest("app-element");
-		const r = await fetch(`${a.dataset.apiUrl}/users/login`, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify(Object.fromEntries(new FormData(event.target)))
-		});
-		if (r.ok) {
-			this.dispatchEvent(new CustomEvent("user-change", {
-				bubbles: true,
-				detail: { user: await r.json() }
-			}));
-			history.pushState({}, "", "/account");
-			dispatchEvent(new CustomEvent("popstate"));
-		}
-	}
+    async updateDisplay() {
+        document.title = "Login";
+        this.closest("app-element").updateSeo(null);
+        this.appendChild(this.interpolateDom({ $template: "" }));
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+        const f = event.target;
+        const a = this.closest("app-element");
+        const r = await fetch(`${a.dataset.apiUrl}/users/login`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(new FormData(f)))
+        });
+        if (r.ok) {
+            const j = await r.json();
+            a.user = j;
+            a.navigate(new URL("/account", location.href));
+        }
+    }
 }

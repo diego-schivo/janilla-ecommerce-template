@@ -85,7 +85,7 @@ public class BackendExchange extends BaseHttpExchange implements UserHttpExchang
 
 	public void requireSessionEmail() {
 		if (sessionEmail() == null)
-			throw new UnauthorizedException();
+			throw new UnauthorizedException("Unauthorized, you must be logged in to make this request.");
 	}
 
 	@Override

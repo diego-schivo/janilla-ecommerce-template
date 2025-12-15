@@ -30,7 +30,7 @@ export default class CreateAddressModal extends WebComponent {
     }
 
     static get observedAttributes() {
-        return ["data-disabled"];
+        return ["data-name", "data-disabled"];
     }
 
     constructor() {

@@ -37,16 +37,6 @@ export default class AddressEdit extends WebComponent {
 		super();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
-	}
-
 	async updateDisplay() {
 		const ae = this.closest("app-element");
 		const u = ae.state.user;
@@ -61,24 +51,5 @@ export default class AddressEdit extends WebComponent {
 				countryValues: ae.state.enums["Country"]
 			}
 		}));
-	}
-
-	handleSubmit = async event => {
-		event.preventDefault();
-		const a = this.closest("app-element");
-		const o = {
-			customer: a.state.user.id,
-			...Object.fromEntries(new FormData(event.target))
-		};
-		const r = await fetch(`${a.dataset.apiUrl}/addresses${this.dataset.id ? `/${this.dataset.id}` : ""}`, {
-			method: this.dataset.id ? "PUT" : "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify(o)
-		});
-		if (r.ok)
-			this.dispatchEvent(new CustomEvent("address-change", {
-				bubbles: true,
-				detail: { address: await r.json() }
-			}));
 	}
 }

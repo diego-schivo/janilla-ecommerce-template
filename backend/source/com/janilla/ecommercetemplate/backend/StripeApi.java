@@ -58,8 +58,6 @@ import com.janilla.web.Handle;
 @Handle(path = "/api/payments/stripe")
 public class StripeApi extends PaymentApi {
 
-//	public static final Map<String, BlockingQueue<Order>> ORDERS = new ConcurrentHashMap<>();
-
 	protected final String secretKey = configuration.getProperty("ecommerce-template.stripe.secret-key");
 
 	protected final Function<HttpResponse, Object> json = x -> {
@@ -75,7 +73,7 @@ public class StripeApi extends PaymentApi {
 	}
 
 	@Override
-	protected InitiateResult initiate(User user, String email, Cart cart, AddressData billingAddress,
+	protected InitiateResult initiate(User user, String guestEmail, Cart cart, AddressData billingAddress,
 			AddressData shippingAddress) {
 		record C(String id) {
 		}
@@ -83,18 +81,19 @@ public class StripeApi extends PaymentApi {
 		}
 		C c;
 		{
-			var rq = new HttpRequest("GET",
-					URI.create("https://api.stripe.com/v1/customers?" + new UriQueryBuilder().append("email", email)));
+			var rq = new HttpRequest("GET", URI.create("https://api.stripe.com/v1/customers?"
+					+ new UriQueryBuilder().append("email", user != null ? user.email() : guestEmail)));
 			rq.setBasicAuthorization(secretKey + ":");
 			var r = new HttpClient().send(rq, json.andThen(x -> (R) new Converter().convert(x, R.class)));
 			IO.println("r=" + r);
-			c = r.data().getFirst();
+			c = !r.data().isEmpty() ? r.data().getFirst() : null;
 		}
 
 		if (c == null) {
 			var rq = new HttpRequest("POST", URI.create("https://api.stripe.com/v1/customers"));
 			rq.setBasicAuthorization(secretKey + ":");
-			var bb = new UriQueryBuilder().append("email", email).toString().getBytes();
+			var bb = new UriQueryBuilder().append("email", user != null ? user.email() : guestEmail).toString()
+					.getBytes();
 			rq.setHeaderValue("content-type", "application/x-www-form-urlencoded");
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));
@@ -126,14 +125,14 @@ public class StripeApi extends PaymentApi {
 
 		persistence.crud(Transaction.class)
 				.create(new Transaction(null, cart.items(), PaymentMethod.STRIPE, billingAddress, Status.PENDING,
-						user != null ? user.id() : null, user == null ? email : null, null, cart.id(), cart.subtotal(),
-						cart.currency(), c.id(), pi.id(), null, null, null, null));
+						user != null ? user.id() : null, guestEmail, null, cart.id(), cart.subtotal(), cart.currency(),
+						c.id(), pi.id(), null, null, null, null));
 
 		return new InitiateResult(pi.id(), pi.client_secret());
 	}
 
 	@Override
-	protected ConfirmOrderResult confirmOrder(User user, String email, String paymentIntent) {
+	protected ConfirmOrderResult confirmOrder(User user, String guestEmail, String paymentIntent) {
 		Transaction t;
 		{
 			var x = persistence.crud(Transaction.class);
@@ -156,7 +155,7 @@ public class StripeApi extends PaymentApi {
 		var sa = (AddressData) new Converter().convert(Json.parse(pi.metadata().get("shippingAddress")),
 				AddressData.class);
 		var o = persistence.crud(Order.class)
-				.create(new Order(null, cii, sa, user != null ? user.id() : null, email, List.of(t.id()),
+				.create(new Order(null, cii, sa, user != null ? user.id() : null, guestEmail, List.of(t.id()),
 						OrderStatus.PROCESSING, BigDecimal.valueOf(pi.amount(), 2),
 						Currency.valueOf(pi.currency().toUpperCase()), null, null, null, null));
 

@@ -25,100 +25,88 @@ import WebComponent from "./web-component.js";
 
 export default class Payment extends WebComponent {
 
-	static get templateNames() {
-		return ["payment"];
-	}
+    static get templateNames() {
+        return ["payment"];
+    }
 
-	static get observedAttributes() {
-		return ["data-email", "data-amount"];
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("submit", this.handleSubmit);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("submit", this.handleSubmit);
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({ $template: "" }));
-		if (!this.state.elements) {
-			const a = this.closest("app-element");
-			const c = this.closest("checkout-element");
-			const j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/initiate`, {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					email: this.dataset.email,
-					cart: c.state.cart.id,
-					billingAddress: a.state.user.addresses.find(x => x.id === c.state.billingAddress),
-					shippingAddress: a.state.user.addresses.find(x => x.id === (c.state.billingAddressSameAsShipping
-						? c.state.billingAddress
-						: c.state.shippingAddress))
-				})
-			})).json();
-			this.state.elements = a.state.stripe.elements({
-				appearance: {
-					theme: "stripe",
-				},
-				clientSecret: j.clientSecret
-				//loader: "auto"
-			});
-			this.state.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
-		}
-	}
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({ $template: "" }));
 
-	handleSubmit = async event => {
-		event.preventDefault();
+        const s = this.state;
+        if (!s.elements) {
+            s.elements = a.state.stripe.elements({
+                appearance: {
+                    theme: "stripe",
+                },
+                clientSecret: this.closest("checkout-element").state.paymentData.clientSecret
+                //loader: "auto"
+            });
+            s.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
+        }
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+        const c = this.closest("checkout-element");
 		const a = this.closest("app-element");
-		const c = this.closest("checkout-element");
-		const ba = a.state.user.addresses.find(x => x.id === c.state.billingAddress);
-		let j = await a.state.stripe.confirmPayment({
-			confirmParams: {
-				return_url: `${location.origin}/order-confirmation`,
-				payment_method_data: {
-					billing_details: {
-						email: a.state.user.email,
-						phone: ba?.phone,
-						address: {
-							line1: ba?.addressLine1,
-							line2: ba?.addressLine2,
-							city: ba?.city,
-							state: ba?.state,
-							postal_code: ba?.postalCode,
-							country: ba?.country,
-						},
-					},
-				}
-			},
-			elements: this.state.elements,
-			redirect: "if_required"
-		});
-		if (j.paymentIntent?.status === "succeeded") {
-			j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					email: this.dataset.email,
-					paymentIntent: j.paymentIntent.id
-				})
-			})).json();
-			if (j?.order) {
-				await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
-				localStorage.removeItem("cart");
-				const u = new URL(`/orders/${j.order}`, location.href);
-				if (this.dataset.email)
-					u.searchParams.append("email", this.dataset.email);
-				history.pushState({}, "", u.pathname + u.search);
-				dispatchEvent(new CustomEvent("popstate"));
-			}
-		}
-	}
+		const [ba] = [c.state.billingAddress].map(x => typeof x === "object" ? x : a.state.user.addresses.find(y => y.id === x));
+        let j = await a.state.stripe.confirmPayment({
+            confirmParams: {
+                return_url: `${location.origin}/order-confirmation`,
+                payment_method_data: {
+                    billing_details: {
+                        email: this.dataset.email,
+                        phone: ba.phone,
+                        address: {
+                            line1: ba.addressLine1,
+                            line2: ba.addressLine2,
+                            city: ba.city,
+                            state: ba.state,
+                            postal_code: ba.postalCode,
+                            country: ba.country,
+                        },
+                    },
+                }
+            },
+            elements: s.elements,
+            redirect: "if_required"
+        });
+        if (j.paymentIntent?.status === "succeeded") {
+            j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                    guestEmail: this.dataset.guestEmail,
+                    paymentIntent: j.paymentIntent.id
+                })
+            })).json();
+            if (j?.order) {
+                await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
+                localStorage.removeItem("cart");
+                const u = new URL(`/orders/${j.order}`, location.href);
+                if (this.dataset.email)
+                    u.searchParams.append("email", this.dataset.email);
+                history.pushState({}, "", u.pathname + u.search);
+                dispatchEvent(new CustomEvent("popstate"));
+            }
+        }
+    }
 }

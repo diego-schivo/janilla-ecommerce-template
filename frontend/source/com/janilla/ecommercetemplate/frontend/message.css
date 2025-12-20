@@ -1,0 +1,12 @@
+message-element {
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  &.success {
+    background: rgb(0, 52, 71);
+  }
+
+  &.warning {
+    background: rgb(96, 68, 31);
+  }
+}

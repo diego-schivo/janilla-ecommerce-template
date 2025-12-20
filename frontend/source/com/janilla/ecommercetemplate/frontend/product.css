@@ -7,7 +7,7 @@ app-element:has(product-element) {
 product-element {
   a:has(> lucide-icon) {
     align-items: center;
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
@@ -23,8 +23,8 @@ product-element {
     gap: 1.5rem;
 
     > div {
-      background: rgb(15, 15, 15);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--background-8);
+      border: 1px solid var(--border-1);
       border-radius: 0.5rem;
       display: flex;
       flex-direction: column;

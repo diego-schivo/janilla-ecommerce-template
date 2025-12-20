@@ -14,8 +14,8 @@ addresses-element {
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    button {
-      align-self: center !important;
+    .button {
+      align-self: center;
     }
   }
 
@@ -24,8 +24,8 @@ addresses-element {
   }
 /*
   dialog[open] {
-    background: rgb(10, 10, 10);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--background-1);
+    border: 1px solid var(--border-1);
     border-radius: 0.5rem;
     left: 50%;
     margin: 0;

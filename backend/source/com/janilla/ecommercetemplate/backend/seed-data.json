@@ -137,59 +137,6 @@
 			}
 		]
 	},
-	"formSubmissions": [],
-	"forms": [
-		{
-			"$type": "Form",
-			"id": 1,
-			"title": "Contact Form",
-			"fields": [
-				{
-					"$type": "TextField",
-					"name": "full-name",
-					"label": "Full Name",
-					"width": 100,
-					"required": true
-				},
-				{
-					"$type": "EmailField",
-					"name": "email",
-					"label": "Email",
-					"width": 100,
-					"required": true
-				},
-				{
-					"$type": "NumberField",
-					"name": "phone",
-					"label": "Phone",
-					"width": 100,
-					"required": false
-				},
-				{
-					"$type": "TextAreaField",
-					"name": "message",
-					"label": "Message",
-					"width": 100,
-					"required": true
-				}
-			],
-			"submitButtonLabel": "Submit",
-			"confirmationType": "MESSAGE",
-			"confirmationMessage": "<h2>The contact form has been submitted successfully.</h2>",
-			"emails": [
-				{
-					"$type": "Email",
-					"emailTo": "${email}",
-					"cc": "",
-					"bcc": "",
-					"replyTo": "",
-					"emailFrom": "\"Janilla\" <diego.schivo@janilla.com>",
-					"subject": "You've received a new message.",
-					"message": "Your contact form submission was successfully received."
-				}
-			]
-		}
-	],
 	"header": {
 		"$type": "Header",
 		"id": 1,
@@ -336,24 +283,7 @@
 			"hero": {
 				"$type": "Hero",
 				"type": "LOW_IMPACT",
-				"richText": "<h1>Janilla Ecommerce Template</h1><p><a href=\"/admin\">Visit the admin dashboard</a> to begin managing this site's content. The code for this template is completely open-source and can be found <a href=\"https://github.com/diego-schivo/janilla-ecommerce-template\" rel=\"noopener noreferrer\" target=\"_blank\">on our Github</a>. </p>",
-				"links": [
-					{
-						"$type": "Link",
-						"type": "CUSTOM",
-						"uri": "/search",
-						"text": "All products",
-						"appearance": "DEFAULT"
-					},
-					{
-						"$type": "Link",
-						"type": "CUSTOM",
-						"uri": "/contact",
-						"text": "Contact",
-						"appearance": "OUTLINE"
-					}
-				],
-				"media": 4
+				"richText": "<h1>Janilla Ecommerce Template</h1><p><a href=\"/admin\">Visit the admin dashboard</a> to begin managing this site's content. The code for this template is completely open-source and can be found <a href=\"https://github.com/diego-schivo/janilla-ecommerce-template\" rel=\"noopener noreferrer\" target=\"_blank\">on our Github</a>. </p>"
 			},
 			"layout": [
 				{
@@ -416,30 +346,6 @@
 				"image": 2
 			},
 			"slug": "home",
-			"documentStatus": {
-				"$type": "DocumentStatus",
-				"name": "PUBLISHED"
-			}
-		},
-		{
-			"$type": "Page",
-			"id": 2,
-			"title": "Contact",
-			"hero": {
-				"$type": "Hero",
-				"type": "NONE",
-				"richText": "",
-				"links": []
-			},
-			"layout": [
-				{
-					"$type": "FormBlock",
-					"form": 1,
-					"introContent": "<h3>Example contact form:</h3>",
-					"enableIntro": "true"
-				}
-			],
-			"slug": "contact",
 			"documentStatus": {
 				"$type": "DocumentStatus",
 				"name": "PUBLISHED"

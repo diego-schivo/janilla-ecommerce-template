@@ -6,10 +6,11 @@ call-to-action {
   }
   
   article {
-    background: light-dark(rgb(245, 245, 245), rgb(10, 10, 10));
-    border: 1px solid rgba(38, 38, 38, 0.8);
+    background: var(--background-4);
+    border: 1px solid var(--border-1);
     border-radius: 0.2rem;
     gap: 1rem;
+    margin: 0 2rem;
     padding: 1rem;
 
     @media (min-width: 1441px) {
@@ -20,29 +21,15 @@ call-to-action {
   }
 
   p {
-    color: light-dark(rgb(46, 42, 36), rgb(209, 213, 219));
+    color: var(--color-2);
 
     a {
-      color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+      color: var(--color-1);
     }
   }
 
   section {
     > .button {
-      /*
-      background: light-dark(rgb(7, 5, 3), rgb(248, 250, 252));
-      border: 1px solid rgba(38, 38, 38, 0.8);
-      border-radius: 0.25rem;
-      box-sizing: border-box;
-      color: light-dark(rgb(240, 232, 213), rgb(15, 23, 42));
-      font-size: 0.875rem;
-      font-weight: 500;
-      height: 2.75rem;
-      line-height: 1.25rem;
-      padding: 0.5rem;
-      text-align: center;
-      text-decoration: none;
-      */
       padding-left: 2rem;
       padding-right: 2rem;
     }

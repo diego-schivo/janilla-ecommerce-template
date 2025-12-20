@@ -1,7 +1,7 @@
 dialog[open]:has(address-edit) {
   &[open] {
-    background: rgb(10, 10, 10);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--background-1);
+    border: 1px solid var(--border-1);
     border-radius: 0.5rem;
     box-sizing: border-box;
     left: 50%;
@@ -38,7 +38,7 @@ dialog address-edit {
   }
 
   p {
-    color: rgb(148, 163, 184);
+    color: var(--color-6);
     font-size: 0.875rem;
     line-height: 1.5;
   }

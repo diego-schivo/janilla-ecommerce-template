@@ -23,10 +23,14 @@
  */
 import WebComponent from "web-component";
 
-export default class Addresses extends WebComponent {
+export default class CreateAccount extends WebComponent {
 
     static get templateNames() {
-        return ["addresses"];
+        return ["create-account"];
+    }
+
+    static get observedAttributes() {
+        return [];
     }
 
     constructor() {
@@ -35,72 +39,47 @@ export default class Addresses extends WebComponent {
 
     connectedCallback() {
         super.connectedCallback();
-        this.addEventListener("click", this.handleClick);
         this.addEventListener("submit", this.handleSubmit);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener("click", this.handleClick);
         this.removeEventListener("submit", this.handleSubmit);
     }
 
     async updateDisplay() {
-        const s = this.state;
-        const u = this.closest("app-element").state.user;
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            items: u.addresses.map(x => ({
-                $template: "item",
-                ...x
-            })),
-            dialog: s.dialog ? {
-                $template: "dialog",
-                ...s.dialog
-            } : null
-        }));
-    }
-
-    handleClick = event => {
-        const b = event.target.closest("button");
-        const s = this.state;
-        switch (b?.name) {
-            case "add":
-            case "edit":
-                event.stopPropagation();
-                s.dialog = { id: b.value };
-                this.requestDisplay();
-                break;
-            case "close":
-                event.stopPropagation();
-                delete s.dialog;
-                this.requestDisplay();
-                break;
-        }
+        document.title = "Account";
+        this.closest("app-element").updateSeo(null);
+        this.appendChild(this.interpolateDom({ $template: "" }));
     }
 
     handleSubmit = async event => {
-        event.preventDefault();
         const f = event.target;
+        event.preventDefault();
+
         const a = this.closest("app-element");
-        const o = {
-            customer: a.state.user.id,
-            ...Object.fromEntries(new FormData(f))
-        };
-        const s = this.state;
-        const r = await fetch(`${a.dataset.apiUrl}/addresses${s.dialog.id ? `/${s.dialog.id}` : ""}`, {
-            method: s.dialog.id ? "PUT" : "POST",
+        const o = Object.fromEntries(new FormData(f));
+        let r = await fetch(`${a.dataset.apiUrl}/users`, {
+            method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify(o)
         });
-        const j = await r.json();
+        let j = await r.json();
         if (r.ok) {
-            delete this.state.dialog;
-            this.requestDisplay();
-            this.dispatchEvent(new CustomEvent("user-change", {
-                bubbles: true,
-                detail: { user: j.customer }
-            }));
-        }
+            r = await fetch(`${a.dataset.apiUrl}/users/login`, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(o)
+            });
+            j = await r.json();
+            if (r.ok) {
+                a.user = j;
+				const u = new URL("/account", location.href);
+				u.searchParams.append("success", "Account created successfully");
+                a.navigate(u);
+            } else
+                a.error(j);
+        } else
+            a.error(j);
     }
 }

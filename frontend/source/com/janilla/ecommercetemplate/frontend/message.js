@@ -21,37 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
-export default class Posts extends WebComponent {
+export default class Message extends WebComponent {
 
-	static get templateNames() {
-		return ["posts"];
-	}
+    static get templateNames() {
+        return ["message"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-text"];
+    }
 
-	async updateDisplay() {
-		let hs = history.state;
-		const a = this.closest("app-element");
-		if (!hs.posts) {
-			const u = new URL(`${a.dataset.apiUrl}/posts`, location.href);
-			history.replaceState(hs = {
-				...hs,
-				posts: await (await fetch(u)).json()
-			}, "");
-		}
+    constructor() {
+        super();
+    }
 
-		a.updateSeo(null);
-		this.appendChild(this.interpolateDom({
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
 			$template: "",
-			total: hs.posts?.length ?? 0,
-			cards: hs.posts?.map(x => ({
-				$template: "card",
-				...x
-			}))
+			...this.dataset
 		}));
-	}
+    }
 }

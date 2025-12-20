@@ -23,9 +23,5 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.util.List;
-
-import com.janilla.cms.Types;
-
-public record Hero(HeroType type, String richText, List<Link> links, @Types(Media.class) Long media) {
+public record Hero(HeroType type, String richText) {
 }

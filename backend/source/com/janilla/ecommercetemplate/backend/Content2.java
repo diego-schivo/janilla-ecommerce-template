@@ -25,6 +25,5 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.List;
 
-public record Content2(List<Page> pages, List<Category> categories, List<Media> media, List<Form> forms,
-		List<FormSubmission> formSubmissions) {
+public record Content2(List<Page> pages, List<Category> categories, List<Media> media) {
 }

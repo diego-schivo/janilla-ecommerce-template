@@ -13,4 +13,8 @@ login-element {
       flex: 1;
     }
   }
+
+  input {
+    background: rgb(10, 10, 10);
+  }
 }

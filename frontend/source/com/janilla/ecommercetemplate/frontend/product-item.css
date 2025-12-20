@@ -31,7 +31,7 @@ product-item {
     text-decoration: none;
 
     &:has(img) {
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-1);
       border-radius: 0.5rem;
       display: block;
       overflow: hidden;
@@ -46,7 +46,7 @@ product-item {
   }
 
   .option {
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     font-family: GeistMono;
     font-size: 0.875rem;
     letter-spacing: 0.1em;
@@ -65,7 +65,7 @@ product-item {
 
   dd {
     all: unset;
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     font-family: GeistMono;
     font-size: 0.875rem;
   }

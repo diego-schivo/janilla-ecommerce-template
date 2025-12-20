@@ -1,9 +1,9 @@
 mobile-menu {
   button[name="show"] {
     background: transparent;
-    border: 1px solid oklch(0.371 0 0);
+    border: 1px solid var(--border-4);
     border-radius: 0.375rem;
-    color: white;
+    color: var(--color-1);
     padding: 0.825rem;
   }
 
@@ -17,17 +17,21 @@ mobile-menu {
       flex-direction: column;
     }
 
-    ul {
+    ul,
+    li {
       display: flex;
       flex-direction: column;
     }
 
-    li:has(.button) {
-      margin-top: 1.5rem;
+    li {
+      &:has(.button) {
+        margin-top: 1.5rem;
+      }
     }
 
     .button {
-      height: 2.25rem !important;
+      height: 2.25rem;
+      width: 100%;
     }
   }
 

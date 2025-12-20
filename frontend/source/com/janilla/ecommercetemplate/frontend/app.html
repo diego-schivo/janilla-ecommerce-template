@@ -30,7 +30,7 @@
 </template>
 
 <template id="account">
-  <account-element class="account"></account-element>
+  <account-element class="account" data-success="${success}" data-warning="${warning}"></account-element>
 </template>
 
 <template id="addresses">
@@ -39,6 +39,14 @@
 
 <template id="checkout">
   <checkout-element></checkout-element>
+</template>
+
+<template id="create-account">
+  <create-account></create-account>
+</template>
+
+<template id="find-order">
+  <find-order></find-order>
 </template>
 
 <template id="login">

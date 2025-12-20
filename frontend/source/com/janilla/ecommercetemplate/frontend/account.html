@@ -1,4 +1,6 @@
 <main>
+  <!--${success}-->
+  <!--${warning}-->
   <article>
     <h1>Account settings</h1>
     <p>
@@ -29,6 +31,10 @@
     <a href="/orders" class="button primary">View all orders</a>
   </article>
 </main>
+
+<template id="message">
+  <message-element class="${class}" data-text="${text}"></message-element>
+</template>
 
 <template id="empty">
   <p>You have no orders.</p>

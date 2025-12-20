@@ -1,10 +1,10 @@
 app-element {
   > div {
-    /*background: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));*/
-    color: light-dark(rgb(46, 42, 36), rgb(209, 213, 219));
+    color: var(--color-2);
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    /*gap: 4rem;*/
+    gap: 2rem;
     min-height: 100vh;
 
     > footer > div {
@@ -58,71 +58,78 @@ app-element {
         }
       }
     }
+  }
 
-    > footer {
-      background: light-dark(rgb(245, 245, 245), rgb(10, 10, 10));
-      border-top: 1px solid rgba(38, 38, 38, 0.8);
-      /*margin-top: 2rem;*/
-      margin-top: auto;
-      padding: 2rem;
+  footer {
+    background: var(--background-1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.875rem;
+    /*margin-top: 2rem;*/
+    margin-top: auto;
+    padding: 2rem;
 
-      > div,
-      nav {
-        display: flex;
-        gap: 1rem;
+    > div {
+      display: flex;
+      gap: 1rem;
 
-        @media (max-width: 1440px) {
-          flex-direction: column;
-        }
-
-        @media (min-width: 1441px) {
-          align-items: center;
-        }
+      @media (max-width: 1440px) {
+        flex-direction: column;
       }
 
-      img {
-        height: 20px;
-        object-fit: cover;
-        object-position: left;
-        width: 20px;
+      @media (min-width: 1441px) {
+        align-items: center;
+      }
+    }
+
+    img {
+      height: 20px;
+      object-fit: cover;
+      object-position: left;
+      width: 20px;
+    }
+
+    nav {
+      display: flex;
+
+      @media (max-width: 1440px) {
+        flex-direction: column;
       }
 
-      nav {
-        @media (min-width: 1441px) {
-          order: 1;
-        }
+	  @media (min-width: 1441px) {
+        align-items: center;
+        order: 1;
+      }
+    }
+
+    div:has(> select) {
+      align-self: start;
+      position: relative;
+
+      @media (min-width: 1441px) {
+        margin-left: auto;
       }
 
-      div:has(> select) {
-        align-self: start;
-        position: relative;
-
-        @media (min-width: 1441px) {
-          margin-left: auto;
-        }
-
-        lucide-icon {
-          pointer-events: none;
-          position: absolute;
-          right: 0;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-
-        svg {
-          display: block;
-          opacity: 0.5;
-          width: 1rem;
-        }
+      lucide-icon {
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
       }
 
-      select {
-        appearance: none;
-        background: transparent;
-        border: none;
-        font-size: 1rem;
-        padding: 0.5rem 1rem 0.5rem 0;
+      svg {
+        display: block;
+        opacity: 0.5;
+        width: 1rem;
       }
+    }
+
+    select {
+      appearance: none;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      padding: 0.5rem 1rem 0.5rem 0;
     }
   }
 }

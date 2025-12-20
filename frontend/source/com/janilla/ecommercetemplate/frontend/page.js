@@ -21,81 +21,83 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
 export default class Page extends WebComponent {
 
-	static get observedAttributes() {
-		return ["data-slug"];
-	}
+    static get observedAttributes() {
+        return ["data-slug"];
+    }
 
-	static get templateNames() {
-		return ["page"];
-	}
+    static get templateNames() {
+        return ["page"];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	async updateDisplay() {
-		let hs = history.state;
-		const a = this.closest("app-element");
-		if (!Object.hasOwn(hs, "page"))
-			history.replaceState(hs = {
-				...hs,
-				page: a.serverState?.page
-			}, "");
+    async updateDisplay() {
+        let hs = history.state;
+        const a = this.closest("app-element");
 
-		if (this.dataset.slug != hs.page?.slug) {
-			const u = new URL(`${a.dataset.apiUrl}/pages`, location.href);
-			u.searchParams.append("slug", this.dataset.slug);
-			let p = (await (await fetch(u)).json())[0];
-			if (!p && this.dataset.slug === "home")
-				p = {
-					placeholder: true,
-					layout: [
-						{
-							$type: "Content",
-							columns: [
-								{
-									$type: "Column",
-									size: "FULL",
-									richText: `<h1>Janilla Ecommerce Template</h1>
-								<p>
-								  <a href="/admin">Visit the admin dashboard</a>
-								  to make your account and seed content for your website.
-								</p>`
-								}
-							]
-						}
-					]
-				};
-			history.replaceState(hs = {
-				...hs,
-				page: p
-			}, "");
-		}
+        if (!Object.hasOwn(hs, "page"))
+            history.replaceState(hs = {
+                ...hs,
+                page: a.serverState?.page
+            }, "");
 
-		a.updateSeo(hs.page?.meta);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			placeholder: hs.page?.placeholder ? "placeholder" : null,
-			hero: (hs.page?.hero?.type?.name ?? "NONE") !== "NONE" ? {
-				$template: "hero",
-				path: "hero"
-			} : null,
-			layout: hs.page?.layout?.map((x, i) => ({
-				$template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
-				path: `layout.${i}`
-			}))
-		}));
-	}
+        if (this.dataset.slug != hs.page?.slug) {
+            const u = new URL(`${a.dataset.apiUrl}/pages`, location.href);
+            u.searchParams.append("slug", this.dataset.slug);
+            const p = (await (await fetch(u)).json())[0] ?? (this.dataset.slug === "home" ? {
+                placeholder: true,
+                layout: [
+                    {
+                        $type: "Content",
+                        columns: [
+                            {
+                                $type: "Column",
+                                size: "FULL",
+                                richText: `<h1>Janilla Ecommerce Template</h1>
+											<p>
+											  <a href="/admin">Visit the admin dashboard</a>
+											  to make your account and seed content for your website.
+											</p>`
+                            }
+                        ]
+                    }
+                ]
+            } : null);
+            if (p)
+                history.replaceState(hs = {
+                    ...hs,
+                    page: p
+                }, "");
+            else
+                a.notFound();
+        }
 
-	data(path) {
-		return path.split(".").reduce((x, n) => Array.isArray(x)
-			? x[parseInt(n)]
-			: typeof x === "object" && x !== null
-				? x[n]
-				: null, history.state.page);
-	}
+        a.updateSeo(hs.page?.meta);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            placeholder: hs.page?.placeholder ? "placeholder" : null,
+            hero: (hs.page?.hero?.type?.name ?? "NONE") !== "NONE" ? {
+                $template: "hero",
+                path: "hero"
+            } : null,
+            layout: hs.page?.layout?.map((x, i) => ({
+                $template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
+                path: `layout.${i}`
+            }))
+        }));
+    }
+
+    data(path) {
+        return path.split(".").reduce((x, n) => Array.isArray(x)
+            ? x[parseInt(n)]
+            : typeof x === "object" && x !== null
+                ? x[n]
+                : null, history.state.page);
+    }
 }

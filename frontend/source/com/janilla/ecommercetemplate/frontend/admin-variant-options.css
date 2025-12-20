@@ -44,11 +44,11 @@
   }
 
   option {
-    background: rgb(34, 34, 34);
+    background: var(--background-6);
     padding: 0.5rem 1rem;
 
     &:checked {
-      background: rgb(101, 101, 101);
+      background: var(--background-9);
     }
 
     &::checkmark {

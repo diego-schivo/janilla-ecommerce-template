@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
 export default class Hero extends WebComponent {
 
@@ -37,11 +37,7 @@ export default class Hero extends WebComponent {
 		const d = this.closest("page-element").data(this.dataset.path);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			...d,
-			links: d.links?.map(x => ({
-				$template: "link",
-				...x
-			}))
+			...d
 		}));
 	}
 }

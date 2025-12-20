@@ -1,16 +1,48 @@
-:root {
-  color-scheme: light dark;
-}
-
-html,
+:root,
 :host {
+  color-scheme: light dark;
   line-height: 1.5;
   text-size-adjust: 100%;
 }
 
+:root {
+  --background-1: rgb(10, 10, 10);
+  --background-2: rgb(248, 250, 252);
+  --background-3: rgba(248, 250, 252, 0.9);
+  --background-4: rgb(20, 20, 20);
+  --background-5: rgb(0, 0, 0);
+  --background-6: rgb(34, 34, 34);
+  --background-7: oklab(0 0 0 / 0.8);
+  --background-8: rgb(15, 15, 15);
+  --background-9: rgb(101, 101, 101);
+  --background-10: oklch(0.556 0 0);
+  --background-11: oklch(0.205 0 0);
+  --background-12: oklab(0.983787 -0.0012686 -0.00321162 / 0.05);
+  --background-13: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
+  --background-14: rgb(0, 52, 71);
+  --background-15: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
+  --border-1: rgba(255, 255, 255, 0.1);
+  --border-2: rgb(60, 60, 60);
+  --border-3: oklch(0.556 0 0);
+  --border-4: oklch(0.371 0 0);
+  --border-5: rgb(204, 204, 204);
+  --border-6: oklch(0.546 0.245 262.881);
+  --color-1: white;
+  --color-2: rgb(209, 213, 219);
+  --color-3: rgb(15, 23, 42);
+  --color-4: rgb(248, 250, 252);
+  --color-5: gray;
+  --color-6: rgb(148, 163, 184);
+  --color-7: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+  --color-8: black;
+  --color-9: oklch(0.708 0 0);
+  --color-10: oklch(0.556 0 0);
+  --color-11: oklch(0.446 0.03 256.802);
+}
+
 a,
 strong {
-  color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+  color: var(--color-1);
 }
 
 article,
@@ -20,15 +52,13 @@ label {
   flex-direction: column;
 }
 
-article,
-form {
+article {
   gap: 1rem;
 }
 
 body {
-  /*background: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));*/
-  background: rgb(10, 10, 10);
-  color: light-dark(rgb(46, 42, 36), rgb(209, 213, 219));
+  background: var(--background-1);
+  color: var(--color-2);
   font-family: Geist;
   margin: 0;
 
@@ -61,7 +91,6 @@ button {
   padding: 0;
 }
 
-/*button,*/
 .button {
   align-items: center;
   border: none;
@@ -71,8 +100,7 @@ button {
   font-weight: 500;
   text-decoration: none;
 
-  &.primary,
-  &.secondary {
+  &:where(.primary, .secondary) {
     border-radius: 0.25rem;
     box-sizing: border-box;
     height: 2.5rem;
@@ -86,18 +114,18 @@ button {
   }
 
   &.primary {
-    background: rgb(248, 250, 252);
-    color: rgb(15, 23, 42);
+    background: var(--background-2);
+    color: var(--color-3);
 
     &:not(:disabled):hover {
-      background: rgba(248, 250, 252, 0.9);
+      background: var(--background-3);
     }
   }
 
   &.secondary {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgb(20, 20, 20);
-    color: rgb(248, 250, 252);
+    border: 1px solid var(--border-1);
+    background: var(--background-4);
+    color: var(--color-4);
   }
 }
 
@@ -112,14 +140,23 @@ ul {
   margin: 0;
 }
 
-::backdrop {
-  background: oklab(0 0 0 / 0.8);
+form {
+  gap: 2rem;
+
+  .button {
+    align-self: start;
+    height: 2.25rem;
+  }
+
+  label {
+    gap: 0.5rem;
+  }
 }
 
 h1,
 h2,
 h3 {
-  color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+  color: var(--color-1);
   font-weight: 400;
 }
 
@@ -146,12 +183,14 @@ input,
 select,
 textarea {
   /*background: transparent;*/
-  background: rgb(0, 0, 0);
-  border: 1px solid rgba(38, 38, 38, 0.8);
+  background: var(--background-5);
+  border: 1px solid var(--border-1);
   border-radius: 0.25rem;
   box-sizing: border-box;
-  /*padding: 0.5rem 0.75rem;*/
-  padding: 0.5rem 1rem;
+  color: var(--color-1);
+  font-size: 1rem;
+  /*padding: 0.5rem 1rem;*/
+  padding: 0.25rem 0.75rem;
 
   &:focus {
     outline: 2px solid rgb(255, 255, 255);
@@ -159,11 +198,12 @@ textarea {
 }
 
 input {
-  height: 2.5rem;
+  /*height: 2.5rem;*/
+  height: 2.25rem;
 }
 
 label {
-  color: gray;
+  color: var(--color-5);
   font-family: GeistMono;
   /*text-transform: uppercase;*/
 
@@ -184,8 +224,8 @@ label {
     }
 
     lucide-icon {
-      background: light-dark(rgb(221, 221, 221), rgb(34, 34, 34));
-      border: 1px solid rgb(60, 60, 60);
+      background: var(--background-6);
+      border: 1px solid var(--border-2);
       border-radius: 0.1875rem;
     }
   }
@@ -213,4 +253,8 @@ textarea {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+::backdrop {
+  background: var(--background-7);
 }

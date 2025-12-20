@@ -1,2 +1,20 @@
+div:has(> not-found) {
+  gap: 6.5rem;
+}
+
 not-found {
+  h1 {
+    color: oklch(0.21 0.034 264.665);
+    font-size: 2.25rem;
+    font-weight: 800;
+  }
+
+  p {
+    color: oklch(0.373 0.034 259.733);
+  }
+
+  .button {
+    align-self: start;
+    height: 2.25rem;
+  }
 }

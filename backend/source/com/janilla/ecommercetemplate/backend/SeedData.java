@@ -26,7 +26,7 @@ package com.janilla.ecommercetemplate.backend;
 import java.util.List;
 
 public record SeedData(List<Address> addresses, List<Cart> carts, List<Category> categories, Footer footer,
-		List<FormSubmission> formSubmissions, List<Form> forms, Header header, List<Media> media, List<Order> orders,
-		List<Page> pages, List<Product> products, List<Transaction> transactions, List<User> users,
-		List<VariantOption> variantOptions, List<VariantType> variantTypes, List<Variant> variants) {
+		Header header, List<Media> media, List<Order> orders, List<Page> pages, List<Product> products,
+		List<Transaction> transactions, List<User> users, List<VariantOption> variantOptions,
+		List<VariantType> variantTypes, List<Variant> variants) {
 }

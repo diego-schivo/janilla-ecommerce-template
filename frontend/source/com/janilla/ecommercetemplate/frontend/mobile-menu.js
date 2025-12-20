@@ -21,88 +21,93 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
 export default class MobileMenu extends WebComponent {
 
-	static get templateNames() {
-		return ["mobile-menu"];
-	}
+    static get templateNames() {
+        return ["mobile-menu"];
+    }
 
-	static get observedAttributes() {
-		return [];
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("click", this.handleClick);
-		this.closest("app-element").addEventListener("userchanged", this.handleUserChanged);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+        (this.state.app = this.closest("app-element")).addEventListener("userchanged", this.handleUserChanged);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("click", this.handleClick);
-		this.closest("app-element").removeEventListener("userchanged", this.handleUserChanged);
-	}
+    disconnectedCallback() {
+        const a = this.state.app;
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+        a.removeEventListener("userchanged", this.handleUserChanged);
+    }
 
-	async updateDisplay() {
-		const a = this.closest("app-element");
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			navItems: a.state.header?.navItems?.map(x => ({
-				$template: "list-item",
-				content: {
-					$template: "link",
-					...x,
-					document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-					href: x.type.name === "CUSTOM" ? x.uri : null,
-					target: x.newTab ? "_blank" : null
-				}
-			})),
-			navItems2: (a.state.user ? [{
-				href: "/orders",
-				text: "Orders"
-			}, {
-				href: "/account/addresses",
-				text: "Addresses"
-			}, {
-				href: "/account",
-				text: "Manage account"
-			}, {
-				href: "/logout",
-				class: "button secondary",
-				text: "Log out"
-			}] : [{
-				href: "/login",
-				class: "button",
-				text: "Log in"
-			}]).map(x => ({
-				$template: "list-item",
-				content: {
-					$template: "link",
-					...x
-				}
-			}))
-		}));
-	}
+    async updateDisplay() {
+        const a = this.closest("app-element");
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            navItems: a.state.header?.navItems?.map(x => ({
+                $template: "list-item",
+                content: {
+                    $template: "link",
+                    ...x,
+                    document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+                    href: x.type.name === "CUSTOM" ? x.uri : null,
+                    target: x.newTab ? "_blank" : null
+                }
+            })),
+            navItems2: (a.state.user ? [{
+                href: "/orders",
+                text: "Orders"
+            }, {
+                href: "/account/addresses",
+                text: "Addresses"
+            }, {
+                href: "/account",
+                text: "Manage account"
+            }, {
+                href: "/logout",
+                class: "button secondary",
+                text: "Log out"
+            }] : [{
+                href: "/login",
+                class: "button secondary",
+                text: "Log in"
+            }, {
+                href: "/create-account",
+                class: "button primary",
+                text: "Create an account"
+            }]).map(x => ({
+                $template: "list-item",
+                content: {
+                    $template: "link",
+                    ...x
+                }
+            }))
+        }));
+    }
 
-	handleClick = event => {
-		const x = event.target.closest("button");
-		switch (x?.name) {
-			case "show":
-				this.querySelector("dialog").showModal();
-				break;
-			case "close":
-				this.querySelector("dialog").close();
-				break;
-		}
-	}
+    handleClick = event => {
+        const x = event.target.closest("button");
+        switch (x?.name) {
+            case "show":
+                this.querySelector("dialog").showModal();
+                break;
+            case "close":
+                this.querySelector("dialog").close();
+                break;
+        }
+    }
 
-	handleUserChanged = () => {
-	    this.requestDisplay();
-	}
+    handleUserChanged = () => {
+        this.requestDisplay();
+    }
 }

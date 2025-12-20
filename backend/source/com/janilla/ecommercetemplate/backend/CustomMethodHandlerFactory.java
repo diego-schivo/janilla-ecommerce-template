@@ -48,7 +48,7 @@ public class CustomMethodHandlerFactory extends InvocationHandlerFactory {
 
 	public static final AtomicReference<CustomMethodHandlerFactory> INSTANCE = new AtomicReference<>();
 
-	protected static final Set<String> GUEST_POST = Set.of("/api/carts", "/api/form-submissions",
+	protected static final Set<String> GUEST_POST = Set.of("/api/carts", "/api/form-submissions", "/api/users",
 			"/api/users/first-register", "/api/users/forgot-password", "/api/users/login", "/api/users/reset-password",
 //			"/api/payments/stripe/initiate", "/api/payments/stripe/confirm-order", 
 			"/api/payments/stripe/webhooks");

@@ -19,12 +19,12 @@ checkout-element {
   }
 
   p {
-    color: rgb(248, 250, 252);
+    color: var(--color-4);
   }
 
   .contact {
     > div {
-      background: rgb(20, 20, 20);
+      background: var(--background-4);
       border-radius: 0.5rem;
       padding: 1rem;
     }
@@ -41,8 +41,8 @@ checkout-element {
       font-weight: 500;
     }
 
-    button[name="remove"] {
-      align-self: center !important;
+    .button[name="remove"] {
+      align-self: center;
     }
   }
 
@@ -53,12 +53,12 @@ checkout-element {
     }
   }
   */
-  button {
+  .button {
     align-self: start;
   }
 
   .cart {
-    background: oklab(0.983787 -0.0012686 -0.00321162 / 0.05);
+    background: var(--background-12);
     border-radius: 0.5rem;
     padding: 2rem;
 
@@ -83,7 +83,7 @@ checkout-element {
       }
 
       a {
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border-1);
         border-radius: 0.5rem;
         display: block;
         height: 4rem;

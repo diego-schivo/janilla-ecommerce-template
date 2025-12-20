@@ -1,6 +1,6 @@
 order-item {
-  background: rgb(20, 20, 20);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--background-4);
+  border: 1px solid var(--border-1);
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -8,7 +8,7 @@ order-item {
   padding: 0.5rem 1rem;
 
   h3 {
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     font-family: GeistMono;
     font-size: 0.875rem;
     font-weight: 400;
@@ -22,9 +22,9 @@ order-item {
     letter-spacing: 0.1em;
 
     span {
-      background: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
+      background: var(--background-13);
       border-radius: 0.25rem;
-      color: rgb(248, 250, 252);
+      color: var(--color-4);
       display: inline-block;
       line-height: 1.35;
       padding: 0 0.5rem;
@@ -32,13 +32,13 @@ order-item {
 
     &[data-status="COMPLETED"] {
       span {
-        background: rgb(0, 52, 71);
+        background: var(--background-14);
       }
     }
   }
 
   .created-at {
-    color: rgb(248, 250, 252);
+    color: var(--color-4);
     font-size: 1.25rem;
   }
 
@@ -56,7 +56,7 @@ order-item {
 
   .button {
     align-self: start;
-    height: 2.25rem !important;
+    height: 2.25rem;
     margin-top: 2rem;
   }
 }

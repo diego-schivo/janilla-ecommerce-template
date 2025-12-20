@@ -37,7 +37,7 @@ import com.janilla.persistence.Store;
 //@Index(sort = "-createdAt")
 @Versions(drafts = true)
 public record Page(Long id, String title, Hero hero, List<@Types( {
-		Archive.class, CallToAction.class, Content.class, FormBlock.class, MediaBlock.class }) ?> layout, Meta meta,
-		@Index String slug, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
+		CallToAction.class, Content.class, MediaBlock.class }) ?> layout, Meta meta, @Index String slug,
+		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
 		implements Document<Long>{
 }

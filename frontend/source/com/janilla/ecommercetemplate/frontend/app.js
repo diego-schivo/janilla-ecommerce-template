@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
 const adminRegex = /^\/admin(\/.*)?$/;
 const ordersRegex = /^\/orders(\/.*)?$/;
@@ -42,14 +42,14 @@ export default class App extends WebComponent {
         if (!history.state)
             history.replaceState({}, "");
     }
-	
-	get user() {
-		return this.state.user;
-	}
+
+    get user() {
+        return this.state.user;
+    }
 
     set user(user) {
         this.state.user = user;
-		this.dispatchEvent(new CustomEvent("userchanged", { detail: user }));
+        this.dispatchEvent(new CustomEvent("userchanged", { detail: user }));
     }
 
     connectedCallback() {
@@ -75,22 +75,35 @@ export default class App extends WebComponent {
 
     async updateDisplay() {
         const s = this.state;
+        const ss = this.serverState;
+
+        if (ss?.error?.code === 404)
+            s.notFound = true;
+
         if (!Object.hasOwn(s, "user"))
-            s.user = this.serverState && Object.hasOwn(this.serverState, "user")
-                ? this.serverState.user
+            s.user = ss && Object.hasOwn(ss, "user")
+                ? ss.user
                 : await (await fetch(`${this.dataset.apiUrl}/users/me`)).json();
-        const u0 = s.user;
 
         const p = location.pathname;
-        if (s.user) {
-            if (p === "/logout") {
-                await fetch(`${this.dataset.apiUrl}/users/logout`, { method: "POST" });
-                this.user = null;
+        const spp = new URLSearchParams(location.search);
+        const u0 = s.user;
+
+        if (s.user)
+            switch (p) {
+                case "/create-account":
+                case "/login":
+                    const u = new URL("/account", location.href);
+                    u.searchParams.append("warning", "You are already logged in.");
+                    this.navigate(u);
+                    return;
+                case "/logout":
+                    await fetch(`${this.dataset.apiUrl}/users/logout`, { method: "POST" });
+                    s.user = null;
+                    break;
             }
-        } else if (["/account"].includes(p) || p.startsWith("/account/")) {
-            // location.href = "/login";
-            history.pushState({}, "", "/login");
-            dispatchEvent(new CustomEvent("popstate"));
+        else if (["/account"].includes(p) || p.startsWith("/account/")) {
+            this.navigate(new URL("/login", location.href));
             return;
         }
 
@@ -110,16 +123,16 @@ export default class App extends WebComponent {
         }
 
         if (!Object.hasOwn(s, "header"))
-            s.header = this.serverState && Object.hasOwn(this.serverState, "header")
-                ? this.serverState.header
+            s.header = ss && Object.hasOwn(ss, "header")
+                ? ss.header
                 : await (await fetch(`${this.dataset.apiUrl}/header`)).json();
         if (!Object.hasOwn(s, "footer"))
-            s.footer = this.serverState && Object.hasOwn(this.serverState, "footer")
-                ? this.serverState.footer
+            s.footer = ss && Object.hasOwn(ss, "footer")
+                ? ss.footer
                 : await (await fetch(`${this.dataset.apiUrl}/footer`)).json();
         if (!Object.hasOwn(s, "enums"))
-            s.enums = this.serverState && Object.hasOwn(this.serverState, "enums")
-                ? this.serverState.enums
+            s.enums = ss && Object.hasOwn(ss, "enums")
+                ? ss.enums
                 : await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
 
         const cs = localStorage.getItem("janilla-ecommerce-template.color-scheme");
@@ -135,7 +148,11 @@ export default class App extends WebComponent {
                 content: s.notFound ? { $template: "not-found" } : (() => {
                     switch (p) {
                         case "/account":
-                            return { $template: "account" };
+                            return {
+                                $template: "account",
+                                success: spp.get("success"),
+                                warning: spp.get("warning")
+                            };
                         case "/account/addresses":
                             return { $template: "addresses" };
                         case "/checkout":
@@ -151,6 +168,10 @@ export default class App extends WebComponent {
                             } else if (!s.stripe && typeof Stripe !== "undefined")
                                 s.stripe = Stripe(this.dataset.stripePublishableKey);
                             return { $template: "checkout" };
+                        case "/create-account":
+                            return { $template: "create-account" };
+                        case "/find-order":
+                            return { $template: "find-order" };
                         case "/login":
                             return { $template: "login" };
                         case "/logout":
@@ -161,7 +182,7 @@ export default class App extends WebComponent {
                         case "/order-confirmation":
                             return {
                                 $template: "order-confirmation",
-                                stripePaymentIntentId: new URLSearchParams(location.search).get("payment_intent")
+                                stripePaymentIntentId: spp.get("payment_intent")
                             };
                     }
                     const m2 = p.match(productRegex);
@@ -178,12 +199,11 @@ export default class App extends WebComponent {
                             id: m3[1].substring(1)
                         } : { $template: "orders" };
                     return p === "/shop" ? (() => {
-                        const s = new URLSearchParams(location.search);
                         return {
                             $template: "shop",
-                            query: s.get("q"),
-                            category: s.get("category"),
-                            sort: s.get("sort")
+                            query: spp.get("q"),
+                            category: spp.get("category"),
+                            sort: spp.get("sort")
                         };
                     })() : {
                         $template: "page",

@@ -24,6 +24,7 @@
 package com.janilla.ecommercetemplate.backend;
 
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
@@ -40,5 +41,14 @@ public class UserApi extends com.janilla.cms.UserApi<Long, UserRole, User> {
 		super(User.class, drafts, persistence, configuration.getProperty("ecommerce-template.jwt.key"));
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
+	}
+
+	@Handle(method = "POST")
+	public User create(CreateData<User> data, BackendExchange exchange) {
+		if (exchange.sessionUser() == null) {
+			var u = data.user().withRoles(Set.of(UserRole.CUSTOMER));
+			data = data.withUser(u);
+		}
+		return super.create(data);
 	}
 }

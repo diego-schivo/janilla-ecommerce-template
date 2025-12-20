@@ -18,12 +18,12 @@ product-gallery {
   }
 
   button {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-1);
     border-radius: 0.5rem;
     overflow: hidden;
 
     &.active {
-      border: 2px solid oklch(0.546 0.245 262.881);
+      border: 2px solid var(--border-6);
     }
   }
 

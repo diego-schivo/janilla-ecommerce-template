@@ -44,9 +44,9 @@ public class CustomPersistenceBuilder extends ApplicationPersistenceBuilder {
 
 	@Override
 	public Persistence build() {
-		var fe = Files.exists(databaseFile);
+		var f = Files.exists(databaseFile);
 		var p = super.build();
-		if (!fe && Boolean.parseBoolean(configuration.getProperty("ecommerce-template.live-demo")))
+		if (!f && Boolean.parseBoolean(configuration.getProperty("ecommerce-template.live-demo")))
 			try {
 				((CustomPersistence) persistence).seed();
 			} catch (IOException e) {

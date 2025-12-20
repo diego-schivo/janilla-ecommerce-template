@@ -96,6 +96,8 @@ public class FrontendApplication {
 
 	protected final HttpHandler handler;
 
+	protected final IndexFactory indexFactory;
+
 	protected final List<Invocable> invocables;
 
 	protected final HttpClient httpClient;
@@ -118,6 +120,7 @@ public class FrontendApplication {
 			httpClient = diFactory.create(HttpClient.class, Map.of("sslContext", c));
 		}
 		dataFetching = diFactory.create(DataFetching.class);
+		indexFactory = diFactory.create(IndexFactory.class);
 
 		invocables = types().stream().flatMap(x -> Arrays.stream(x.getMethods())
 				.filter(y -> !Modifier.isStatic(y.getModifiers())).map(y -> new Invocable(x, y))).toList();
@@ -154,6 +157,10 @@ public class FrontendApplication {
 
 	public HttpHandler handler() {
 		return handler;
+	}
+
+	public IndexFactory indexFactory() {
+		return indexFactory;
 	}
 
 	public List<Invocable> invocables() {

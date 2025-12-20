@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
 export default class Account extends WebComponent {
 
@@ -30,7 +30,7 @@ export default class Account extends WebComponent {
     }
 
     static get observedAttributes() {
-        return [];
+        return ["data-success", "data-warning"];
     }
 
     constructor() {
@@ -55,6 +55,16 @@ export default class Account extends WebComponent {
         s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
         this.appendChild(this.interpolateDom({
             $template: "",
+			success: this.dataset.success ? {
+				$template: "message",
+				class: "success",
+				text: this.dataset.success
+			} : null,
+			warning: this.dataset.warning ? {
+				$template: "message",
+				class: "warning",
+				text: this.dataset.warning
+			} : null,
             user: a.user,
             orders: s.orders?.length ? {
                 $template: "list",

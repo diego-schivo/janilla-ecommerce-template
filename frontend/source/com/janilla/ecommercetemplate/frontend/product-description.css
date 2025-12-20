@@ -17,7 +17,7 @@ product-description {
   }
 
   price-element {
-    color: rgb(248, 250, 252);
+    color: var(--color-4);
     line-height: 1.5;
   }
 

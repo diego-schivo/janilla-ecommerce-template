@@ -21,45 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "./web-component.js";
+import WebComponent from "web-component";
 
-export default class CmsVariantOptions extends WebComponent {
+export default class FindOrder extends WebComponent {
 
-	static get observedAttributes() {
-		return ["data-array-key", "data-path", "data-updated-at"];
-	}
+    static get templateNames() {
+        return ["find-order"];
+    }
 
-	static get templateNames() {
-		return ["cms-variant-options"];
-	}
+    static get observedAttributes() {
+        return [];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	async updateDisplay() {
-		const a = this.closest("cms-admin");
-		const p = this.dataset.path;
-		const f = a.field(p);
-		this.appendChild(this.interpolateDom({
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("submit", this.handleSubmit);
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("submit", this.handleSubmit);
+    }
+
+    async updateDisplay() {
+        document.title = "Find order";
+		const a = this.closest("app-element");
+        a.updateSeo(null);
+        this.appendChild(this.interpolateDom({
 			$template: "",
-			selects: a.state.document.variantOptions.map(x => {
-				const t = `${x.$type}Option`;
-				const n = f.data?.find(y => y.$type === t)?.name;
-				return {
-					$template: "select",
-					name: p,
-					options: [{
-						$type: t,
-						name: ""
-					}, ...x.options].map(y => ({
-						$template: "option",
-						value: `${x.$type}:${y.name}`,
-						selected: y.name == (n ?? ""),
-						text: y.name
-					}))
-				};
-			})
+			email: a.user?.email
 		}));
-	}
+    }
+
+    handleSubmit = async event => {
+        const f = event.target;
+        event.preventDefault();
+
+        const a = this.closest("app-element");
+        const d = new FormData(f);
+        const u = new URL(`/orders/${d.get("order")}`, location.href);
+        u.searchParams.append("email", d.get("email"));
+        a.navigate(u);
+    }
 }

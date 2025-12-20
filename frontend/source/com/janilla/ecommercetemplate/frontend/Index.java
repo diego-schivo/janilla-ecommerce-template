@@ -25,9 +25,20 @@ package com.janilla.ecommercetemplate.frontend;
 
 import java.util.Map;
 
+import com.janilla.json.Json;
 import com.janilla.web.Render;
+import com.janilla.web.Renderer;
 
 @Render(template = "index.html")
-public record Index(@Render(template = "stripe") Object stripe, String apiUrl, String stripePublishableKey,
+public record Index(@Render(template = "stripe") Object stripe,
+		@Render(renderer = JsonRenderer.class) Map<String, String> imports, String apiUrl, String stripePublishableKey,
 		@Render(renderer = StateRenderer.class) Map<String, Object> state) {
+
+	public static class JsonRenderer<T> extends Renderer<T> {
+
+		@Override
+		public String apply(T value) {
+			return Json.format(value);
+		}
+	}
 }

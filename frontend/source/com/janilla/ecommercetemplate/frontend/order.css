@@ -11,7 +11,7 @@ order-element {
 
   a:has(> lucide-icon) {
     align-items: center;
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
@@ -24,7 +24,7 @@ order-element {
   }
 
   h1 {
-    background: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
+    background: var(--background-13);
     border-radius: 0.25rem;
     font-family: GeistMono;
     font-size: 0.875rem;
@@ -35,8 +35,8 @@ order-element {
   }
 
   section {
-    background: rgb(20, 20, 20);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--background-4);
+    border: 1px solid var(--border-1);
     border-radius: 0.5rem;
     padding: 1rem 1.5rem;
   }
@@ -54,14 +54,14 @@ order-element {
   }
 
   dt {
-    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    color: var(--color-7);
     font-family: GeistMono;
     font-size: 0.875rem;
     text-transform: uppercase;
   }
 
   dd {
-    color: rgb(248, 250, 252);
+    color: var(--color-4);
   }
 
   .created-at,
@@ -79,7 +79,7 @@ order-element {
     }
 
     span {
-      background: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
+      background: var(--background-13);
       border-radius: 0.25rem;
       display: inline-block;
       padding: 0 0.5rem;

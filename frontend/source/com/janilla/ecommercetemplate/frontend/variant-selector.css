@@ -35,7 +35,7 @@ variant-selector {
     }
 
     &:has(:checked) {
-      background: var(--background-15);
+      background: var(--background-16);
       color: var(--color-4);
     }
   }

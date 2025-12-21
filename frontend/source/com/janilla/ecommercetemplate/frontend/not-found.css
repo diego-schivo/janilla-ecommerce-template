@@ -4,13 +4,13 @@ div:has(> not-found) {
 
 not-found {
   h1 {
-    color: oklch(0.21 0.034 264.665);
+    color: var(--color-12);
     font-size: 2.25rem;
     font-weight: 800;
   }
 
   p {
-    color: oklch(0.373 0.034 259.733);
+    color: var(--color-13);
   }
 
   .button {

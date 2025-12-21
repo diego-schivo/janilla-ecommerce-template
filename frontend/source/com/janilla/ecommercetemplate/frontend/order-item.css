@@ -22,7 +22,7 @@ order-item {
     letter-spacing: 0.1em;
 
     span {
-      background: var(--background-13);
+      background: var(--background-15);
       border-radius: 0.25rem;
       color: var(--color-4);
       display: inline-block;
@@ -32,7 +32,7 @@ order-item {
 
     &[data-status="COMPLETED"] {
       span {
-        background: var(--background-14);
+        background: var(--background-13);
       }
     }
   }

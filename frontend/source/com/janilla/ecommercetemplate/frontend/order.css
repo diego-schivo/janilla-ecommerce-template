@@ -24,7 +24,7 @@ order-element {
   }
 
   h1 {
-    background: var(--background-13);
+    background: var(--background-15);
     border-radius: 0.25rem;
     font-family: GeistMono;
     font-size: 0.875rem;
@@ -79,7 +79,7 @@ order-element {
     }
 
     span {
-      background: var(--background-13);
+      background: var(--background-15);
       border-radius: 0.25rem;
       display: inline-block;
       padding: 0 0.5rem;

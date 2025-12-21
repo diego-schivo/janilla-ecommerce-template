@@ -54,8 +54,9 @@ export default class Login extends WebComponent {
     }
 
     handleSubmit = async event => {
-        event.preventDefault();
         const f = event.target;
+        event.preventDefault();
+
         const a = this.closest("app-element");
         const r = await fetch(`${a.dataset.apiUrl}/users/login`, {
             method: "POST",

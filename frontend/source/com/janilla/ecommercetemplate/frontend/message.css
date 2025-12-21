@@ -3,10 +3,10 @@ message-element {
   padding: 1rem;
 
   &.success {
-    background: rgb(0, 52, 71);
+    background: var(--background-13);
   }
 
   &.warning {
-    background: rgb(96, 68, 31);
+    background: var(--background-14);
   }
 }

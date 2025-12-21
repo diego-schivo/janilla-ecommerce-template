@@ -15,6 +15,6 @@ login-element {
   }
 
   input {
-    background: rgb(10, 10, 10);
+    background: var(--background-1);
   }
 }

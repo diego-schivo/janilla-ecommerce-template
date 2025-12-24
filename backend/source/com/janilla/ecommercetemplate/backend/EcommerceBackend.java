@@ -108,7 +108,7 @@ public class EcommerceBackend {
 
 	protected final Persistence persistence;
 
-	protected final RenderableFactory renderableFactory;
+//	protected final RenderableFactory renderableFactory;
 
 	protected final TypeResolver typeResolver;
 
@@ -132,7 +132,7 @@ public class EcommerceBackend {
 						.filter(y -> !Modifier.isStatic(y.getModifiers()) && !y.isBridge())
 						.map(y -> new Invocable(x, y)))
 				.toList();
-		renderableFactory = diFactory.create(RenderableFactory.class);
+//		renderableFactory = diFactory.create(RenderableFactory.class);
 		{
 			var f = diFactory.create(ApplicationHandlerFactory.class);
 			handler = x -> {
@@ -168,9 +168,9 @@ public class EcommerceBackend {
 		return persistence;
 	}
 
-	public RenderableFactory renderableFactory() {
-		return renderableFactory;
-	}
+//	public RenderableFactory renderableFactory() {
+//		return renderableFactory;
+//	}
 
 	public TypeResolver typeResolver() {
 		return typeResolver;

@@ -63,7 +63,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
 	public Object admin(String path, FrontendExchange exchange) {
-		IO.println("Admin.admin, path=" + path);
+		IO.println("WebHandling.admin, path=" + path);
 		if (path == null || path.isEmpty())
 			path = "/";
 		switch (path) {

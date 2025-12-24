@@ -35,70 +35,59 @@ import com.janilla.net.UriQueryBuilder;
 
 public class DataFetching {
 
-	protected final Properties configuration;
+	protected final String apiUrl;
 
 	protected final HttpClient httpClient;
 
 	public DataFetching(Properties configuration, HttpClient httpClient) {
-		this.configuration = configuration;
+		apiUrl = configuration.getProperty("ecommerce-template.api.url");
 		this.httpClient = httpClient;
 	}
 
 	public List<?> categories() {
-		return (List<?>) httpClient
-				.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/categories"));
+		return (List<?>) httpClient.getJson(URI.create(apiUrl + "/categories"));
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, List<String>> enums() {
-		return (Map<String, List<String>>) httpClient
-				.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/enums"));
+		return (Map<String, List<String>>) httpClient.getJson(URI.create(apiUrl + "/enums"));
 	}
 
 	public Object footer() {
-		return httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/footer"));
+		return httpClient.getJson(URI.create(apiUrl + "/footer"));
 	}
 
 	public Object header() {
-		return httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/header"));
+		return httpClient.getJson(URI.create(apiUrl + "/header"));
 	}
 
 	public Object order(Long id, HttpCookie token) {
-		return httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/orders/" + id),
-				token != null ? token.format() : null);
+		return httpClient.getJson(URI.create(apiUrl + "/orders/" + id), token != null ? token.format() : null);
 	}
 
 	public List<?> orders(HttpCookie token) {
-		return (List<?>) httpClient.getJson(
-				URI.create(configuration.getProperty("ecommerce-template.api.url") + "/orders"),
-				token != null ? token.format() : null);
+		return (List<?>) httpClient.getJson(URI.create(apiUrl + "/orders"), token != null ? token.format() : null);
 	}
 
 	public List<?> pages(String slug, HttpCookie token) {
-		return (List<?>) httpClient.getJson(
-				slug != null
-						? URI.create(configuration.getProperty("ecommerce-template.api.url") + "/pages?"
-								+ new UriQueryBuilder().append("slug", slug))
-						: URI.create(configuration.getProperty("ecommerce-template.api.url") + "/pages"),
+		return (List<?>) httpClient.getJson(URI.create(apiUrl + "/pages?" + new UriQueryBuilder().append("slug", slug)),
 				token != null ? token.format() : null);
 	}
 
 	public List<?> products(String slug, String query, Long category, String sort, HttpCookie token) {
-		return (List<?>) httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url")
-				+ "/products?"
-				+ new UriQueryBuilder().append("slug", slug).append("q", query)
+		return (List<?>) httpClient.getJson(
+				URI.create(apiUrl + "/products?" + new UriQueryBuilder().append("slug", slug).append("q", query)
 						.append("category", category != null ? category.toString() : null).append("sort", sort)),
 				token != null ? token.format() : null);
 	}
 
 	public Object sessionUser(HttpCookie token) {
-		return httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url") + "/users/me"),
-				token != null ? token.format() : null);
+		return httpClient.getJson(URI.create(apiUrl + "/users/me"), token != null ? token.format() : null);
 	}
 
 	public List<?> users(Long skip, Long limit) {
-		return (List<?>) httpClient.getJson(URI.create(configuration.getProperty("ecommerce-template.api.url")
-				+ "/users?" + new UriQueryBuilder().append("skip", skip != null ? skip.toString() : null)
+		return (List<?>) httpClient.getJson(URI
+				.create(apiUrl + "/users?" + new UriQueryBuilder().append("skip", skip != null ? skip.toString() : null)
 						.append("limit", limit != null ? limit.toString() : null)));
 	}
 }

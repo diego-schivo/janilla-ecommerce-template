@@ -22,22 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.frontend;
+package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.ioc.DiFactory;
-import com.janilla.web.RenderableFactory;
-import com.janilla.web.Renderer;
+import java.nio.file.Path;
+import java.util.Properties;
 
-public class CustomRenderableFactory extends RenderableFactory {
+import com.janilla.cms.CmsFileHandlerFactory;
 
-	protected final DiFactory diFactory;
+public class CustomFileHandlerFactory extends CmsFileHandlerFactory {
 
-	public CustomRenderableFactory(DiFactory diFactory) {
-		this.diFactory = diFactory;
-	}
-
-	@Override
-	protected <T> Renderer<T> createRenderer(Class<Renderer<T>> c) {
-		return diFactory.create(c);
+	public CustomFileHandlerFactory(Properties configuration) {
+		var d = configuration.getProperty("ecommerce-template.upload.directory");
+		if (d.startsWith("~"))
+			d = System.getProperty("user.home") + d.substring(1);
+		super(Path.of(d));
 	}
 }

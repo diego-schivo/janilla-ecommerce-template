@@ -44,8 +44,8 @@ public class IndexFactory {
 	}
 
 	public Index index(FrontendExchange exchange) {
-		return new Index(null, imports(), configuration.getProperty("ecommerce-template.api.url"),
-				configuration.getProperty("ecommerce-template.stripe.publishable-key"), state(exchange));
+		return new Index(imports(), configuration.getProperty("ecommerce-template.api.url"), state(exchange), null,
+				configuration.getProperty("ecommerce-template.stripe.publishable-key"));
 	}
 
 	protected Map<String, Object> state(FrontendExchange exchange) {

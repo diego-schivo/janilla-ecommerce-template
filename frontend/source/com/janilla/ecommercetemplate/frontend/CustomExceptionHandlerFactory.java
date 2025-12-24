@@ -47,8 +47,8 @@ public class CustomExceptionHandlerFactory extends ExceptionHandlerFactory {
 
 	@Override
 	protected boolean handle(Error error, HttpExchange exchange) {
-		IO.println(
-				"CustomExceptionHandlerFactory.handle, " + exchange.request().getPath() + ", " + exchange.exception());
+//		IO.println(
+//				"CustomExceptionHandlerFactory.handle, " + exchange.request().getPath() + ", " + exchange.exception());
 		super.handle(error, exchange);
 		var i = indexFactory.index((FrontendExchange) exchange);
 		i.state().put("error", error);

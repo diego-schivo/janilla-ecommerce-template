@@ -30,9 +30,9 @@ export default class CustomAdmin extends Admin {
 		return ["admin"];
 	}
 
-	static get observedAttributes() {
-		return ["data-api-url", "data-path", "data-user-id", "data-user-admin"];
-	}
+    static get observedAttributes() {
+        return ["data-user", "data-path"];
+    }
 
 	constructor() {
 		super();

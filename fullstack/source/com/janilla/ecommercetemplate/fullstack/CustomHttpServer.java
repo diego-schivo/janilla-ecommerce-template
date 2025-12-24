@@ -1,7 +1,8 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024-2025 Diego Schivo
+ * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
+ * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +26,11 @@ package com.janilla.ecommercetemplate.fullstack;
 
 import java.net.SocketAddress;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 
-import com.janilla.ecommercetemplate.backend.BackendApplication;
-import com.janilla.ecommercetemplate.frontend.FrontendApplication;
+import com.janilla.ecommercetemplate.backend.EcommerceBackend;
+import com.janilla.ecommercetemplate.frontend.EcommerceFrontend;
 import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpRequest;
@@ -42,12 +42,12 @@ import com.janilla.ioc.DiFactory;
 @Context("fullstack")
 public class CustomHttpServer extends HttpServer {
 
-	protected final BackendApplication backend;
+	protected final EcommerceBackend backend;
 
-	protected final FrontendApplication frontend;
+	protected final EcommerceFrontend frontend;
 
 	public CustomHttpServer(SSLContext sslContext, SocketAddress endpoint, HttpHandler handler, DiFactory diFactory,
-			BackendApplication backend, FrontendApplication frontend) {
+			EcommerceBackend backend, EcommerceFrontend frontend) {
 		super(sslContext, endpoint, handler, diFactory);
 		this.backend = backend;
 		this.frontend = frontend;
@@ -57,7 +57,7 @@ public class CustomHttpServer extends HttpServer {
 	protected HttpExchange createExchange(HttpRequest request, HttpResponse response) {
 //		IO.println("CustomHttpServer.createExchange, request.getPath()=" + request.getPath());
 		var f = request.getPath().startsWith("/api/") ? backend.diFactory() : frontend.diFactory();
-		return Optional.ofNullable(f.create(HttpExchange.class, Map.of("request", request, "response", response)))
-				.orElseGet(() -> super.createExchange(request, response));
+		var x = f.create(HttpExchange.class, Map.of("request", request, "response", response));
+		return x != null ? x : super.createExchange(request, response);
 	}
 }

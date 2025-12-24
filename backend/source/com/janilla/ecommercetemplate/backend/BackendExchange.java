@@ -1,7 +1,8 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024-2025 Diego Schivo
+ * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
+ * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +32,17 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.janilla.cms.UserHttpExchange;
-import com.janilla.http.BaseHttpExchange;
+import com.janilla.http.SimpleHttpExchange;
 import com.janilla.http.HttpCookie;
-import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpRequest;
 import com.janilla.http.HttpResponse;
 import com.janilla.json.Jwt;
 import com.janilla.persistence.Persistence;
 import com.janilla.web.UnauthorizedException;
 
-public class BackendExchange extends BaseHttpExchange implements UserHttpExchange {
+public class BackendExchange extends SimpleHttpExchange implements UserHttpExchange {
 
-	private static final String SESSION_COOKIE = "janilla-ecommerce-template-token";
+	private static final String SESSION_COOKIE = "ecommerce-token";
 
 	protected final Properties configuration;
 
@@ -95,11 +95,5 @@ public class BackendExchange extends BaseHttpExchange implements UserHttpExchang
 						.withExpires(value != null && !value.isEmpty() ? ZonedDateTime.now(ZoneOffset.UTC).plusHours(2)
 								: ZonedDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC))
 						.format());
-	}
-
-	@Override
-	public HttpExchange withException(Exception exception) {
-		this.exception = exception;
-		return this;
 	}
 }

@@ -1,7 +1,8 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024-2025 Diego Schivo
+ * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
+ * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,26 +36,26 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
-import com.janilla.ecommercetemplate.backend.BackendApplication;
 import com.janilla.ecommercetemplate.backend.BackendExchange;
-import com.janilla.ecommercetemplate.frontend.FrontendApplication;
+import com.janilla.ecommercetemplate.backend.EcommerceBackend;
+import com.janilla.ecommercetemplate.frontend.EcommerceFrontend;
 import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.Net;
 
-public class FullstackApplication {
+public class EcommerceFullstack {
 
-	public static final AtomicReference<FullstackApplication> INSTANCE = new AtomicReference<>();
+	public static final AtomicReference<EcommerceFullstack> INSTANCE = new AtomicReference<>();
 
 	public static void main(String[] args) {
 		try {
-			FullstackApplication a;
+			EcommerceFullstack a;
 			{
-				var f = new DiFactory(Java.getPackageClasses(FullstackApplication.class.getPackageName()),
-						FullstackApplication.INSTANCE::get, "fullstack");
-				a = f.create(FullstackApplication.class,
+				var f = new DiFactory(Java.getPackageClasses(EcommerceFullstack.class.getPackageName()),
+						EcommerceFullstack.INSTANCE::get, "fullstack");
+				a = f.create(EcommerceFullstack.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -78,17 +79,17 @@ public class FullstackApplication {
 		}
 	}
 
-	protected final BackendApplication backend;
+	protected final EcommerceBackend backend;
 
 	protected final Properties configuration;
 
 	protected final DiFactory diFactory;
 
-	protected final FrontendApplication frontend;
+	protected final EcommerceFrontend frontend;
 
 	protected final HttpHandler handler;
 
-	public FullstackApplication(DiFactory diFactory, Path configurationFile) {
+	public EcommerceFullstack(DiFactory diFactory, Path configurationFile) {
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
@@ -96,49 +97,43 @@ public class FullstackApplication {
 
 		var cf = Optional.ofNullable(configurationFile).orElseGet(() -> {
 			try {
-				return Path.of(FullstackApplication.class.getResource("configuration.properties").toURI());
+				return Path.of(EcommerceFullstack.class.getResource("configuration.properties").toURI());
 			} catch (URISyntaxException e) {
 				throw new RuntimeException(e);
 			}
 		});
 		backend = diFactory
-				.create(BackendApplication.class,
+				.create(EcommerceBackend.class,
 						Java.hashMap("diFactory",
 								new DiFactory(
 										Stream.concat(
 												Stream.of("fullstack", "backend")
-														.map(x -> BackendApplication.class.getPackageName()
+														.map(x -> EcommerceBackend.class.getPackageName()
 																.replace(".backend", "." + x)),
 												Stream.of("com.janilla.web"))
 												.flatMap(x -> Java.getPackageClasses(x).stream()).toList(),
-										BackendApplication.INSTANCE::get, "backend"),
+										EcommerceBackend.INSTANCE::get, "backend"),
 								"configurationFile", cf));
 		frontend = diFactory
-				.create(FrontendApplication.class,
+				.create(EcommerceFrontend.class,
 						Java.hashMap("diFactory",
 								new DiFactory(
 										Stream.concat(
 												Stream.of("fullstack", "frontend")
-														.map(x -> FrontendApplication.class.getPackageName()
+														.map(x -> EcommerceFrontend.class.getPackageName()
 																.replace(".frontend", "." + x)),
 												Stream.of("com.janilla.web"))
 												.flatMap(x -> Java.getPackageClasses(x).stream()).toList(),
-										FrontendApplication.INSTANCE::get, "frontend"),
+										EcommerceFrontend.INSTANCE::get, "frontend"),
 								"configurationFile", cf));
 
 		handler = x -> {
-//			IO.println("EcommerceTemplateFullstack, " + x.request().getPath());
-//			var h = switch (Objects.requireNonNullElse(x.exception(), x.request())) {
-//			case HttpRequest y -> y.getPath().startsWith("/api/") ? backend.handler() : frontend.handler();
-//			case Exception _ -> backend.handler();
-//			default -> null;
-//			};
 			var h = x instanceof BackendExchange ? backend.handler() : frontend.handler();
 			return h.handle(x);
 		};
 	}
 
-	public BackendApplication backend() {
+	public EcommerceBackend backend() {
 		return backend;
 	}
 
@@ -150,7 +145,7 @@ public class FullstackApplication {
 		return diFactory;
 	}
 
-	public FrontendApplication frontend() {
+	public EcommerceFrontend frontend() {
 		return frontend;
 	}
 

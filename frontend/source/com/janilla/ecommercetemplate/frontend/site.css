@@ -22,31 +22,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "web-component";
-
-export default class Logout extends WebComponent {
-
-    static get templateNames() {
-        return ["logout"];
-    }
-
-    static get observedAttributes() {
-        return [];
-    }
-
-    constructor() {
-        super();
-    }
-
-    async updateDisplay() {
-        document.title = "Logout";
-        const a = this.closest("app-element");
-        a.updateSeo(null);
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            title: this.dataset.noOp !== undefined
-                ? "You are already logged out."
-                : "Logged out successfully."
-        }));
-    }
-}
+@import "base.css";
+@import "account.css";
+@import "address-edit.css";
+@import "address-item.css";
+@import "addresses.css";
+@import "app.css";
+@import "call-to-action.css";
+@import "card.css";
+@import "cart-modal.css";
+@import "checkout.css";
+@import "checkout-addresses.css";
+@import "content.css";
+@import "create-account.css";
+@import "create-address-modal.css";
+@import "find-order.css";
+@import "header.css";
+@import "hero.css";
+@import "link.css";
+@import "login.css";
+@import "logout.css";
+@import "lucide-icon.css";
+@import "media-block.css";
+@import "message.css";
+@import "mobile-menu.css";
+@import "not-found.css";
+@import "order.css";
+@import "order-confirmation.css";
+@import "order-item.css";
+@import "orders.css";
+@import "page.css";
+@import "payment.css";
+@import "price.css";
+@import "product.css";
+@import "product-description.css";
+@import "product-gallery.css";
+@import "product-item.css";
+@import "rich-text.css";
+@import "select.css";
+@import "shop.css";
+@import "variant-selector.css";

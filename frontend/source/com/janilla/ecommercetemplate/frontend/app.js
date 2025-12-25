@@ -114,10 +114,8 @@ export default class App extends WebComponent {
                 $template: "",
                 admin: {
                     $template: "admin",
-                    path: m[1] ?? "/",
-                    apiUrl: this.dataset.apiUrl,
-                    userId: s.user?.id,
-                    userAdmin: s.user?.roles?.some(x => x.name === "ADMIN")
+                    user: s.user ? JSON.stringify(s.user) : null,
+                    path: m[1] ?? "/"
                 }
             }));
             return;
@@ -208,10 +206,7 @@ export default class App extends WebComponent {
                         };
                     })() : {
                         $template: "page",
-                        slug: (() => {
-                            const s2 = p.substring(1);
-                            return s2 ? s2 : "home";
-                        })()
+                        slug: location.pathname.split("/").map(x => x === "" ? "home" : x)[1]
                     };
                 })(),
                 footer: {
@@ -248,32 +243,17 @@ export default class App extends WebComponent {
     handleClick = event => {
         const a = event.target.closest("a");
         if (a?.href && !event.defaultPrevented && !a.target) {
-            if (a.getAttribute("href") === "#") {
-                event.preventDefault();
-                this.querySelector("dialog").showModal();
-            } else {
-                const u = new URL(a.href);
-                // if (!u.pathname.match(adminRegex) !== !location.pathname.match(adminRegex))
-                // return;
-                event.preventDefault();
-                history.pushState({}, "", u.pathname + u.search);
-                dispatchEvent(new CustomEvent("popstate"));
-            }
+            const u = new URL(a.href);
+            event.preventDefault();
+            history.pushState({}, "", u.pathname + u.search);
+            dispatchEvent(new CustomEvent("popstate"));
         }
-        /*
-        const b = event.target.closest("button");
-        if (b?.nextElementSibling?.matches("dialog"))
-            b.nextElementSibling.showModal();
-        else if (b?.parentElement?.matches("dialog"))
-            b.parentElement.close();
-        */
     }
 
     handlePopState = () => {
         // console.log("handlePopState", JSON.stringify(history.state));
         delete this.serverState;
         window.scrollTo(0, 0);
-        document.querySelectorAll("dialog[open]").forEach(x => x.close());
         delete this.state.notFound;
         this.requestDisplay();
     }
@@ -285,15 +265,6 @@ export default class App extends WebComponent {
             window.scrollTo(0, 0);
         history.pushState({}, "", url.pathname + url.search);
         this.requestDisplay();
-    }
-
-    handleSubmit = event => {
-        if (false) {
-            event.preventDefault();
-            const usp = new URLSearchParams(new FormData(event.target));
-            history.pushState({}, "", `/search?${usp}`);
-            dispatchEvent(new CustomEvent("popstate"));
-        }
     }
 
     updateSeo(meta) {

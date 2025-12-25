@@ -15,16 +15,6 @@
   <admin-bar data-user-email="${userEmail}"></admin-bar>
 </template>
 
-<template id="list-item">
-  <li>
-    <!--${content}-->
-  </li>
-</template>
-
-<template id="link">
-  <link-element data-reference="${reference}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
-</template>
-
 <template id="page">
   <page-element data-slug="${slug}"></page-element>
 </template>
@@ -102,6 +92,10 @@
       </div>
     </div>
   </footer>
+</template>
+
+<template id="link">
+  <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
 </template>
 
 <template id="option">

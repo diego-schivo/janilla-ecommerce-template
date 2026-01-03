@@ -2,7 +2,7 @@
  * MIT License
  *
  * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
- * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
+ * Copyright (c) 2024-2026 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import com.janilla.admin.frontend.AdminFrontend;
+import com.janilla.cms.CmsFrontend;
 import com.janilla.frontend.Frontend;
 
 public class IndexFactory {
@@ -58,16 +58,25 @@ public class IndexFactory {
 	}
 
 	protected Map<String, String> imports() {
-		var m = new LinkedHashMap<String, String>();
-		Frontend.putImports(m);
-		AdminFrontend.putImports(m);
-		Stream.of("admin", "admin-fields").forEach(x -> m.put(x, "/custom-" + x + ".js"));
-		Stream.of("account", "address-edit", "address-item", "addresses", "app", "call-to-action", "card", "cart-modal",
-				"checkout", "checkout-addresses", "content", "create-account", "create-address-modal", "find-order",
-				"header", "hero", "intl-format", "link", "login", "logout", "lucide-icon", "media-block", "message",
-				"mobile-menu", "not-found", "order", "order-confirmation", "order-item", "orders", "page", "payment",
-				"price", "product", "product-description", "product-gallery", "product-item", "rich-text", "select",
-				"shop", "toaster", "variant-selector").forEach(x -> m.put(x, "/" + x + ".js"));
-		return m;
+		class A {
+			private static Map<String, String> m;
+		}
+		if (A.m == null)
+			synchronized (this) {
+				if (A.m == null) {
+					A.m = new LinkedHashMap<String, String>();
+					Frontend.putImports(A.m);
+					CmsFrontend.putImports(A.m);
+					Stream.of("admin", "admin-fields").forEach(x -> A.m.put(x, "/custom-" + x + ".js"));
+					Stream.of("account", "address-edit", "address-item", "addresses", "app", "call-to-action", "card",
+							"cart-modal", "checkout", "checkout-addresses", "content", "create-account",
+							"create-address-modal", "find-order", "header", "hero", "intl-format", "link", "login",
+							"logout", "lucide-icon", "media-block", "message", "mobile-menu", "not-found", "order",
+							"order-confirmation", "order-item", "orders", "page", "payment", "price", "product",
+							"product-description", "product-gallery", "product-item", "rich-text", "select", "shop",
+							"toaster", "variant-selector").forEach(x -> A.m.put(x, "/" + x + ".js"));
+				}
+			}
+		return A.m;
 	}
 }

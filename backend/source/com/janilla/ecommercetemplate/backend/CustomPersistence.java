@@ -2,7 +2,7 @@
  * MIT License
  *
  * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
- * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
+ * Copyright (c) 2024-2026 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,25 +57,6 @@ import com.janilla.reflect.Reflection;
 import com.janilla.sqlite.SqliteDatabase;
 
 public class CustomPersistence extends CmsPersistence {
-
-//	protected static final CrudObserver USER_OBSERVER = new CrudObserver() {
-//
-//		@Override
-//		public <E> E beforeCreate(E entity) {
-//			var u = (User) entity;
-//			var c = u.cart();
-//			if (c != null)
-//				c = c.withNonNullItemIds();
-//			@SuppressWarnings("unchecked")
-//			var e = (E) (c != u.cart() ? u.withCart(c) : u);
-//			return e;
-//		}
-//
-//		@Override
-//		public <E> E beforeUpdate(E entity) {
-//			return beforeCreate(entity);
-//		}
-//	};
 
 	protected final DiFactory diFactory;
 
@@ -154,7 +135,6 @@ public class CustomPersistence extends CmsPersistence {
 		if (!u.toString().startsWith("jar:"))
 			u = URI.create("jar:" + u);
 		var s = Java.zipFileSystem(u).getPath("/");
-//		var d = Files.createDirectories(databaseFile.getParent().resolve("ecommerce-template-upload"));
 		var ud = configuration.getProperty("ecommerce-template.upload.directory");
 		if (ud.startsWith("~"))
 			ud = System.getProperty("user.home") + ud.substring(1);

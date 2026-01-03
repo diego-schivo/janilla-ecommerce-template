@@ -2,7 +2,7 @@
  * MIT License
  *
  * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
- * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
+ * Copyright (c) 2024-2026 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/account")
 	public Object account(FrontendExchange exchange) {
-		IO.println("WebHandling.account");
+//		IO.println("WebHandling.account");
 		if (exchange.sessionUser() == null)
 			return URI.create("/login");
 		var i = indexFactory.index(exchange);
@@ -55,7 +55,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/account/addresses")
 	public Object addresses(FrontendExchange exchange) {
-		IO.println("WebHandling.addresses");
+//		IO.println("WebHandling.addresses");
 		if (exchange.sessionUser() == null)
 			return URI.create("/login");
 		return indexFactory.index(exchange);
@@ -63,7 +63,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
 	public Object admin(String path, FrontendExchange exchange) {
-		IO.println("WebHandling.admin, path=" + path);
+//		IO.println("WebHandling.admin, path=" + path);
 		if (path == null || path.isEmpty())
 			path = "/";
 		switch (path) {
@@ -81,13 +81,13 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/checkout")
 	public Object checkout(FrontendExchange exchange) {
-		IO.println("WebHandling.checkout");
+//		IO.println("WebHandling.checkout");
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/create-account")
 	public Object createAccount(FrontendExchange exchange) {
-		IO.println("WebHandling.createAccount");
+//		IO.println("WebHandling.createAccount");
 		if (exchange.sessionUser() != null)
 			return URI.create("/account");
 		return indexFactory.index(exchange);
@@ -95,13 +95,13 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/find-order")
 	public Object findOrder(FrontendExchange exchange) {
-		IO.println("WebHandling.findOrder");
+//		IO.println("WebHandling.findOrder");
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/login")
 	public Object login(FrontendExchange exchange) {
-		IO.println("WebHandling.login");
+//		IO.println("WebHandling.login");
 		if (exchange.sessionUser() != null)
 			return URI.create(
 					"/account?" + new UriQueryBuilder().append("warning", "You are already logged in.").toString());
@@ -110,13 +110,13 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/logout")
 	public Object logout(FrontendExchange exchange) {
-		IO.println("WebHandling.logout");
+//		IO.println("WebHandling.logout");
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/orders/(\\d+)")
 	public Object order(Long id, String email, FrontendExchange exchange) {
-		IO.println("WebHandling.order, id=" + id + ", email=" + email);
+//		IO.println("WebHandling.order, id=" + id + ", email=" + email);
 		var o = dataFetching.order(id, exchange.tokenCookie());
 		if (o == null)
 			throw new NotFoundException("id=" + id);
@@ -127,7 +127,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/orders")
 	public Object orders(FrontendExchange exchange) {
-		IO.println("WebHandling.orders");
+//		IO.println("WebHandling.orders");
 		var i = indexFactory.index(exchange);
 		i.state().put("orders", dataFetching.orders(exchange.tokenCookie()));
 		return i;
@@ -135,7 +135,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/([\\w\\d-]*)")
 	public Object page(String slug, FrontendExchange exchange) {
-		IO.println("WebHandling.page, slug=" + slug);
+//		IO.println("WebHandling.page, slug=" + slug);
 		if (slug == null || slug.isEmpty())
 			slug = "home";
 		var pp = dataFetching.pages(slug, exchange.tokenCookie());
@@ -148,7 +148,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
 	public Object product(String slug, FrontendExchange exchange) {
-		IO.println("WebHandling.product, slug=" + slug);
+//		IO.println("WebHandling.product, slug=" + slug);
 		var pp = dataFetching.products(slug, null, null, null, exchange.tokenCookie());
 		if (pp.isEmpty())
 			throw new NotFoundException("slug=" + slug);
@@ -159,7 +159,7 @@ public class WebHandling {
 
 	@Handle(method = "GET", path = "/shop")
 	public Object shop(@Bind("q") String query, Long category, String sort, FrontendExchange exchange) {
-		IO.println("WebHandling.shop, query=" + query + ", category=" + category);
+//		IO.println("WebHandling.shop, query=" + query + ", category=" + category);
 		var i = indexFactory.index(exchange);
 		i.state().put("categories", dataFetching.categories());
 		i.state().put("products", dataFetching.products(null, query, category, sort, exchange.tokenCookie()));

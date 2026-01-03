@@ -2,7 +2,7 @@
  * MIT License
  *
  * Copyright (c) 2018-2025 Payload CMS, Inc. <info@payloadcms.com>
- * Copyright (c) 2024-2025 Diego Schivo <diego.schivo@janilla.com>
+ * Copyright (c) 2024-2026 Diego Schivo <diego.schivo@janilla.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ import WebComponent from "web-component";
 
 export default class Page extends WebComponent {
 
-    static get observedAttributes() {
-        return ["data-slug"];
-    }
-
     static get templateNames() {
         return ["page"];
+    }
+
+    static get observedAttributes() {
+        return ["data-slug"];
     }
 
     constructor() {
@@ -70,28 +70,28 @@ export default class Page extends WebComponent {
                     }
                 ]
             } : null);
-            if (p)
-                history.replaceState(hs = {
-                    ...hs,
-                    page: p
-                }, "");
-            else
-                a.notFound();
+            history.replaceState(hs = {
+                ...hs,
+                page: p
+            }, "");
         }
 
-        a.updateSeo(hs.page?.meta);
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            placeholder: hs.page?.placeholder ? "placeholder" : null,
-            hero: (hs.page?.hero?.type?.name ?? "NONE") !== "NONE" ? {
-                $template: "hero",
-                path: "hero"
-            } : null,
-            layout: hs.page?.layout?.map((x, i) => ({
-                $template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
-                path: `layout.${i}`
-            }))
-        }));
+        if (hs.page) {
+            a.updateSeo(hs.page.meta);
+            this.appendChild(this.interpolateDom({
+                $template: "",
+                placeholder: hs.page.placeholder ? "placeholder" : null,
+                hero: (hs.page.hero?.type?.name ?? "NONE") !== "NONE" ? {
+                    $template: "hero",
+                    path: "hero"
+                } : null,
+                layout: hs.page.layout?.map((x, i) => ({
+                    $template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
+                    path: `layout.${i}`
+                }))
+            }));
+        } else
+            a.notFound();
     }
 
     data(path) {

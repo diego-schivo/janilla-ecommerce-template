@@ -110,6 +110,7 @@ public class EcommerceBackend {
 	protected final TypeResolver typeResolver;
 
 	public EcommerceBackend(DiFactory diFactory, Path configurationFile) {
+//		IO.println("EcommerceBackend, configurationFile=" + configurationFile);
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();

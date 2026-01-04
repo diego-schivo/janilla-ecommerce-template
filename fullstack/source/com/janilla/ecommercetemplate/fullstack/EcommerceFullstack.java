@@ -90,6 +90,7 @@ public class EcommerceFullstack {
 	protected final HttpHandler handler;
 
 	public EcommerceFullstack(DiFactory diFactory, Path configurationFile) {
+//		IO.println("EcommerceFullstack, configurationFile=" + configurationFile);
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();

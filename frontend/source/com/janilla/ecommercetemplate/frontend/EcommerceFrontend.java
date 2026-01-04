@@ -106,6 +106,7 @@ public class EcommerceFrontend {
 	protected final RenderableFactory renderableFactory;
 
 	public EcommerceFrontend(DiFactory diFactory, Path configurationFile) {
+//		IO.println("EcommerceFrontend, configurationFile=" + configurationFile);
 		this.diFactory = diFactory;
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();

@@ -60,11 +60,11 @@ header-element {
       font-weight: 500;
       line-height: 1.25rem;
 
-      img {
-        height: 34px;
-        object-fit: cover;
-        object-position: left;
-        width: 34px;
+      janilla-logo {
+        display: block;
+        height: 2.125rem;
+        overflow: hidden;
+        width: 2.125rem;
       }
     }
 

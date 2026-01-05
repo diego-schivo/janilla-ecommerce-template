@@ -30,7 +30,7 @@
 }
 
 :root {
-  --background-1: rgb(10, 10, 10);
+  --background-1: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
   --background-2: rgb(248, 250, 252);
   --background-3: rgba(248, 250, 252, 0.9);
   --background-4: rgb(20, 20, 20);
@@ -52,13 +52,13 @@
   --border-4: oklch(0.371 0 0);
   --border-5: rgb(204, 204, 204);
   --border-6: oklch(0.546 0.245 262.881);
-  --color-1: white;
+  --color-1: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
   --color-2: rgb(209, 213, 219);
   --color-3: rgb(15, 23, 42);
   --color-4: rgb(248, 250, 252);
   --color-5: gray;
   --color-6: rgb(148, 163, 184);
-  --color-7: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+  --color-7: light-dark(oklab(0.207922 -0.00297319 -0.0397971 / 0.5), oklab(0.983834 -0.00131196 -0.00322449 / 0.5));
   --color-8: black;
   --color-9: oklch(0.708 0 0);
   --color-10: oklch(0.556 0 0);

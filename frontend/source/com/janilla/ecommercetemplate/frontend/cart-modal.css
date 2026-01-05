@@ -33,7 +33,10 @@ header-element cart-modal {
     letter-spacing: 0.1em;
     padding: 0;
     text-transform: uppercase;
-    translate: 0 -0.25rem;
+
+    @media (max-width: 1440px) {
+      translate: 0 -0.25rem;
+    }
 
     span::before {
       content: "\2022";

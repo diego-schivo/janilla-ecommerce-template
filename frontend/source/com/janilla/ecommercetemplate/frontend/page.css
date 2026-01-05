@@ -23,13 +23,20 @@
  * SOFTWARE.
  */
 page-element {
-
   .placeholder {
     padding-top: 4rem;
+
+    @media (min-width: 1441px) {
+      padding-top: 6rem;
+    }
 
     h1 {
       font-size: 2.25rem;
       line-height: 1.1111111;
+
+      @media (min-width: 1441px) {
+        font-weight: 800;
+      }
     }
 
     p {
@@ -52,7 +59,7 @@ page-element {
         box-sizing: border-box;
         margin-left: auto;
         margin-right: auto;
-        max-width: 86rem;
+        max-width: 76.125rem;
         padding-left: 2rem;
         padding-right: 2rem;
         width: 100%;

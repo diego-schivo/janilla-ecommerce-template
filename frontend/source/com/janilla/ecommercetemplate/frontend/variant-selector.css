@@ -59,7 +59,7 @@ variant-selector {
     }
 
     &:has(:checked) {
-      background: var(--background-16);
+      background: var(--background-15);
       color: var(--color-4);
     }
   }

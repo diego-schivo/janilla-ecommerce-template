@@ -3,7 +3,7 @@
 
 <template id="public">
   <!--${adminBar}-->
-  <div style="color-scheme: ${colorScheme}">
+  <div data-color-scheme="${colorScheme}">
     <header-element></header-element>
     <!--${content}-->
     <!--${footer}-->
@@ -79,7 +79,7 @@
   <footer>
     <div>
       <a href="/">
-        <img src="/images/janilla-logo-light.svg" loading="lazy" />
+        <janilla-logo></janilla-logo>
       </a>
       <nav>
         <!--${navItems}-->

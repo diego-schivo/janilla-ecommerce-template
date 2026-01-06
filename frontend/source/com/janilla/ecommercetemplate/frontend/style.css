@@ -22,6 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "site.css" layer(site);
-@import "admin.css" layer(admin);
-@import "admin-variant-options.css" layer(admin);
+@import "admin.css";
+@import "admin-variant-options.css";
+@import "custom-admin-dashboard.css";
+@import "geist-font.css";
+@import "site.css";

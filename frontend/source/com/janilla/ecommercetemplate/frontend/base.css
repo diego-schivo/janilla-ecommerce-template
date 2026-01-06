@@ -27,33 +27,40 @@
   color-scheme: light dark;
   line-height: 1.5;
   text-size-adjust: 100%;
+
+  &:has([data-color-scheme="light"]) {
+    color-scheme: light;
+  }
+
+  &:has([data-color-scheme="dark"]) {
+    color-scheme: dark;
+  }
 }
 
-:root {
+:root:not(:has(.admin)) {
   --background-1: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
-  --background-2: rgb(248, 250, 252);
+  --background-2: light-dark(rgb(245, 245, 245), rgb(248, 250, 252));
   --background-3: rgba(248, 250, 252, 0.9);
   --background-4: rgb(20, 20, 20);
   --background-5: rgb(0, 0, 0);
   --background-6: rgb(34, 34, 34);
   --background-7: oklab(0 0 0 / 0.8);
   --background-8: rgb(15, 15, 15);
-  --background-9: rgb(101, 101, 101);
-  --background-10: oklch(0.556 0 0);
-  --background-11: oklch(0.205 0 0);
-  --background-12: oklab(0.983787 -0.0012686 -0.00321162 / 0.05);
-  --background-13: rgb(0, 52, 71);
-  --background-14: rgb(96, 68, 31);
-  --background-15: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
-  --background-16: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
-  --border-1: rgba(255, 255, 255, 0.1);
+  --background-9: oklch(0.556 0 0);
+  --background-10: oklch(0.205 0 0);
+  --background-11: oklab(0.983787 -0.0012686 -0.00321162 / 0.05);
+  --background-12: rgb(0, 52, 71);
+  --background-13: rgb(96, 68, 31);
+  --background-14: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
+  --background-15: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
+  --border-1: light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
   --border-2: rgb(60, 60, 60);
   --border-3: oklch(0.556 0 0);
   --border-4: oklch(0.371 0 0);
   --border-5: rgb(204, 204, 204);
   --border-6: oklch(0.546 0.245 262.881);
-  --color-1: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
-  --color-2: rgb(209, 213, 219);
+  --color-1: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
+  --color-2: light-dark(oklch(0.373 0.034 259.733), rgb(209, 213, 219));
   --color-3: rgb(15, 23, 42);
   --color-4: rgb(248, 250, 252);
   --color-5: gray;

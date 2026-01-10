@@ -71,13 +71,14 @@ public class IndexFactory {
 					CmsFrontend.putImports(A.m);
 					Stream.of("admin", "admin-dashboard", "admin-fields")
 							.forEach(x -> A.m.put(x, "/custom-" + x + ".js"));
-					Stream.of("account", "address-edit", "address-item", "addresses", "admin-variant-options", "app",
-							"call-to-action", "card", "cart-modal", "checkout", "checkout-addresses", "content",
-							"create-account", "create-address-modal", "find-order", "header", "hero", "intl-format",
-							"link", "login", "logout", "media-block", "message", "mobile-menu", "not-found", "order",
-							"order-confirmation", "order-item", "orders", "page", "payment", "price", "product",
-							"product-description", "product-gallery", "product-item", "rich-text", "select", "shop",
-							"variant-selector").forEach(x -> A.m.put(x, "/" + x + ".js"));
+					Stream.of("account", "account-nav", "address-edit", "address-item", "addresses",
+							"admin-variant-options", "app", "call-to-action", "card", "cart-modal", "checkout",
+							"checkout-addresses", "content", "create-account", "create-address-modal", "find-order",
+							"footer", "header", "hero", "intl-format", "link", "login", "logout", "media-block",
+							"message", "mobile-menu", "not-found", "order", "order-confirmation", "order-item",
+							"orders", "page", "payment", "price", "product", "product-description", "product-gallery",
+							"product-item", "rich-text", "select", "shop", "variant-selector")
+							.forEach(x -> A.m.put(x, "/" + x + ".js"));
 				}
 			}
 		return A.m;

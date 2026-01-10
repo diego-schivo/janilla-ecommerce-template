@@ -1,21 +1,28 @@
 <main>
-  <article>
-    <h1>Orders</h1>
-    <!--${content}-->
-  </article>
+  <div>
+    <!--${nav}-->
+    <article>
+      <h1>Orders</h1>
+      <!--${results}-->
+    </article>
+  </div>
 </main>
 
-<template id="empty">
+<template id="nav">
+  <account-nav data-path="${path}"></account-nav>
+</template>
+
+<template id="no-results">
   <p>You have no orders.</p>
 </template>
 
-<template id="list">
+<template id="results">
   <ul>
     <!--${items}-->
   </ul>
 </template>
 
-<template id="item">
+<template id="result">
   <li>
     <order-item data-item="${item}"></order-item>
   </li>

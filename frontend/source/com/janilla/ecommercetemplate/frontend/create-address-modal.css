@@ -23,4 +23,6 @@
  * SOFTWARE.
  */
 create-address-modal {
+  display: flex;
+  flex-direction: column;
 }

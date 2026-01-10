@@ -1,0 +1,24 @@
+<footer>
+  <div>
+    <a href="/">
+      <janilla-logo></janilla-logo>
+    </a>
+    <nav>
+      <!--${navItems}-->
+    </nav>
+    <div>
+      <select>
+        <!--${options}-->
+      </select>
+      <lucide-icon data-name="chevron-down"></lucide-icon>
+    </div>
+  </div>
+</footer>
+
+<template id="link">
+  <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
+</template>
+
+<template id="option">
+  <option value="${value}" selected="${selected}">${text}</option>
+</template>

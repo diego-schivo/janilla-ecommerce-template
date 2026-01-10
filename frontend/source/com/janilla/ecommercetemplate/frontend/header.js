@@ -26,19 +26,30 @@ import WebComponent from "web-component";
 
 export default class Header extends WebComponent {
 
-	static get templateNames() {
-		return ["header"];
-	}
+    static get templateNames() {
+        return ["header"];
+    }
 
-	static get observedAttributes() {
-		return [];
-	}
+    static get observedAttributes() {
+        return ["data-path"];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({ $template: "" }));
-	}
+    async updateDisplay() {
+        const a = this.closest("app-element");
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            navItems: a.state.header?.navItems?.map(x => ({
+                $template: "nav-item",
+                ...x,
+                document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+                href: x.type.name === "CUSTOM" ? x.uri : null,
+                target: x.newTab ? "_blank" : null,
+                class: this.dataset.path === x.uri || this.dataset.path.startsWith(x.uri + "/") ? "active" : null
+            }))
+        }));
+    }
 }

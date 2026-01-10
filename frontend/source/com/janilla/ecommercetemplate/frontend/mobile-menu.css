@@ -31,10 +31,10 @@ app-element:has(.placeholder) {
 mobile-menu {
   button[name="show"] {
     background: transparent;
-    border: 1px solid var(--border-4);
+    border: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
     border-radius: 0.375rem;
-    color: var(--color-1);
-    padding: 0.825rem;
+    color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
+    padding: 0.8125rem;
   }
 
   dialog {
@@ -84,11 +84,13 @@ mobile-menu {
     gap: 0.5rem;
 
 	h2 {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 1.25rem;
       font-weight: 400;
       margin-top: 2.5rem;
+      /*
       padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      */
     }
 
     ul {

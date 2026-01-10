@@ -31,7 +31,7 @@ export default class Link extends WebComponent {
 	}
 
 	static get observedAttributes() {
-		return ["data-document", "data-href", "data-target"];
+		return ["data-document", "data-href", "data-target", "data-class", "data-text"];
 	}
 
 	constructor() {
@@ -40,8 +40,8 @@ export default class Link extends WebComponent {
 
 	async updateDisplay() {
 		const o = { ...this.dataset };
-		if (this.dataset.document) {
-			const [t, s] = this.dataset.document.split(":");
+		if (o.document) {
+			const [t, s] = o.document.split(":");
 			switch (t) {
 				case "Page":
 					o.href = `/${s}`;

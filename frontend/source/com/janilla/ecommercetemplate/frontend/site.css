@@ -25,6 +25,7 @@
 @import "base.css";
 
 @import "account.css";
+@import "account-nav.css";
 @import "address-edit.css";
 @import "address-item.css";
 @import "addresses.css";
@@ -38,6 +39,7 @@
 @import "create-account.css";
 @import "create-address-modal.css";
 @import "find-order.css";
+@import "footer.css";
 @import "header.css";
 @import "hero.css";
 @import "link.css";

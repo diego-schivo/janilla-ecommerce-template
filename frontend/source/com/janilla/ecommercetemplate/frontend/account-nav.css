@@ -22,49 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-checkout-addresses {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  h3 {
-    font-weight: 500;
-  }
-
-  p {
-    color: rgb(148, 163, 184);
-  }
-
-  dialog {
-    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
-    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
-    border-radius: 0.5rem;
-    box-sizing: border-box;
-    max-height: 90vh;
-    position: relative;
-    width: calc(100vw - 2rem);
-  }
-
-  h2 {
-    font-size: 1.125rem;
-    text-align: center;
-  }
+account-nav {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
 
   ul {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: 1rem;
   }
 
-  li:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 2rem;
+  li {
+    padding: 0 1rem;
+
+    &:last-child {
+      border-top: 1px solid light-dark(oklab(0.999994 0.0000455678 0.0000200868 / 0.05), oklab(0.999994 0.0000455678 0.0000200868 / 0.05));
+      padding-top: 1.5rem;
+    }
   }
 
-  button[name="close"] {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+  a {
+    color: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.5), oklab(0.983828 -0.00126734 -0.00320476 / 0.5));
+    text-underline-offset: 0.25rem;
+
+    &.active,
+    &:hover {
+      color: light-dark(oklab(0.207918 -0.00296434 -0.0397924), oklab(0.983828 -0.00126734 -0.00320476));
+    }
+
+    &:not(:hover) {
+      text-decoration: none;
+    }
   }
 }

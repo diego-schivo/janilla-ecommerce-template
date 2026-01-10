@@ -47,7 +47,8 @@ public class WebHandling {
 	public Object account(FrontendExchange exchange) {
 //		IO.println("WebHandling.account");
 		if (exchange.sessionUser() == null)
-			return URI.create("/login");
+			return URI.create("/login?" + new UriQueryBuilder()
+					.append("warning", "Please login to access your account settings.").toString());
 		var i = indexFactory.index(exchange);
 		i.state().put("orders", dataFetching.orders(exchange.tokenCookie()));
 		return i;
@@ -57,7 +58,8 @@ public class WebHandling {
 	public Object addresses(FrontendExchange exchange) {
 //		IO.println("WebHandling.addresses");
 		if (exchange.sessionUser() == null)
-			return URI.create("/login");
+			return URI.create("/login?" + new UriQueryBuilder()
+					.append("warning", "Please login to access your account settings.").toString());
 		return indexFactory.index(exchange);
 	}
 

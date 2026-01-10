@@ -54,7 +54,7 @@ export default class FindOrder extends WebComponent {
         a.updateSeo(null);
         this.appendChild(this.interpolateDom({
 			$template: "",
-			email: a.user?.email
+			email: a.currentUser?.email
 		}));
     }
 

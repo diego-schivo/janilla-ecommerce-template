@@ -4,7 +4,7 @@
 <template id="public">
   <!--${adminBar}-->
   <div data-color-scheme="${colorScheme}">
-    <header-element></header-element>
+    <!--${header}-->
     <!--${content}-->
     <!--${footer}-->
     <toaster-element></toaster-element>
@@ -13,6 +13,10 @@
 
 <template id="admin-bar">
   <admin-bar data-user-email="${userEmail}"></admin-bar>
+</template>
+
+<template id="header">
+  <header-element data-path="${path}"></header-element>
 </template>
 
 <template id="page">
@@ -40,11 +44,11 @@
 </template>
 
 <template id="login">
-  <login-element></login-element>
+  <login-element class="login" data-warning="${warning}"></login-element>
 </template>
 
 <template id="logout">
-  <logout-element data-no-op="${noOp}"></logout-element>
+  <logout-element class="login" data-no-op="${noOp}"></logout-element>
 </template>
 
 <template id="not-found">
@@ -56,7 +60,7 @@
 </template>
 
 <template id="orders">
-  <orders-element></orders-element>
+  <orders-element class="account"></orders-element>
 </template>
 
 <template id="order">
@@ -76,30 +80,7 @@
 </template>
 
 <template id="footer">
-  <footer>
-    <div>
-      <a href="/">
-        <janilla-logo></janilla-logo>
-      </a>
-      <nav>
-        <!--${navItems}-->
-      </nav>
-      <div>
-        <select>
-          <!--${options}-->
-        </select>
-        <lucide-icon data-name="chevron-down"></lucide-icon>
-      </div>
-    </div>
-  </footer>
-</template>
-
-<template id="link">
-  <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
-</template>
-
-<template id="option">
-  <option value="${value}" selected="${selected}">${text}</option>
+  <footer-element data-color-scheme="${colorScheme}"></footer-element>
 </template>
 
 <template id="admin">

@@ -48,13 +48,20 @@ export default class Addresses extends WebComponent {
 
     async updateDisplay() {
         const s = this.state;
-        const u = this.closest("app-element").state.user;
+		const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            items: u.addresses.map(x => ({
-                $template: "item",
-                ...x
-            })),
+            nav: {
+                $template: "nav",
+                path: a.currentPath
+            },
+            results: a.currentUser.addresses.length ? {
+                $template: "results",
+                items: a.currentUser.addresses.map(x => ({
+                    $template: "result",
+                    ...x
+                }))
+            } : { $template: "no-results" },
             dialog: s.dialog ? {
                 $template: "dialog",
                 ...s.dialog

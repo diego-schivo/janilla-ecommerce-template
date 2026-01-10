@@ -22,49 +22,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-checkout-addresses {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+import WebComponent from "web-component";
 
-  h3 {
-    font-weight: 500;
-  }
+export default class AccountNav extends WebComponent {
 
-  p {
-    color: rgb(148, 163, 184);
-  }
+    static get templateNames() {
+        return ["account-nav"];
+    }
 
-  dialog {
-    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
-    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
-    border-radius: 0.5rem;
-    box-sizing: border-box;
-    max-height: 90vh;
-    position: relative;
-    width: calc(100vw - 2rem);
-  }
+    static get observedAttributes() {
+        return ["data-path"];
+    }
 
-  h2 {
-    font-size: 1.125rem;
-    text-align: center;
-  }
+    constructor() {
+        super();
+    }
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  li:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 2rem;
-  }
-
-  button[name="close"] {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-  }
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            links: [{
+                href: "/account",
+                text: "Account settings"
+            }, {
+                href: "/account/addresses",
+                text: "Addresses"
+            }, {
+                href: "/orders",
+                text: "Orders"
+            }].map(x => ({
+                $template: "link",
+                ...x,
+                class: x.href === this.dataset.path ? "active" : null
+            }))
+        }));
+    }
 }

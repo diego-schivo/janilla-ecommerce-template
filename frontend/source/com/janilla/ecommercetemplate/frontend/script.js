@@ -23,6 +23,7 @@
  * SOFTWARE.
  */
 import Account from "account";
+import AccountNav from "account-nav";
 import AddressEdit from "address-edit";
 import AddressItem from "address-item";
 import Addresses from "addresses";
@@ -64,6 +65,7 @@ import Content from "content";
 import CreateAccount from "create-account";
 import CreateAddressModal from "create-address-modal";
 import FindOrder from "find-order";
+import Footer from "footer";
 import Header from "header";
 import Hero from "hero";
 import IntlFormat from "intl-format";
@@ -94,6 +96,7 @@ import Toaster from "toaster";
 import VariantSelector from "variant-selector";
 
 customElements.define("account-element", Account);
+customElements.define("account-nav", AccountNav);
 customElements.define("address-edit", AddressEdit);
 customElements.define("address-item", AddressItem);
 customElements.define("addresses-element", Addresses);
@@ -135,6 +138,7 @@ customElements.define("content-element", Content);
 customElements.define("create-account", CreateAccount);
 customElements.define("create-address-modal", CreateAddressModal);
 customElements.define("find-order", FindOrder);
+customElements.define("footer-element", Footer);
 customElements.define("header-element", Header);
 customElements.define("hero-element", Hero);
 customElements.define("intl-format", IntlFormat);

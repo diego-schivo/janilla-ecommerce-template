@@ -74,7 +74,7 @@ export default class CreateAccount extends WebComponent {
             });
             j = await r.json();
             if (r.ok) {
-                a.user = j;
+                a.currentUser = j;
 				const u = new URL("/account", location.href);
 				u.searchParams.append("success", "Account created successfully");
                 a.navigate(u);

@@ -29,9 +29,10 @@ app-element:has(product-element) {
 }
 
 product-element {
+
   a:has(> lucide-icon) {
     align-items: center;
-    color: var(--color-7);
+    color: light-dark(oklab(0.207922 -0.00297319 -0.0397971 / 0.5), oklab(0.983834 -0.00131196 -0.00322449 / 0.5));
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
@@ -46,14 +47,28 @@ product-element {
   article:has(product-gallery) {
     gap: 1.5rem;
 
+    @media (max-width: 1440px) {
+      margin: 0 2rem;
+    }
+
     > div {
-      background: var(--background-8);
-      border: 1px solid var(--border-1);
+      background: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
+      border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
       border-radius: 0.5rem;
       display: flex;
-      flex-direction: column;
       gap: 3rem;
       padding: 2rem;
+
+      @media (max-width: 1440px) {
+        flex-direction: column;
+      }
+    }
+
+    product-gallery,
+    product-description {
+      @media (min-width: 1441px) {
+        flex: 1;
+      }
     }
   }
 

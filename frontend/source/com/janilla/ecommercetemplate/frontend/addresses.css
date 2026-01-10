@@ -23,33 +23,55 @@
  * SOFTWARE.
  */
 addresses-element {
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
+  /*
+  main {
+    gap: 3rem;
 
-  li {
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 2rem;
-
-    &:not(:last-child) {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    @media (max-width: 1440px) {
+      padding: 0 2rem;
     }
 
-    .button {
-      align-self: center;
+    > div {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: minmax(auto, 15.5rem) 1fr;
     }
   }
 
-  p {
-    flex-grow: 1;
+  account-nav {
+    grid-area: 1 / 1 / 3 / 2;
+  }
+  */
+
+  article {
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 2rem;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .button {
+        align-self: center;
+      }
+    }
+
+    p {
+      flex-grow: 1;
+    }
   }
 /*
   dialog[open] {
-    background: var(--background-1);
-    border: 1px solid var(--border-1);
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
     border-radius: 0.5rem;
     left: 50%;
     margin: 0;

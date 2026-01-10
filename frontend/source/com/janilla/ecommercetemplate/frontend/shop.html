@@ -1,34 +1,41 @@
 <main>
   <article>
-    <form>
-      <label for="search" class="visually-hidden">Search</label>
-      <div>
-        <input id="search" name="q" value="${query}" placeholder="Search for products..." autocomplete="off" />
-        <lucide-icon data-name="search"></lucide-icon>
-      </div>
-      <button class="visually-hidden">submit</button>
-      <div>
-        <h3>Category</h3>
-        <ul>
-          <!--${categories}-->
-        </ul>
-        <h3>Sort by</h3>
-        <select name="sort">
-          <!--${sortOptions}-->
-        </select>
-      </div>
-    </form>
-    <div>
+    <section class="query-filter">
+      <form id="filter">
+        <label for="search" class="visually-hidden">Search</label>
+        <div>
+          <input id="search" name="q" value="${query}" placeholder="Search for products..." autocomplete="off" />
+          <lucide-icon data-name="search"></lucide-icon>
+        </div>
+        <button class="visually-hidden">submit</button>
+      </form>
+    </section>
+    <section class="category-filter">
+      <h3>Category</h3>
+      <ul>
+        <!--${categoryItems}-->
+      </ul>
+    </section>
+    <section class="sort-filter">
+      <h3>Sort by</h3>
+      <select name="sort">
+        <!--${sortOptions}-->
+      </select>
+      <ul>
+        <!--${sortItems}-->
+      </ul>
+    </section>
+    <section class="product-results">
       <!--${products}-->
-    </div>
+    </section>
   </article>
 </main>
 
-<template id="category">
+<template id="item">
   <li>
     <label>
-      <input type="checkbox" name="category" value="${id}" class="visually-hidden" />
-      ${title}
+      <input type="checkbox" form="filter" name="${name}" value="${value}" checked="${checked}" class="visually-hidden" />
+      ${text}
     </label>
   </li>
 </template>

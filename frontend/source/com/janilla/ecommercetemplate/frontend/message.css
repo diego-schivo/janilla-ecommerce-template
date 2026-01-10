@@ -24,13 +24,14 @@
  */
 message-element {
   border-radius: 0.5rem;
+  color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
   padding: 1rem;
 
   &.success {
-    background: var(--background-12);
+    background: light-dark(rgb(154, 205, 223), rgb(0, 52, 71));
   }
 
   &.warning {
-    background: var(--background-13);
+    background: light-dark(rgb(251, 221, 183), rgb(96, 68, 31));
   }
 }

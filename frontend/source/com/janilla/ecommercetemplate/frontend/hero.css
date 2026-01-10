@@ -25,6 +25,10 @@
 hero-element {
   margin-top: 4rem;
 
+  @media (min-width: 1441px) {
+    margin-top: 6rem;
+  }
+
   article,
   section {
     display: flex;
@@ -33,41 +37,37 @@ hero-element {
 
   article {
     gap: 1rem;
-    padding: 0 2rem;
+
+    @media (max-width: 1440px) {
+      padding: 0 2rem;
+    }
   }
 
   section {
     gap: 1.5rem;
-	/*transform: translateY(-2rem);*/
 
     @media (min-width: 1441px) {
-      align-items: center;
-      max-width: 36.5rem;
+      gap: 2rem;
+      max-width: 48rem;
     }
   }
 
   h1 {
-    /*font-weight: normal;*/
     font-weight: 800;
     font-size: 2.25rem;
     line-height: 1.1111111;
     margin: 0;
-
-    @media (min-width: 1441px) {
-      font-size: 3.5rem;
-      text-align: center;
-    }
   }
 
   p {
-    a {
-      color: var(--color-1);
-      font-weight: 500;
-      text-decoration: underline;
+    @media (min-width: 1441px) {
+      line-height: 1.75;
     }
 
-    @media (min-width: 1441px) {
-      text-align: center;
+    a {
+      color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
+      font-weight: 500;
+      text-decoration: underline;
     }
   }
 }

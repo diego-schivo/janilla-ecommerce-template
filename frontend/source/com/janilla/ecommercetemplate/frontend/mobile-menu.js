@@ -55,7 +55,7 @@ export default class MobileMenu extends WebComponent {
         const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            navItems: a.state.header?.navItems?.map(x => ({
+            storeItems: a.state.header?.navItems?.map(x => ({
                 $template: "list-item",
                 content: {
                     $template: "link",
@@ -65,7 +65,7 @@ export default class MobileMenu extends WebComponent {
                     target: x.newTab ? "_blank" : null
                 }
             })),
-            navItems2: (a.state.user ? [{
+            accountItems: (a.currentUser ? [{
                 href: "/orders",
                 text: "Orders"
             }, {
@@ -97,8 +97,9 @@ export default class MobileMenu extends WebComponent {
     }
 
     handleClick = event => {
-        const x = event.target.closest("button");
-        switch (x?.name) {
+        const el = event.target;
+
+        switch (el.closest("button")?.name) {
             case "show":
                 this.querySelector("dialog").showModal();
                 break;
@@ -106,6 +107,9 @@ export default class MobileMenu extends WebComponent {
                 this.querySelector("dialog").close();
                 break;
         }
+
+        if (el.matches("dialog"))
+            this.querySelector("dialog").close();
     }
 
     handleUserChanged = () => {

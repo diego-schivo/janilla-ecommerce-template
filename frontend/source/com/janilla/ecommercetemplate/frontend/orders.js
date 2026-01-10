@@ -30,10 +30,6 @@ export default class Orders extends WebComponent {
         return ["orders"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
     constructor() {
         super();
     }
@@ -44,13 +40,17 @@ export default class Orders extends WebComponent {
         s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
         this.appendChild(this.interpolateDom({
             $template: "",
-            content: s.orders?.length ? {
-                $template: "list",
+			nav: {
+			    $template: "nav",
+			    path: a.currentPath
+			},
+            results: s.orders?.length ? {
+                $template: "results",
                 items: s.orders.map(x => ({
-                    $template: "item",
+                    $template: "result",
                     item: JSON.stringify(x)
                 }))
-            } : { $template: "empty" }
+            } : { $template: "no-results" }
         }));
     }
 }

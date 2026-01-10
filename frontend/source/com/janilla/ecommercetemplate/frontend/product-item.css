@@ -44,7 +44,7 @@ product-item {
     display: flex;
 
     &:has(img) {
-      flex-basis: 40%;
+      /*flex-basis: 40%;*/
       height: 5rem;
       margin-right: 1rem;
       order: -1;
@@ -55,7 +55,7 @@ product-item {
     text-decoration: none;
 
     &:has(img) {
-      border: 1px solid var(--border-1);
+      border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
       border-radius: 0.5rem;
       display: block;
       overflow: hidden;
@@ -70,7 +70,7 @@ product-item {
   }
 
   .option {
-    color: var(--color-7);
+    color: light-dark(oklab(0.207922 -0.00297319 -0.0397971 / 0.5), oklab(0.983834 -0.00131196 -0.00322449 / 0.5));
     font-family: GeistMono;
     font-size: 0.875rem;
     letter-spacing: 0.1em;
@@ -89,7 +89,7 @@ product-item {
 
   dd {
     all: unset;
-    color: var(--color-7);
+    color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
     font-family: GeistMono;
     font-size: 0.875rem;
   }

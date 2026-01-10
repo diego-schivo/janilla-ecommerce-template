@@ -27,21 +27,31 @@ product-description {
   flex-direction: column;
   gap: 1.5rem;
 
+  header {
+    @media (min-width: 1441px) {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
   h1 {
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 2rem;
 
+    /*
     @media (min-width: 1441px) {
       font-size: 3.75rem;
       font-weight: 400;
       line-height: 1;
       margin-bottom: 1.5rem;
     }
+    */
   }
 
   price-element {
-    color: var(--color-4);
+    color: rgb(248, 250, 252);
     line-height: 1.5;
   }
 

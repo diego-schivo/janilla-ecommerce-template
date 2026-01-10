@@ -189,8 +189,7 @@
 				"$type": "File",
 				"name": "image-hero1.webp"
 			},
-			"alt": "Straight metallic shapes with a blue gradient",
-			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+			"alt": "Straight metallic shapes with a blue gradient"
 		},
 		{
 			"$type": "Media",

@@ -23,6 +23,23 @@
  * SOFTWARE.
  */
 create-account {
+  margin-top: 2rem;
+
+  main {
+    @media (max-width: 1440px) {
+      padding: 0 2rem;
+    }
+  }
+
+  article {
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 32rem;
+    }
+  }
+
   h1 {
     font-size: 1.25rem;
     font-weight: 400;
@@ -34,6 +51,6 @@ create-account {
   }
 
   input {
-    background: var(--background-1);
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
   }
 }

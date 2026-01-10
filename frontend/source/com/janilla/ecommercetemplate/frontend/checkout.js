@@ -96,6 +96,7 @@ export default class Checkout extends WebComponent {
                 disabled: !s.guestEmail || s.guestEmailEditable
             },
             billingAddressSameAsShipping: s.billingAddressSameAsShipping,
+			billingAddressSameAsShippingDisabled: true,
             shippingAddress: s.billingAddressSameAsShipping ? null : s.shippingAddress ? {
                 $template: "address-item",
                 ...(typeof s.shippingAddress === "object"
@@ -120,11 +121,17 @@ export default class Checkout extends WebComponent {
                 //guestEmail: s.guestEmail,
                 //amount: s.cart.subtotal * 100
             },
+			/*
             items: s.cart.items.map(x => ({
                 $template: "item",
                 ...x,
                 image: x.product.gallery.find(y => x.variant.options.some(z => z.id === y.variantOption.id)).image,
                 option: x.variant.options.map(y => y.label).join(", ")
+            })),
+			*/
+            items: s.cart.items.map(x => ({
+                $template: "item",
+                item: JSON.stringify(x)
             })),
             total: s.cart.subtotal
         }));

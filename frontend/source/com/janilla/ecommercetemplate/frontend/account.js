@@ -56,17 +56,21 @@ export default class Account extends WebComponent {
         s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
         this.appendChild(this.interpolateDom({
             $template: "",
-			success: this.dataset.success ? {
-				$template: "message",
-				class: "success",
-				text: this.dataset.success
-			} : null,
-			warning: this.dataset.warning ? {
-				$template: "message",
-				class: "warning",
-				text: this.dataset.warning
-			} : null,
-            user: a.user,
+            success: this.dataset.success ? {
+                $template: "message",
+                class: "success",
+                text: this.dataset.success
+            } : null,
+            warning: this.dataset.warning ? {
+                $template: "message",
+                class: "warning",
+                text: this.dataset.warning
+            } : null,
+            nav: {
+				$template: "nav",
+				path: a.currentPath
+			},
+            user: a.currentUser,
             orders: s.orders?.length ? {
                 $template: "list",
                 items: s.orders.map(x => ({

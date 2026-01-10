@@ -1,9 +1,20 @@
 <header>
   <mobile-menu></mobile-menu>
-  <a href="/">
-    <janilla-logo></janilla-logo>
-  </a>
+  <nav>
+    <a href="/">
+      <janilla-logo></janilla-logo>
+    </a>
+    <ul>
+      <!--${navItems}-->
+    </ul>
+  </nav>
   <div>
     <cart-modal></cart-modal>
   </div>
 </header>
+
+<template id="nav-item">
+  <li>
+    <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
+  </li>
+</template>

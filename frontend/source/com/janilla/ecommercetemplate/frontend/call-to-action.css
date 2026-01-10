@@ -30,12 +30,15 @@ call-to-action {
   }
   
   article {
-    background: var(--background-4);
-    border: 1px solid var(--border-1);
+    background: light-dark(rgb(244, 244, 245), rgb(20, 20, 20));
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
     border-radius: 0.2rem;
     gap: 1rem;
-    margin: 0 2rem;
     padding: 1rem;
+
+    @media (max-width: 1440px) {
+      margin: 0 2rem;
+    }
 
     @media (min-width: 1441px) {
       align-items: center;
@@ -45,10 +48,10 @@ call-to-action {
   }
 
   p {
-    color: var(--color-2);
+    color: light-dark(oklch(0.373 0.034 259.733), rgb(209, 213, 219));
 
     a {
-      color: var(--color-1);
+      color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
     }
   }
 

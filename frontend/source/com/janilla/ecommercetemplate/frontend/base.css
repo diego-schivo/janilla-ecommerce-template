@@ -22,8 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-:root,
-:host {
+:where(:root:not(:has(.admin)), :host:not(:has(.admin))) {
   color-scheme: light dark;
   line-height: 1.5;
   text-size-adjust: 100%;
@@ -37,258 +36,227 @@
   }
 }
 
-:root:not(:has(.admin)) {
-  --background-1: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
-  --background-2: light-dark(rgb(245, 245, 245), rgb(248, 250, 252));
-  --background-3: rgba(248, 250, 252, 0.9);
-  --background-4: rgb(20, 20, 20);
-  --background-5: rgb(0, 0, 0);
-  --background-6: rgb(34, 34, 34);
-  --background-7: oklab(0 0 0 / 0.8);
-  --background-8: rgb(15, 15, 15);
-  --background-9: oklch(0.556 0 0);
-  --background-10: oklch(0.205 0 0);
-  --background-11: oklab(0.983787 -0.0012686 -0.00321162 / 0.05);
-  --background-12: rgb(0, 52, 71);
-  --background-13: rgb(96, 68, 31);
-  --background-14: oklab(0.983828 -0.00126734 -0.00320476 / 0.1);
-  --background-15: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
-  --border-1: light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
-  --border-2: rgb(60, 60, 60);
-  --border-3: oklch(0.556 0 0);
-  --border-4: oklch(0.371 0 0);
-  --border-5: rgb(204, 204, 204);
-  --border-6: oklch(0.546 0.245 262.881);
-  --color-1: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
-  --color-2: light-dark(oklch(0.373 0.034 259.733), rgb(209, 213, 219));
-  --color-3: rgb(15, 23, 42);
-  --color-4: rgb(248, 250, 252);
-  --color-5: gray;
-  --color-6: rgb(148, 163, 184);
-  --color-7: light-dark(oklab(0.207922 -0.00297319 -0.0397971 / 0.5), oklab(0.983834 -0.00131196 -0.00322449 / 0.5));
-  --color-8: black;
-  --color-9: oklch(0.708 0 0);
-  --color-10: oklch(0.556 0 0);
-  --color-11: oklch(0.446 0.03 256.802);
-  --color-12: oklch(0.21 0.034 264.665);
-  --color-13: oklch(0.373 0.034 259.733);
-}
+:where(:root:not(:has(.admin))) {
+  --foo: rgb(0, 0, 0);
 
-a,
-strong {
-  color: var(--color-1);
-}
-
-article,
-form,
-label {
-  display: flex;
-  flex-direction: column;
-}
-
-article {
-  gap: 1rem;
-}
-
-body {
-  background: var(--background-1);
-  color: var(--color-2);
-  font-family: Geist;
-  margin: 0;
-
-  &:has(dialog[open]) {
-    overflow: hidden;
+  a,
+  strong {
+    color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
   }
-}
 
-/*button,*/
-.button,
-input,
-label,
-select,
-textarea {
-  color: inherit;
-  font-size: 0.875rem;
-}
+  article,
+  form,
+  label {
+    display: flex;
+    flex-direction: column;
+  }
 
-/*button,*/
-.button,
-input,
-select,
-textarea {
-  font-family: Geist;
-}
+  article {
+    gap: 1rem;
+  }
 
-button {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
+  body {
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
+    color: light-dark(oklch(0.373 0.034 259.733), rgb(209, 213, 219));
+    font-family: Geist;
+    margin: 0;
 
-.button {
-  align-items: center;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-
-  &:where(.primary, .secondary) {
-    border-radius: 0.25rem;
-    box-sizing: border-box;
-    height: 2.5rem;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    text-align: center;
-
-    &:disabled {
-      opacity: 0.5;
+    &:has(dialog[open]) {
+      overflow: hidden;
     }
   }
 
-  &.primary {
-    background: var(--background-2);
-    color: var(--color-3);
-
-    &:not(:disabled):hover {
-      background: var(--background-3);
-    }
+  .button,
+  input,
+  label,
+  select,
+  textarea {
+    color: inherit;
+    font-size: 0.875rem;
   }
 
-  &.secondary {
-    border: 1px solid var(--border-1);
-    background: var(--background-4);
-    color: var(--color-4);
+  .button,
+  input,
+  select,
+  textarea {
+    font-family: Geist;
   }
-}
 
-dd,
-dl,
-h1,
-h2,
-h3,
-ol,
-p,
-ul {
-  margin: 0;
-}
-
-form {
-  gap: 2rem;
+  button {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
 
   .button {
-    align-self: start;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:where(.primary, .secondary) {
+      border-radius: 0.25rem;
+      box-sizing: border-box;
+      height: 2.5rem;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      text-align: center;
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+
+    &.primary {
+      background: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+      color: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
+
+      &:not(:disabled):hover {
+        background: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.9), oklab(0.983828 -0.00126734 -0.00320476 / 0.9));
+      }
+    }
+
+    &.secondary {
+      border: 1px solid light-dark(rgb(226, 232, 240), rgba(255, 255, 255, 0.1));
+      background: light-dark(rgb(244, 244, 245), rgb(20, 20, 20));
+      color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
+    }
+  }
+
+  dd,
+  dl,
+  h1,
+  h2,
+  h3,
+  ol,
+  p,
+  ul {
+    margin: 0;
+  }
+
+  form {
+    gap: 2rem;
+
+    .button {
+      align-self: start;
+      height: 2.25rem;
+    }
+
+    label {
+      gap: 0.5rem;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  img {
+    display: block;
+  }
+
+  input,
+  select,
+  textarea {
+    background: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));
+    border: 1px solid light-dark(rgb(228, 228, 231), oklch(0.269 0 0));
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));
+    font-size: 1rem;
+    /*padding: 0.5rem 1rem;*/
+    padding: 0.25rem 0.75rem;
+
+    &:focus {
+      outline: 2px solid rgb(255, 255, 255);
+    }
+  }
+
+  input {
+    /*height: 2.5rem;*/
     height: 2.25rem;
   }
 
   label {
-    gap: 0.5rem;
-  }
-}
+    color: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.5), oklab(0.983828 -0.00126734 -0.00320476 / 0.5));
+    font-family: GeistMono;
+    /*text-transform: uppercase;*/
 
-h1,
-h2,
-h3 {
-  color: var(--color-1);
-  font-weight: 400;
-}
+    &:has([required]) span::after {
+      content: " *";
+    }
 
-h1 {
-  font-size: 1.8rem;
-}
+    &.checkbox {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
+      input:not(:checked) + lucide-icon {
+        svg {
+          display: none;
+        }
+      }
 
-h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
+      lucide-icon {
+        background: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+        border: 1px solid light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+        border-radius: 0.1875rem;
+        color: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
+      }
 
-img {
-  display: block;
-}
-
-input,
-select,
-textarea {
-  /*background: transparent;*/
-  background: var(--background-5);
-  border: 1px solid var(--border-1);
-  border-radius: 0.25rem;
-  box-sizing: border-box;
-  color: var(--color-1);
-  font-size: 1rem;
-  /*padding: 0.5rem 1rem;*/
-  padding: 0.25rem 0.75rem;
-
-  &:focus {
-    outline: 2px solid rgb(255, 255, 255);
-  }
-}
-
-input {
-  /*height: 2.5rem;*/
-  height: 2.25rem;
-}
-
-label {
-  color: var(--color-5);
-  font-family: GeistMono;
-  /*text-transform: uppercase;*/
-
-  &:has([required]) span::after {
-    content: " *";
-  }
-
-  &.checkbox {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-
-    input:not(:checked) + lucide-icon {
-      svg {
-        display: none;
+      &:has([disabled]) {
+        opacity: 0.5;
       }
     }
-
-    lucide-icon {
-      background: var(--background-6);
-      border: 1px solid var(--border-2);
-      border-radius: 0.1875rem;
-    }
   }
-}
 
-ol,
-ul {
-  list-style: none;
-  padding: 0;
-}
+  ol,
+  ul {
+    list-style: none;
+    padding: 0;
+  }
 
-strong {
-  font-weight: 600;
-}
+  strong {
+    font-weight: 600;
+  }
 
-textarea {
-  resize: none;
-}
+  textarea {
+    resize: none;
+  }
 
-.visually-hidden {
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
+  .visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
 
-::backdrop {
-  background: var(--background-7);
+  ::backdrop {
+    background: oklab(0 0 0 / 0.8);
+  }
 }

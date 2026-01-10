@@ -24,14 +24,14 @@
  */
 import WebComponent from "web-component";
 
-export default class Login extends WebComponent {
+export default class Footer extends WebComponent {
 
     static get templateNames() {
-        return ["login"];
+        return ["footer"];
     }
 
     static get observedAttributes() {
-        return ["data-warning"];
+        return ["data-color-scheme"];
     }
 
     constructor() {
@@ -40,41 +40,37 @@ export default class Login extends WebComponent {
 
     connectedCallback() {
         super.connectedCallback();
-        this.addEventListener("submit", this.handleSubmit);
+        this.addEventListener("change", this.handleChange);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener("submit", this.handleSubmit);
+        this.removeEventListener("change", this.handleChange);
     }
 
     async updateDisplay() {
-        document.title = "Login";
-        this.closest("app-element").updateSeo(null);
+        const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            warning: this.dataset.warning ? {
-                $template: "message",
-                class: "warning",
-                text: this.dataset.warning
-            } : null,
+            navItems: a.state.footer?.navItems?.map(x => ({
+                $template: "link",
+                ...x,
+                document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+                href: x.type.name === "CUSTOM" ? x.uri : null,
+                target: x.newTab ? "_blank" : null
+            })),
+            options: ["auto", "light", "dark"].map(x => ({
+                $template: "option",
+                value: x,
+                text: x.charAt(0).toUpperCase() + x.substring(1),
+                selected: x === (this.dataset.colorScheme ?? "auto")
+            }))
         }));
     }
 
-    handleSubmit = async event => {
-        const f = event.target;
-        event.preventDefault();
-
-        const a = this.closest("app-element");
-        const r = await fetch(`${a.dataset.apiUrl}/users/login`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(Object.fromEntries(new FormData(f)))
-        });
-        if (r.ok) {
-            const j = await r.json();
-            a.currentUser = j;
-            a.navigate(new URL("/account", location.href));
-        }
+    handleChange = event => {
+        const el = event.target.closest("select");
+		if (el)
+			this.closest("app-element").colorScheme = el.value === "auto" ? null : el.value;
     }
 }

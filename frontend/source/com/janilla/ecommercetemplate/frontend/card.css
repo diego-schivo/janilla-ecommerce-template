@@ -23,24 +23,35 @@
  * SOFTWARE.
  */
 card-element {
+  /*
   article {
-    background: var(--background-1);
-    border: 1px solid var(--border-1);
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
     border-radius: 0.2rem;
     height: 100%;
   }
+  */
 
   a {
     text-decoration: none;
   }
 
+  picture {
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
+    border-radius: 0.2rem;
+    display: block;
+    padding: 2rem;
+  }
+
   img {
+    aspect-ratio: 1;
     display: block;
     max-width: 100%;
   }
 
   div {
-    color: var(--color-5);
+    color: gray;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -49,6 +60,9 @@ card-element {
 
   h3 {
     color: inherit;
+    font-family: GeistMono, ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
     margin: 0;
   }
 }

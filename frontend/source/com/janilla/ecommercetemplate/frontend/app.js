@@ -44,11 +44,27 @@ export default class App extends WebComponent {
             history.replaceState({}, "");
     }
 
-    get user() {
+    get colorScheme() {
+        return this.state.colorScheme;
+    }
+
+    set colorScheme(colorScheme) {
+        if (colorScheme)
+            localStorage.setItem("janilla-ecommerce-template.color-scheme", colorScheme);
+        else
+            localStorage.removeItem("janilla-ecommerce-template.color-scheme");
+        this.requestDisplay();
+    }
+
+    get currentPath() {
+        return location.pathname;
+    }
+
+    get currentUser() {
         return this.state.user;
     }
 
-    set user(user) {
+    set currentUser(user) {
         this.state.user = user;
         this.dispatchEvent(new CustomEvent("userchanged", { detail: user }));
     }
@@ -60,7 +76,6 @@ export default class App extends WebComponent {
             el.remove();
         }
         super.connectedCallback();
-        this.addEventListener("change", this.handleChange);
         this.addEventListener("click", this.handleClick);
         addEventListener("popstate", this.handlePopState);
         this.addEventListener("submit", this.handleSubmit);
@@ -68,7 +83,6 @@ export default class App extends WebComponent {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener("change", this.handleChange);
         this.removeEventListener("click", this.handleClick);
         removeEventListener("popstate", this.handlePopState);
         this.removeEventListener("submit", this.handleSubmit);
@@ -86,11 +100,11 @@ export default class App extends WebComponent {
                 ? ss.user
                 : await (await fetch(`${this.dataset.apiUrl}/users/me`)).json();
 
-        const p = location.pathname;
+        const p = this.currentPath;
         const spp = new URLSearchParams(location.search);
-        const u0 = s.user;
+        const u0 = this.currentUser;
 
-        if (s.user)
+        if (u0)
             switch (p) {
                 case "/create-account":
                 case "/login":
@@ -104,7 +118,9 @@ export default class App extends WebComponent {
                     break;
             }
         else if (["/account"].includes(p) || p.startsWith("/account/")) {
-            this.navigate(new URL("/login", location.href));
+            const u = new URL("/login", location.href);
+            u.searchParams.append("warning", "Please login to access your account settings.");
+            this.navigate(u);
             return;
         }
 
@@ -114,7 +130,7 @@ export default class App extends WebComponent {
                 $template: "",
                 admin: {
                     $template: "admin",
-                    user: s.user ? JSON.stringify(s.user) : null,
+                    user: this.currentUser ? JSON.stringify(this.currentUser) : null,
                     path: m[1] ?? "/"
                 }
             }));
@@ -133,17 +149,21 @@ export default class App extends WebComponent {
             s.enums = ss && Object.hasOwn(ss, "enums")
                 ? ss.enums
                 : await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
+        s.colorScheme = localStorage.getItem("janilla-ecommerce-template.color-scheme");
 
-        const cs = localStorage.getItem("janilla-ecommerce-template.color-scheme");
         this.appendChild(this.interpolateDom({
             $template: "",
             public: {
                 $template: "public",
-                colorScheme: cs ?? "light dark",
-                adminBar: s.user?.roles?.some(x => x.name === "ADMIN") ? {
+                colorScheme: this.colorScheme ?? "light dark",
+                adminBar: this.currentUser?.roles?.some(x => x.name === "ADMIN") ? {
                     $template: "admin-bar",
-                    userEmail: s.user?.email
+                    userEmail: this.currentUser?.email
                 } : null,
+                header: {
+                    $template: "header",
+                    path: p
+                },
                 content: s.notFound ? { $template: "not-found" } : (() => {
                     switch (p) {
                         case "/account":
@@ -172,7 +192,10 @@ export default class App extends WebComponent {
                         case "/find-order":
                             return { $template: "find-order" };
                         case "/login":
-                            return { $template: "login" };
+                            return {
+                                $template: "login",
+                                warning: spp.get("warning")
+                            };
                         case "/logout":
                             return {
                                 $template: "logout",
@@ -206,47 +229,24 @@ export default class App extends WebComponent {
                         };
                     })() : {
                         $template: "page",
-                        slug: location.pathname.split("/").map(x => x === "" ? "home" : x)[1]
+                        slug: p.split("/").map(x => x === "" ? "home" : x)[1]
                     };
                 })(),
                 footer: {
                     $template: "footer",
-                    navItems: s.footer?.navItems?.map(x => ({
-                        $template: "link",
-                        ...x,
-                        document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-                        href: x.type.name === "CUSTOM" ? x.uri : null,
-                        target: x.newTab ? "_blank" : null
-                    })),
-                    options: ["auto", "light", "dark"].map(x => ({
-                        $template: "option",
-                        value: x,
-                        text: x.charAt(0).toUpperCase() + x.substring(1),
-                        selected: x === (cs ?? "auto")
-                    }))
+                    colorScheme: this.colorScheme
                 }
             }
         }));
     }
 
-    handleChange = event => {
-        const el = event.target.closest("select");
-        if (el?.closest("footer")) {
-            if (el.value === "auto")
-                localStorage.removeItem("janilla-ecommerce-template.color-scheme");
-            else
-                localStorage.setItem("janilla-ecommerce-template.color-scheme", el.value);
-            this.requestDisplay();
-        }
-    }
-
     handleClick = event => {
-        const a = event.target.closest("a");
-        if (a?.href && !event.defaultPrevented && !a.target) {
-            const u = new URL(a.href);
-            event.preventDefault();
-            history.pushState({}, "", u.pathname + u.search);
-            dispatchEvent(new CustomEvent("popstate"));
+        if (!event.defaultPrevented) {
+            const a = event.target.closest("a");
+            if (a?.href && !a.target) {
+                event.preventDefault();
+                this.navigate(new URL(a.href));
+            }
         }
     }
 
@@ -259,9 +259,10 @@ export default class App extends WebComponent {
     }
 
     navigate(url) {
+        this.querySelectorAll("dialog[open]").forEach(x => x.close());
         delete this.serverState;
         delete this.state.notFound;
-        if (url.pathname !== location.pathname)
+        if (url.pathname !== this.currentPath)
             window.scrollTo(0, 0);
         history.pushState({}, "", url.pathname + url.search);
         this.requestDisplay();

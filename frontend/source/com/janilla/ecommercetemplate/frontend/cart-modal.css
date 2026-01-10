@@ -23,9 +23,9 @@
  * SOFTWARE.
  */
 header-element cart-modal {
-  button[name="show"] {
+  :where(button[name="show"]) {
     background: transparent;
-    color: var(--color-7);
+    color: light-dark(oklab(0.207922 -0.00297319 -0.0397971 / 0.5), oklab(0.983834 -0.00131196 -0.00322449 / 0.5));
     display: flex;
     font-family: GeistMono;
     font-size: 0.75rem;
@@ -51,7 +51,7 @@ header-element cart-modal {
   }
 
   button[name="close"] {
-    color: var(--color-4);
+    color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
     opacity: 0.7;
   }
 
@@ -73,7 +73,7 @@ header-element cart-modal {
     }
 
     p {
-      color: var(--color-6);
+      color: light-dark(rgb(100, 116, 139), rgb(148, 163, 184));
       font-size: 0.875em;
     }
   }
@@ -118,10 +118,10 @@ header-element cart-modal {
         position: relative;
 
         button {
-          background: var(--background-9);
-          border: 0.5px solid var(--border-3);
+          background: light-dark(oklch(0.556 0 0), oklch(0.556 0 0));
+          border: 0.5px solid light-dark(oklch(0.556 0 0), oklch(0.556 0 0));
           border-radius: 100%;
-          color: var(--color-8);
+          color: light-dark(rgb(255, 255, 255), rgb(0, 0, 0));
           height: auto;
           padding: 0;
           position: absolute;
@@ -141,8 +141,8 @@ header-element cart-modal {
     }
 
     a {
-      background: var(--background-10);
-      border: 1px solid var(--border-4);
+      background: light-dark(oklch(0.87 0 0), oklch(0.205 0 0));
+      border: 1px solid light-dark(oklch(0.87 0 0), oklch(0.371 0 0));
       border-radius: 0.375rem;
       box-sizing: border-box;
       display: block;
@@ -164,12 +164,12 @@ header-element cart-modal {
   }
 
   p {
-    color: var(--color-9);
+    color: oklch(0.708 0 0);
   }
 
   .edit-quantity {
     align-items: center;
-    border: 1px solid var(--border-1);
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
     border-radius: 0.5rem;
     display: flex;
     gap: 1.25rem;
@@ -177,7 +177,7 @@ header-element cart-modal {
 
     button {
       background: transparent;
-      color: var(--color-10);
+      color: oklch(0.556 0 0);
       height: auto;
       padding: 0;
     }
@@ -189,6 +189,10 @@ header-element cart-modal {
     gap: 0.75rem;
     padding: 0 1rem;
 
+    dd {
+      font-size: 1rem;
+    }
+
     .button {
       height: 2.25rem;
     }
@@ -196,14 +200,14 @@ header-element cart-modal {
 
   dl {
     align-items: center;
-    border-bottom: 1px solid oklch(0.371 0 0);
+    border-bottom: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.25rem;
   }
 
   dt {
-    color: var(--color-9);
+    color: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
     font-size: 0.875rem;
   }
 }

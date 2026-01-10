@@ -22,8 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-login-element {
+:where(.login) {
+  margin-top: 1rem;
+
+  main {
+    gap: 2rem;
+
+    @media (max-width: 1440px) {
+      padding: 0 2rem;
+    }
+  }
+
+  message-element,
+  article {
+    max-width: 36rem;
+  }
+
+  article {
+    padding: 0;
+  }
+
   form {
+    margin-top: 1rem;
+
     p:last-child {
       display: flex;
       gap: 1rem;
@@ -33,12 +54,12 @@ login-element {
       font-weight: 500;
     }
 
-    button {
+    .button {
       flex: 1;
     }
   }
 
   input {
-    background: var(--background-1);
+    background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
   }
 }

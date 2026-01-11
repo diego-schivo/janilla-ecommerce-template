@@ -34,10 +34,6 @@
   &:has([data-color-scheme="dark"]) {
     color-scheme: dark;
   }
-}
-
-:where(:root:not(:has(.admin))) {
-  --foo: rgb(0, 0, 0);
 
   a,
   strong {

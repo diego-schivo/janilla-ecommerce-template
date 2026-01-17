@@ -85,7 +85,7 @@ public class StripeApi extends PaymentApi {
 					+ new UriQueryBuilder().append("email", user != null ? user.email() : guestEmail)));
 			rq.setBasicAuthorization(secretKey + ":");
 			var r = new HttpClient().send(rq, json.andThen(x -> (R) new Converter().convert(x, R.class)));
-			IO.println("r=" + r);
+//			IO.println("r=" + r);
 			c = !r.data().isEmpty() ? r.data().getFirst() : null;
 		}
 
@@ -98,7 +98,7 @@ public class StripeApi extends PaymentApi {
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));
 			c = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, C.class)));
-			IO.println("c=" + c);
+//			IO.println("c=" + c);
 		}
 
 		record PI(String id, String client_secret) {
@@ -115,13 +115,13 @@ public class StripeApi extends PaymentApi {
 					.append("metadata[cartId]", cart.id().toString())
 					.append("metadata[cartItems]", Json.format(cart.items(), true))
 					.append("metadata[shippingAddress]", Json.format(shippingAddress, true)).toString();
-			IO.println("q=" + q);
+//			IO.println("q=" + q);
 			var bb = q.getBytes();
 			rq.setHeaderValue("content-type", "application/x-www-form-urlencoded");
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));
 			pi = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, PI.class)));
-			IO.println("pi=" + pi);
+//			IO.println("pi=" + pi);
 		}
 
 		persistence.crud(Transaction.class)
@@ -147,7 +147,7 @@ public class StripeApi extends PaymentApi {
 			var rq = new HttpRequest("GET", URI.create("https://api.stripe.com/v1/payment_intents/" + paymentIntent));
 			rq.setBasicAuthorization(configuration.getProperty("ecommerce-template.stripe.secret-key") + ":");
 			pi = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, PI.class)));
-			IO.println("pi=" + pi);
+//			IO.println("pi=" + pi);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -173,14 +173,14 @@ public class StripeApi extends PaymentApi {
 		var b = request.getBody();
 		if (b != null) {
 			var bs = new String(Channels.newInputStream((ReadableByteChannel) b).readAllBytes());
-			IO.println("StripeApi.webhooks, bs=" + bs);
+//			IO.println("StripeApi.webhooks, bs=" + bs);
 
 			try {
 				var ss = request.getHeaderValue("stripe-signature");
-				IO.println("StripeApi.webhooks, ss=" + ss);
+//				IO.println("StripeApi.webhooks, ss=" + ss);
 				var ssm = Arrays.stream(ss.split(",")).map(x -> x.split("=", 2))
 						.collect(Collectors.toMap(x -> x[0], x -> x[1]));
-				IO.println("StripeApi.webhooks, ssm=" + ssm);
+//				IO.println("StripeApi.webhooks, ssm=" + ssm);
 
 				var k = configuration.getProperty("ecommerce-template.stripe.webhooks-signing-secret");
 				var m = ssm.get("t") + "." + bs;
@@ -188,7 +188,7 @@ public class StripeApi extends PaymentApi {
 				var a = Mac.getInstance("HmacSHA256");
 				a.init(new SecretKeySpec(k.getBytes(), "HmacSHA256"));
 				var r = HexFormat.of().formatHex(a.doFinal(m.getBytes()));
-				IO.println("StripeApi.webhooks, r=" + r);
+//				IO.println("StripeApi.webhooks, r=" + r);
 
 				if (!r.equals(ssm.get("v1")))
 					throw new ForbiddenException();

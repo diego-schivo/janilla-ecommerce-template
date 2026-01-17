@@ -150,8 +150,8 @@ export default class App extends WebComponent {
 
         this.appendChild(this.interpolateDom({
             $template: "",
-            public: {
-                $template: "public",
+            site: {
+                $template: "site",
                 colorScheme: this.colorScheme ?? "light dark",
                 adminBar: this.currentUser?.roles?.some(x => x.name === "ADMIN") ? {
                     $template: "admin-bar",

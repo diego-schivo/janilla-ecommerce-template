@@ -48,7 +48,7 @@ public abstract class PaymentApi {
 
 	@Handle(method = "POST", path = "initiate")
 	public InitiateResult initiate(InitiateData data, BackendExchange exchange) {
-		IO.println("PaymentApi.initiate, data=" + data);
+//		IO.println("PaymentApi.initiate, data=" + data);
 		var u = exchange.sessionUser();
 		return initiate(u, data.guestEmail(), persistence.crud(Cart.class).read(data.cart()), data.billingAddress(),
 				data.shippingAddress());
@@ -62,7 +62,7 @@ public abstract class PaymentApi {
 
 	@Handle(method = "POST", path = "confirm-order")
 	public ConfirmOrderResult confirmOrder(ConfirmOrderData data, BackendExchange exchange) {
-		IO.println("PaymentApi.confirmOrder, data=" + data);
+//		IO.println("PaymentApi.confirmOrder, data=" + data);
 		var u = exchange.sessionUser();
 		return confirmOrder(u, data.guestEmail(), data.paymentIntent());
 	}

@@ -23,11 +23,7 @@
  * SOFTWARE.
  */
 hero-element {
-  margin-top: 4rem;
-
-  @media (min-width: 1441px) {
-    margin-top: 6rem;
-  }
+  margin-top: 6rem;
 
   article,
   section {
@@ -44,10 +40,9 @@ hero-element {
   }
 
   section {
-    gap: 1.5rem;
+    gap: 2rem;
 
     @media (min-width: 1441px) {
-      gap: 2rem;
       max-width: 48rem;
     }
   }
@@ -60,9 +55,7 @@ hero-element {
   }
 
   p {
-    @media (min-width: 1441px) {
-      line-height: 1.75;
-    }
+    line-height: 1.75;
 
     a {
       color: light-dark(oklch(0.21 0.034 264.665), rgb(255, 255, 255));

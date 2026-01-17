@@ -53,7 +53,8 @@ export default class Account extends WebComponent {
     async updateDisplay() {
         const s = this.state;
         const a = this.closest("app-element");
-        s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+        s.orders ??= await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+        a.updateSeo({ title: "Account" });
         this.appendChild(this.interpolateDom({
             $template: "",
             success: this.dataset.success ? {
@@ -67,9 +68,9 @@ export default class Account extends WebComponent {
                 text: this.dataset.warning
             } : null,
             nav: {
-				$template: "nav",
-				path: a.currentPath
-			},
+                $template: "nav",
+                path: a.currentPath
+            },
             user: a.currentUser,
             orders: s.orders?.length ? {
                 $template: "list",
@@ -83,13 +84,13 @@ export default class Account extends WebComponent {
 
     handleInput = event => {
         const o = Object.fromEntries(new FormData(event.target.form));
-        const u = this.closest("app-element").state.user;
+        const u = this.closest("app-element").currentUser;
         this.querySelector("button").disabled = o.email === u.email && o.name === u.name;
     }
 
     handleSubmit = async event => {
         event.preventDefault();
-        const u = this.closest("app-element").state.user;
+        const u = this.closest("app-element").currentUser;
         const o = Object.fromEntries(new FormData(event.target));
         const r = await fetch(`/api/users/${u.id}`, {
             method: "PATCH",

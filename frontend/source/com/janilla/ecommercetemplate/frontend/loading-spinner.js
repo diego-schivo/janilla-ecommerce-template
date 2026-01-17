@@ -22,5 +22,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-order-confirmation {
+import WebComponent from "web-component";
+
+export default class LoadingSpinner extends WebComponent {
+
+	static get templateNames() {
+		return ["loading-spinner"];
+	}
+
+	constructor() {
+		super();
+	}
 }

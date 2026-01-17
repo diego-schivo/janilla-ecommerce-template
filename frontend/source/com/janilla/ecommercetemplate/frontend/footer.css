@@ -23,94 +23,154 @@
  * SOFTWARE.
  */
 footer-element {
+  margin-top: auto;
 
   footer {
     background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.875rem;
-    /*margin-top: 2rem;*/
-    margin-top: auto;
-    padding: 2rem;
+    line-height: 1.4286;
+  }
 
-    > div {
-      display: flex;
-      gap: 1rem;
+  .logo {
+    border-top: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
+    display: flex;
+    gap: 1rem;
+    margin: 0 2rem;
+    padding: 3rem 0;
 
-      @media (max-width: 1440px) {
-        flex-direction: column;
+    @media (max-width: 1440px) {
+      flex-direction: column;
+    }
+
+    @media (min-width: 1441px) {
+      align-items: start;
+      box-sizing: border-box;
+      gap: 3rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 72.125rem;
+      width: 100%;
+    }
+
+    a:not(:hover) {
+      text-decoration: none;
+    }
+  }
+
+  janilla-logo {
+    height: 1.25rem;
+    overflow: hidden;
+    width: 1.25rem;
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+  }
+
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+
+  select {
+    border: none;
+    color: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+    font-size: 0.875rem;
+    line-height: 1.4286;
+
+    @media (max-width: 1440px) {
+      align-self: end;
+    }
+
+    @media (min-width: 1441px) {
+      margin-left: auto;
+    }
+
+    &::picker-icon {
+      display: none;
+    }
+
+    lucide-icon {
+      color: light-dark(rgb(100, 116, 139), rgb(148, 163, 184));
+    }
+  }
+
+  selectedcontent {
+    lucide-icon {
+      display: none;
+    }
+  }
+
+  ::picker(select) {
+    background: light-dark(rgb(255, 255, 255), rgb(2, 8, 23));
+    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
+    border-radius: 0.375rem;
+    padding: 0.25rem;
+  }
+
+  option {
+    border-radius: 0.25rem;
+    color: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+    min-block-size: auto;
+    padding: 0.375rem 0.5rem;
+
+    &:checked {
+      background: light-dark(rgb(241, 245, 249), rgb(41, 194, 255));
+      
+      lucide-icon {
+        display: block;
       }
+    }
 
-      @media (min-width: 1441px) {
-        align-items: center;
+    &::checkmark {
+      content: none;
+    }
+
+    lucide-icon {
+      display: none;
+    }
+  }
+
+  .copy {
+    border-top: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
+    padding: 1.5rem 0;
+
+    article {
+      color: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+      gap: 0.25rem;
+
+	  @media (min-width: 1441px) {
         box-sizing: border-box;
+        flex-direction: row;
         margin-left: auto;
         margin-right: auto;
-        max-width: 76.125rem;
-        padding: 2rem;
+        max-width: 72.125rem;
         width: 100%;
       }
+    }
 
-      a:not(:hover) {
-        text-decoration: none;
+    p {
+      text-align: center;
+
+      &:nth-child(2) {
+        @media (min-width: 1441px) {
+          border-left: 1px solid light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+          margin-left: 1rem;
+          padding-left: 1rem;
+        }
+      }
+
+      &:nth-child(3) {
+        @media (min-width: 1441px) {
+          margin-left: auto;
+        }
       }
     }
 
-    img {
-      height: 20px;
-      object-fit: cover;
-      object-position: left;
-      width: 20px;
-    }
-
-    janilla-logo {
-      display: block;
-      height: 1.25rem;
-      overflow: hidden;
-      width: 1.25rem;
-    }
-
-    nav {
-      display: flex;
-
-      @media (max-width: 1440px) {
-        flex-direction: column;
-      }
-
-      @media (min-width: 1441px) {
-        align-items: center;
-        order: 1;
-      }
-    }
-
-    div:has(> select) {
-      align-self: start;
-      position: relative;
-
-      @media (min-width: 1441px) {
-        margin-left: auto;
-      }
-
-      lucide-icon {
-        pointer-events: none;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-
-      svg {
-        display: block;
-        opacity: 0.5;
-        width: 1rem;
-      }
-    }
-
-    select {
-      appearance: none;
-      background: transparent;
-      border: none;
-      font-size: 1rem;
-      padding: 0.5rem 1rem 0.5rem 0;
+    a {
+      color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+      text-decoration: none;
     }
   }
 }

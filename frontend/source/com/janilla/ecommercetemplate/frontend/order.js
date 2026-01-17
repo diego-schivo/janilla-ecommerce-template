@@ -39,15 +39,20 @@ export default class Order extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const a = this.closest("app-element");
 		const s = this.state;
-		s.order ??= a.serverState?.order ?? await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
+		const a = this.closest("app-element");
+		s.order ??= await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
+		a.updateSeo({ title: `Order ${s.order.id}` });
 		this.appendChild(this.interpolateDom({
 			$template: "",
+			nav: {
+			    $template: "nav",
+			    path: a.currentPath
+			},
 			...s.order,
-			items: s.order.items.map(x => ({
-				$template: "item",
-				item: JSON.stringify(x)
+			products: s.order.items.map(x => ({
+				$template: "product",
+				json: JSON.stringify(x)
 			})),
 			shippingAddress: JSON.stringify(s.order.shippingAddress)
 		}));

@@ -38,54 +38,39 @@ export default class Product extends WebComponent {
         super();
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener("click", this.handleClick);
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener("click", this.handleClick);
-    }
-
     async updateDisplay() {
+        let hs = history.state;
         const a = this.closest("app-element");
-        const s = this.state;
-        s.product = a.serverState?.product;
-        if (!s.product) {
+
+        if (!Object.hasOwn(hs, "product"))
+            history.replaceState(hs = {
+                ...hs,
+                product: a.serverState?.product
+            }, "");
+
+        if (this.dataset.slug != hs.product?.slug) {
             const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
             u.searchParams.append("slug", this.dataset.slug);
-            s.product = (await (await fetch(u)).json())[0];
+            const p = (await (await fetch(u)).json())[0];
+            history.replaceState(hs = {
+                ...hs,
+                product: p
+            }, "");
         }
+
+		a.updateSeo(hs.product.meta);
         const pp = new URLSearchParams(this.dataset.search);
         this.appendChild(this.interpolateDom({
             $template: "",
-            ...(s.product.enableVariants ? {
-                variantOptions: s.product.variantTypes.map(x => pp.get(x.name)).filter(x => x),
+            ...(hs.product.enableVariants ? {
+                variantOptions: hs.product.variantTypes.map(x => pp.get(x.name)).filter(x => x),
                 variant: pp.get("variant")
             } : {}),
-            layout: s.product.layout?.map((x, i) => ({
+            layout: hs.product.layout?.map((x, i) => ({
                 $template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
                 path: `layout.${i}`
             }))
         }));
-    }
-
-    handleClick = async event => {
-        const b = event.target.closest("button");
-        const ul1 = b?.closest("#gallery-arrows ul");
-        const s = this.state;
-        if (ul1) {
-            let i = s.galleryIndex;
-            i += [-1, 1][Array.prototype.findIndex.call(ul1.children, x => x.contains(b))];
-            s.galleryIndex = (s.product.gallery.length + i) % s.product.gallery.length;
-            this.requestDisplay();
-        }
-        const ul2 = b?.closest("#gallery-thumbnails ul");
-        if (ul2) {
-            s.galleryIndex = Array.prototype.findIndex.call(ul2.children, x => x.contains(b));
-            this.requestDisplay();
-        }
     }
 
     data(path) {
@@ -93,6 +78,6 @@ export default class Product extends WebComponent {
             ? x[parseInt(n)]
             : typeof x === "object" && x !== null
                 ? x[n]
-                : null, this.state.product);
+                : null, history.state.product);
     }
 }

@@ -59,8 +59,8 @@ variant-selector {
     }
 
     &:has(:checked) {
-      background: oklab(0.983828 -0.00126734 -0.00320476 / 0.05);
-      color: rgb(248, 250, 252);
+      background: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.05), oklab(0.983828 -0.00126734 -0.00320476 / 0.05));
+      color: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
     }
   }
 }

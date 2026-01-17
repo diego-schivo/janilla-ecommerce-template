@@ -59,8 +59,16 @@ content-element {
     }
   }
 
+  h1 {
+    font-weight: 800;
+  }
+
   h2 {
     line-height: 1.3333;
+  }
+
+  a {
+    font-weight: 500;
   }
 
   ul {

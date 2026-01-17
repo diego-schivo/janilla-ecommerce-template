@@ -22,11 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+/*
 app-element:has(.placeholder) {
   mobile-menu {
     display: none;
   }
 }
+*/
 
 mobile-menu {
   button[name="show"] {
@@ -47,14 +49,20 @@ mobile-menu {
       flex-direction: column;
     }
 
-    ul,
-    li {
+    ul {
       display: flex;
       flex-direction: column;
+
+      &:empty {
+        display: none;
+      }
     }
 
     li {
-      &:has(.button) {
+      display: flex;
+      flex-direction: column;
+
+	  &:has(.button) {
         margin-top: 1.5rem;
       }
     }

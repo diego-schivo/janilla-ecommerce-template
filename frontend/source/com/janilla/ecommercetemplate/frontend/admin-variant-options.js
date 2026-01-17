@@ -71,7 +71,7 @@ export default class AdminVariantOptions extends WebComponent {
 		}));
 	}
 
-	handleClick = async event => {
+	handleClick = event => {
 		const el = event.target.closest("button");
 		const s = this.state;
 		switch (el?.name) {

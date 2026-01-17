@@ -49,6 +49,7 @@ export default class Addresses extends WebComponent {
     async updateDisplay() {
         const s = this.state;
 		const a = this.closest("app-element");
+		a.updateSeo({ title: "Addresses" });
         this.appendChild(this.interpolateDom({
             $template: "",
             nav: {
@@ -92,7 +93,7 @@ export default class Addresses extends WebComponent {
         const f = event.target;
         const a = this.closest("app-element");
         const o = {
-            customer: a.state.user.id,
+            customer: a.currentUser.id,
             ...Object.fromEntries(new FormData(f))
         };
         const s = this.state;

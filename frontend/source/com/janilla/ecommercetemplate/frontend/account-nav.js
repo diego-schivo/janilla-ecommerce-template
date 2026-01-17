@@ -53,7 +53,7 @@ export default class AccountNav extends WebComponent {
             }].map(x => ({
                 $template: "link",
                 ...x,
-                class: x.href === this.dataset.path ? "active" : null
+                class: (this.dataset.path + "/").startsWith(x.href + "/") ? "active" : null
             }))
         }));
     }

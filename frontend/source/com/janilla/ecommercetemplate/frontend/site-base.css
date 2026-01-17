@@ -22,10 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-:where(:root:not(:has(.admin)), :host:not(:has(.admin))) {
+:root:not(:has(.admin)) {
   color-scheme: light dark;
-  line-height: 1.5;
-  text-size-adjust: 100%;
 
   &:has([data-color-scheme="light"]) {
     color-scheme: light;
@@ -34,6 +32,11 @@
   &:has([data-color-scheme="dark"]) {
     color-scheme: dark;
   }
+}
+
+:where(:root:not(:has(.admin)), :host:not(:has(.admin))) {
+  line-height: 1.5;
+  text-size-adjust: 100%;
 
   a,
   strong {
@@ -62,19 +65,21 @@
     }
   }
 
-  .button,
+  button,
   input,
   label,
   select,
-  textarea {
+  textarea,
+  .button {
     color: inherit;
     font-size: 0.875rem;
   }
 
-  .button,
+  button,
   input,
   select,
-  textarea {
+  textarea,
+  .button {
     font-family: Geist;
   }
 
@@ -82,44 +87,6 @@
     background: transparent;
     border: none;
     padding: 0;
-  }
-
-  .button {
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-
-    &:where(.primary, .secondary) {
-      border-radius: 0.25rem;
-      box-sizing: border-box;
-      height: 2.5rem;
-      justify-content: center;
-      padding: 0.5rem 1rem;
-      text-align: center;
-
-      &:disabled {
-        opacity: 0.5;
-      }
-    }
-
-    &.primary {
-      background: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
-      color: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
-
-      &:not(:disabled):hover {
-        background: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.9), oklab(0.983828 -0.00126734 -0.00320476 / 0.9));
-      }
-    }
-
-    &.secondary {
-      border: 1px solid light-dark(rgb(226, 232, 240), rgba(255, 255, 255, 0.1));
-      background: light-dark(rgb(244, 244, 245), rgb(20, 20, 20));
-      color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
-    }
   }
 
   dd,
@@ -219,6 +186,7 @@
         background: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
         border: 1px solid light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
         border-radius: 0.1875rem;
+        box-sizing: border-box;
         color: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
       }
 
@@ -240,6 +208,47 @@
 
   textarea {
     resize: none;
+  }
+
+  .button {
+    align-items: center;
+    border: none;
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:where(.primary, .secondary) {
+      border-radius: 0.25rem;
+      box-sizing: border-box;
+      height: 2.5rem;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      text-align: center;
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+
+    &.primary {
+      background: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+      color: light-dark(rgb(248, 250, 252), rgb(15, 15, 15));
+
+      &:not(:disabled):hover {
+        background: light-dark(oklab(0.207918 -0.00296434 -0.0397924 / 0.9), oklab(0.983828 -0.00126734 -0.00320476 / 0.9));
+      }
+    }
+
+    &.secondary {
+      border: 1px solid light-dark(rgb(226, 232, 240), rgba(255, 255, 255, 0.1));
+      background: light-dark(rgb(244, 244, 245), rgb(20, 20, 20));
+      color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
+    }
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
   }
 
   .visually-hidden {

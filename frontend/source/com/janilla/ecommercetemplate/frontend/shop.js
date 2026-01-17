@@ -82,7 +82,7 @@ export default class Shop extends WebComponent {
                 $template: "item",
                 name: "category",
                 value: x.id,
-				checked: x.id == this.dataset.category,
+                checked: x.id == this.dataset.category,
                 text: x.title
             })),
             sortOptions: [
@@ -105,7 +105,7 @@ export default class Shop extends WebComponent {
                 $template: "item",
                 name: "sort",
                 value: k ?? "",
-				checked: k == this.dataset.sort,
+                checked: k == this.dataset.sort,
                 text: v
             })),
             products: hs.products.map(x => ({
@@ -122,9 +122,10 @@ export default class Shop extends WebComponent {
     }
 
     handleSubmit = async event => {
+        const el = event.target;
         event.preventDefault();
-        const s = new URLSearchParams(Array.from(new FormData(event.target).entries()).filter(([_, v]) => v)).toString();
-        history.pushState({}, "", ["/shop", s].filter(x => x).join("?"));
-        dispatchEvent(new CustomEvent("popstate"));
+        const u = new URL("/shop", location.href);
+        Array.from(new FormData(el).entries()).filter(([_, v]) => v).forEach(([k, v]) => u.searchParams.append(k, v));
+        a.navigate(u);
     }
 }

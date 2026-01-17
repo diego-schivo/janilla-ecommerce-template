@@ -30,10 +30,6 @@ export default class MobileMenu extends WebComponent {
         return ["mobile-menu"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
     constructor() {
         super();
     }
@@ -57,13 +53,10 @@ export default class MobileMenu extends WebComponent {
             $template: "",
             storeItems: a.state.header?.navItems?.map(x => ({
                 $template: "list-item",
-                content: {
-                    $template: "link",
-                    ...x,
-                    document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-                    href: x.type.name === "CUSTOM" ? x.uri : null,
-                    target: x.newTab ? "_blank" : null
-                }
+                ...x,
+                document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+                href: x.type.name === "CUSTOM" ? x.uri : null,
+                target: x.newTab ? "_blank" : null
             })),
             accountItems: (a.currentUser ? [{
                 href: "/orders",
@@ -88,10 +81,7 @@ export default class MobileMenu extends WebComponent {
                 text: "Create an account"
             }]).map(x => ({
                 $template: "list-item",
-                content: {
-                    $template: "link",
-                    ...x
-                }
+                ...x
             }))
         }));
     }

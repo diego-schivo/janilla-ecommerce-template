@@ -37,7 +37,8 @@ export default class Orders extends WebComponent {
     async updateDisplay() {
         const s = this.state;
         const a = this.closest("app-element");
-        s.orders ??= a.serverState?.orders ?? await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+        s.orders ??= await (await fetch(`${a.dataset.apiUrl}/orders`)).json();
+		a.updateSeo({ title: "Orders" });
         this.appendChild(this.interpolateDom({
             $template: "",
 			nav: {

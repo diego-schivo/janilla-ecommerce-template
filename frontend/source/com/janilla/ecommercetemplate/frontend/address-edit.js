@@ -39,17 +39,17 @@ export default class AddressEdit extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const ae = this.closest("app-element");
-		const u = ae.state.user;
-		const a = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : u ? { customer: u.id } : {};
+		const a = this.closest("app-element");
+		const u = a.currentUser;
+		const a2 = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : u ? { customer: u.id } : {};
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			title: a?.id ? "Edit address" : "Add a new address",
+			title: a2?.id ? "Edit address" : "Add a new address",
 			form: {
 				$template: "form",
-				...a,
-				titleValues: ae.state.enums["Title"],
-				countryValues: ae.state.enums["Country"]
+				...a2,
+				titleValues: await a.enumValues("Title"),
+				countryValues: await a.enumValues("Country")
 			}
 		}));
 	}

@@ -1,14 +1,14 @@
-<!--${public}-->
+<!--${site}-->
 <!--${admin}-->
 
-<template id="public">
+<template id="site">
   <!--${adminBar}-->
   <div data-color-scheme="${colorScheme}">
     <!--${header}-->
     <!--${content}-->
     <!--${footer}-->
-    <toaster-element></toaster-element>
   </div>
+  <toaster-element></toaster-element>
 </template>
 
 <template id="admin-bar">
@@ -17,10 +17,6 @@
 
 <template id="header">
   <header-element data-path="${path}"></header-element>
-</template>
-
-<template id="page">
-  <page-element data-slug="${slug}"></page-element>
 </template>
 
 <template id="account">
@@ -33,6 +29,10 @@
 
 <template id="checkout">
   <checkout-element></checkout-element>
+</template>
+
+<template id="confirm-order">
+  <confirm-order data-guest-email="${guestEmail}" data-payment-intent="${paymentIntent}"></confirm-order>
 </template>
 
 <template id="create-account">
@@ -55,16 +55,16 @@
   <not-found></not-found>
 </template>
 
-<template id="order-confirmation">
-  <order-confirmation data-stripe-payment-intent-id="${stripePaymentIntentId}"></order-confirmation>
+<template id="order">
+  <order-element class="account" data-id="${id}"></order-element>
 </template>
 
 <template id="orders">
   <orders-element class="account"></orders-element>
 </template>
 
-<template id="order">
-  <order-element data-id="${id}"></order-element>
+<template id="page">
+  <page-element data-slug="${slug}"></page-element>
 </template>
 
 <template id="product">
@@ -84,7 +84,5 @@
 </template>
 
 <template id="admin">
-  <admin-element class="admin" data-path="${path}" data-api-url="${apiUrl}"
-    data-user-id="${userId}" data-user-admin="${userAdmin}">
-  </admin-element>
+  <admin-element class="admin" data-user="${user}" data-path="${path}"></admin-element>
 </template>

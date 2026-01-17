@@ -29,19 +29,13 @@
       </label>
     </li>
     <li class="field">
-      <div>
+      <label>
         <span>Roles</span>
-        <label class="checkbox">
-          <input type="checkbox" name="roles" value="ADMIN"" class="visually-hidden" />
-          <lucide-icon data-name="check"></lucide-icon>
-          admin
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="roles" value="CUSTOMER"" class="visually-hidden" />
-          <lucide-icon data-name="check"></lucide-icon>
-          customer
-        </label>
-      </div>
+        <select name="roles" multiple>
+          <option value="ADMIN">admin</option>
+          <option value="CUSTOMER">customer</option>
+        </select>
+      </label>
     </li>
   </ul>
   <button class="button primary">Create</button>

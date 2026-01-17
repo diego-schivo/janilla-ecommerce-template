@@ -26,53 +26,53 @@ import WebComponent from "web-component";
 
 export default class ProductGallery extends WebComponent {
 
-	static get templateNames() {
-		return ["product-gallery"];
-	}
+    static get templateNames() {
+        return ["product-gallery"];
+    }
 
-	static get observedAttributes() {
-		return ["data-variant-options"];
-	}
+    static get observedAttributes() {
+        return ["data-variant-options"];
+    }
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("click", this.handleClick);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("click", this.handleClick);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+    }
 
-	async updateDisplay() {
-	const s = this.state;
-		const p = this.closest("product-element").state.product;
-		s.index ??= p.enableVariants ? (() => {
-			const oo = this.dataset.variantOptions.split(",");
-			const i = p.gallery.findIndex(x => oo.includes(x.variantOption.id.toString()));
-			return i !== -1 ? i : 0;
-		})() : 0;
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			image: p.gallery[s.index].image,
-			thumbnails: p.gallery.map((x, i) => ({
-				$template: "thumbnail",
-				active: i === s.index ? "active" : null,
-				image: x.image
-			}))
-		}));
-	}
+    async updateDisplay() {
+        const s = this.state;
+        const p = history.state.product;
+        s.index ??= p.enableVariants ? (() => {
+            const oo = this.dataset.variantOptions.split(",");
+            const i = p.gallery.findIndex(x => oo.includes(x.variantOption.id.toString()));
+            return i !== -1 ? i : 0;
+        })() : 0;
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            image: p.gallery[s.index].image,
+            thumbnails: p.gallery.map((x, i) => ({
+                $template: "thumbnail",
+                active: i === s.index ? "active" : null,
+                image: x.image
+            }))
+        }));
+    }
 
-	handleClick = async event => {
-		const b = event.target.closest("button");
-		const ul = b?.closest("ul");
-		if (ul) {
-			this.state.index = Array.from(ul.children).findIndex(x => x.contains(b));
-			this.requestDisplay();
-		}
-	}
+    handleClick = async event => {
+        const b = event.target.closest("button");
+        const ul = b?.closest("ul");
+        if (ul) {
+            this.state.index = Array.from(ul.children).findIndex(x => x.contains(b));
+            this.requestDisplay();
+        }
+    }
 }

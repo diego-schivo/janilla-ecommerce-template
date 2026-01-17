@@ -52,13 +52,16 @@ export default class Footer extends WebComponent {
         const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            navItems: a.state.footer?.navItems?.map(x => ({
-                $template: "link",
-                ...x,
-                document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-                href: x.type.name === "CUSTOM" ? x.uri : null,
-                target: x.newTab ? "_blank" : null
-            })),
+            navigation: a.state.footer?.navItems?.length ? {
+                $template: "navigation",
+                items: a.state.footer.navItems.map(x => ({
+                    $template: "list-item",
+                    ...x,
+                    document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
+                    href: x.type.name === "CUSTOM" ? x.uri : null,
+                    target: x.newTab ? "_blank" : null
+                }))
+            } : null,
             options: ["auto", "light", "dark"].map(x => ({
                 $template: "option",
                 value: x,
@@ -70,7 +73,7 @@ export default class Footer extends WebComponent {
 
     handleChange = event => {
         const el = event.target.closest("select");
-		if (el)
-			this.closest("app-element").colorScheme = el.value === "auto" ? null : el.value;
+        if (el)
+            this.closest("app-element").colorScheme = el.value === "auto" ? null : el.value;
     }
 }

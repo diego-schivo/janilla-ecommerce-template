@@ -53,7 +53,7 @@
     font-size: 0.75rem;
     width: 100%;
 
-    &&::picker-icon {
+    &::picker-icon {
       content: "";
       width: 1rem;
     }

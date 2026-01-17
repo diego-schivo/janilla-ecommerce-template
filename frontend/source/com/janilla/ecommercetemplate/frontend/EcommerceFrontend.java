@@ -49,6 +49,7 @@ import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.Net;
 import com.janilla.web.ApplicationHandlerFactory;
+import com.janilla.web.FileMap;
 import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
 import com.janilla.web.RenderableFactory;
@@ -93,7 +94,7 @@ public class EcommerceFrontend {
 
 	protected final DiFactory diFactory;
 
-	protected final List<Path> files;
+	protected final FileMap fileMap;
 
 	protected final HttpHandler handler;
 
@@ -122,6 +123,11 @@ public class EcommerceFrontend {
 			httpClient = diFactory.create(HttpClient.class, Map.of("sslContext", c));
 		}
 		dataFetching = diFactory.create(DataFetching.class);
+
+		fileMap = diFactory.create(FileMap.class,
+				Map.of("paths",
+						Stream.of("com.janilla.frontend", "com.janilla.cms", EcommerceFrontend.class.getPackageName())
+								.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList()));
 		indexFactory = diFactory.create(IndexFactory.class);
 
 		invocables = types().stream()
@@ -129,8 +135,6 @@ public class EcommerceFrontend {
 						.filter(y -> !Modifier.isStatic(y.getModifiers()) && !y.isBridge())
 						.map(y -> new Invocable(x, y)))
 				.toList();
-		files = Stream.of("com.janilla.frontend", "com.janilla.cms", EcommerceFrontend.class.getPackageName())
-				.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList();
 		renderableFactory = diFactory.create(RenderableFactory.class);
 		{
 			var f = diFactory.create(ApplicationHandlerFactory.class);
@@ -141,6 +145,7 @@ public class EcommerceFrontend {
 				return h.handle(x);
 			};
 		}
+
 	}
 
 	public Properties configuration() {
@@ -155,8 +160,8 @@ public class EcommerceFrontend {
 		return diFactory;
 	}
 
-	public List<Path> files() {
-		return files;
+	public FileMap fileMap() {
+		return fileMap;
 	}
 
 	public HttpHandler handler() {
@@ -182,12 +187,4 @@ public class EcommerceFrontend {
 	public Collection<Class<?>> types() {
 		return diFactory.types();
 	}
-
-//	@Handle(method = "GET", path = "/order-confirmation")
-//	public Index orderConfirmation(FrontendExchange exchange) {
-//		IO.println("EcommerceTemplateFrontend.orderConfirmation");
-//		var m = state(exchange);
-//		return new Index(null, configuration.getProperty("ecommerce-template.api.url"),
-//				configuration.getProperty("ecommerce-template.stripe.publishable-key"), m);
-//	}
 }

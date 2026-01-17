@@ -1,24 +1,43 @@
 <footer>
-  <div>
+  <div class="logo">
     <a href="/">
       <janilla-logo></janilla-logo>
     </a>
-    <nav>
-      <!--${navItems}-->
-    </nav>
-    <div>
-      <select>
-        <!--${options}-->
-      </select>
-      <lucide-icon data-name="chevron-down"></lucide-icon>
-    </div>
+    <!--${navigation}-->
+    <select>
+      <button>
+        <selectedcontent></selectedcontent>
+        <lucide-icon data-name="chevron-down"></lucide-icon>
+      </button>
+      <!--${options}-->
+    </select>
+  </div>
+  <div class="copy">
+    <article>
+      <p>&copy; 2023-2026 Payload Inc. &copy; 2025-2026 Diego Schivo. All rights reserved.</p>
+      <p>Designed in Michigan and Italy</p>
+      <p>
+        <a href="https://payloadcms.com">Crafted by Payload</a> and <a href="https://janilla.com">Janilla</a>
+      </p>
+    </article>
   </div>
 </footer>
 
-<template id="link">
-  <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
+<template id="navigation">
+    <nav>
+      <ul><!--${items}--></ul>
+    </nav>
+</template>
+
+<template id="list-item">
+  <li>
+    <link-element data-document="${document}" data-href="${href}" data-target="${target}" data-class="${class}" data-text="${text}"></link-element>
+  </li>
 </template>
 
 <template id="option">
-  <option value="${value}" selected="${selected}">${text}</option>
+  <option value="${value}" selected="${selected}">
+    ${text}
+    <lucide-icon data-name="check"></lucide-icon>
+  </option>
 </template>

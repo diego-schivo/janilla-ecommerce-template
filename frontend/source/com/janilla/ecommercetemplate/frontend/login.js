@@ -49,8 +49,8 @@ export default class Login extends WebComponent {
     }
 
     async updateDisplay() {
-        document.title = "Login";
-        this.closest("app-element").updateSeo(null);
+        const a = this.closest("app-element");
+        a.updateSeo({ title: "Login" });
         this.appendChild(this.interpolateDom({
             $template: "",
             warning: this.dataset.warning ? {

@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "base.css";
+@import "site-base.css";
 
 @import "account.css";
 @import "account-nav.css";
@@ -35,6 +35,7 @@
 @import "cart-modal.css";
 @import "checkout.css";
 @import "checkout-addresses.css";
+@import "confirm-order.css";
 @import "content.css";
 @import "create-account.css";
 @import "create-address-modal.css";
@@ -43,6 +44,7 @@
 @import "header.css";
 @import "hero.css";
 @import "link.css";
+@import "loading-spinner.css";
 @import "login.css";
 @import "logout.css";
 @import "lucide-icon.css";
@@ -51,7 +53,6 @@
 @import "mobile-menu.css";
 @import "not-found.css";
 @import "order.css";
-@import "order-confirmation.css";
 @import "order-item.css";
 @import "orders.css";
 @import "page.css";
@@ -61,7 +62,6 @@
 @import "product-description.css";
 @import "product-gallery.css";
 @import "product-item.css";
-@import "rich-text.css";
 @import "select.css";
 @import "shop.css";
 @import "variant-selector.css";

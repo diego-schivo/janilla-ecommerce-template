@@ -31,7 +31,7 @@ export default class Payment extends WebComponent {
     }
 
     static get observedAttributes() {
-        return [];
+        return ["data-guest-email", "data-amount"];
     }
 
     constructor() {
@@ -40,41 +40,81 @@ export default class Payment extends WebComponent {
 
     connectedCallback() {
         super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
         this.addEventListener("submit", this.handleSubmit);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
         this.removeEventListener("submit", this.handleSubmit);
     }
 
     async updateDisplay() {
-        this.appendChild(this.interpolateDom({ $template: "" }));
-
         const s = this.state;
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            submit: {
+                $template: "submit",
+				disabled: s.submitting,
+                text: s.submitting ? "Loading..." : "Pay now"
+            }
+        }));
+
         if (!s.elements) {
+            const a = this.closest("app-element");
             s.elements = a.state.stripe.elements({
                 appearance: {
                     theme: "stripe",
+                    variables: {
+                        borderRadius: "6px",
+                        colorPrimary: "#858585",
+                        gridColumnSpacing: "20px",
+                        gridRowSpacing: "20px",
+                        colorBackground: { light: "rgb(255, 255, 255)", dark: "#0a0a0a" }[a.colorScheme],
+                        colorDanger: "rgb(255, 111, 118)",
+                        colorDangerText: "rgb(255, 111, 118)",
+                        colorIcon: { light: "rgb(0, 0, 0)", dark: "rgb(255, 255, 255)" }[a.colorScheme],
+                        colorText: { light: "rgb(0, 0, 0)", dark: "#858585" }[a.colorScheme],
+                        colorTextPlaceholder: "#858585",
+                        fontFamily: "Geist, sans-serif",
+                        fontSizeBase: "16px",
+                        fontWeightBold: "600",
+                        fontWeightNormal: "500",
+                        spacingUnit: "4px"
+                    }
                 },
                 clientSecret: this.closest("checkout-element").state.paymentData.clientSecret
-                //loader: "auto"
             });
-            s.elements.create("payment", { layout: "accordion" }).mount("#payment-element");
+            s.elements.create("payment").mount("#payment-element");
         }
+    }
+
+    handleClick = event => {
+        const el = event.target.closest("button");
+        if (el?.name === "cancel")
+            this.closest("checkout-element").paymentData = null;
     }
 
     handleSubmit = async event => {
         event.preventDefault();
-        const c = this.closest("checkout-element");
-		const a = this.closest("app-element");
-		const [ba] = [c.state.billingAddress].map(x => typeof x === "object" ? x : a.state.user.addresses.find(y => y.id === x));
+
+        const s = this.state;
+        s.submitting = true;
+		this.requestDisplay();
+
+		        const c = this.closest("checkout-element");
+        const a = this.closest("app-element");
+        const [ba] = [c.state.billingAddress].map(x => typeof x === "object" ? x : a.currentUser.addresses.find(y => y.id === x));
+        let u = new URL("/checkout/confirm-order", location.href);
+        if (this.dataset.guestEmail)
+            u.searchParams.append("guest_email", this.dataset.guestEmail);
         let j = await a.state.stripe.confirmPayment({
             confirmParams: {
-                return_url: `${location.origin}/order-confirmation`,
+                return_url: u.toString(),
                 payment_method_data: {
                     billing_details: {
-                        email: this.dataset.email,
+                        email: this.dataset.guestEmail,
                         phone: ba.phone,
                         address: {
                             line1: ba.addressLine1,
@@ -102,11 +142,10 @@ export default class Payment extends WebComponent {
             if (j?.order) {
                 await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
                 localStorage.removeItem("cart");
-                const u = new URL(`/orders/${j.order}`, location.href);
-                if (this.dataset.email)
-                    u.searchParams.append("email", this.dataset.email);
-                history.pushState({}, "", u.pathname + u.search);
-                dispatchEvent(new CustomEvent("popstate"));
+                u = new URL(`/orders/${j.order}`, location.href);
+                if (this.dataset.guestEmail)
+                    u.searchParams.append("guestEmail", this.dataset.guestEmail);
+                a.navigate(u);
             }
         }
     }

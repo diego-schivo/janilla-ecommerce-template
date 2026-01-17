@@ -44,7 +44,7 @@ export default class AddressItem extends WebComponent {
         const a = this.closest("app-element");
         s.address ??= this.dataset.data
             ? JSON.parse(this.dataset.data)
-            : a.state.user.addresses.find(x => x.id == this.dataset.id);
+            : a.currentUser.addresses.find(x => x.id == this.dataset.id);
         this.shadowRoot.appendChild(this.interpolateDom({
             $template: "",
             lines: [

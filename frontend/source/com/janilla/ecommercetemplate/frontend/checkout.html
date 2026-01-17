@@ -66,7 +66,7 @@
 
 <template id="address-item">
   <address-item data-id="${id}" data-data="${data}">
-    <button slot="actions" name="${name}" class="button secondary">Remove</button>
+    <button slot="actions" name="${name}" class="button secondary" disabled="${disabled}">Remove</button>
   </address-item>
 </template>
 
@@ -86,26 +86,6 @@
 <template id="payment">
   <payment-element data-guest-email="${guestEmail}" data-amount="${amount}"></payment-element>
 </template>
-
-<!--
-<template id="item">
-  <li>
-    <div>
-      <a href="/products/${product.slug}">
-        <img src="${image.uri}" loading="lazy" />
-      </a>
-    </div>
-    <div>
-      <p>${product.title}</p>
-      <p>${option}</p>
-      <p>x${quantity}</p>
-    </div>
-    <div>
-      <intl-format data-type="amount" data-value="${variant.priceInUsd}"></intl-format>
-    </div>
-  </li>
-</template>
--->
 
 <template id="item">
   <li>

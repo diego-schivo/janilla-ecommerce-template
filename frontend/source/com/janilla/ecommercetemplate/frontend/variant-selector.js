@@ -49,7 +49,7 @@ export default class VariantSelector extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const p = this.closest("product-element").state.product;
+		const p = history.state.product;
 		const oo = this.dataset.options.split(",");
 		const fd = new FormData(this.closest("form"));
 		this.appendChild(this.interpolateDom({
@@ -79,16 +79,13 @@ export default class VariantSelector extends WebComponent {
 		const u = new URL(location.href);
 		u.searchParams.set(el.name, el.value);
 
-		const p = this.closest("product-element").state.product;
+		const p = history.state.product;
 		const fd = new FormData(el.form);
 		const v = p.variants.find(x => x.options.every(y => y.id == fd.get(y.type.name)));
 		if (v)
 			u.searchParams.set("variant", v.id);
 		else
 			u.searchParams.delete("variant");
-
-		//history.pushState({}, "", u.pathname + u.search);
-		//dispatchEvent(new CustomEvent("popstate"));
 		this.closest("app-element").navigate(u)
 	}
 }

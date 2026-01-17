@@ -27,7 +27,7 @@ product-item {
   display: flex;
 
   header {
-    all: unset;
+    /*all: unset;*/
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -40,7 +40,7 @@ product-item {
   }
 
   section {
-    all: unset;
+    /*all: unset;*/
     display: flex;
 
     &:has(img) {
@@ -77,18 +77,19 @@ product-item {
   }
 
   dl {
-    all: unset;
+    /*all: unset;*/
+    display: block;
     text-align: right;
   }
 
   dt {
-    all: unset;
+    /*all: unset;*/
     font-size: 1.125rem;
     font-weight: 500;
   }
 
   dd {
-    all: unset;
+    /*all: unset;*/
     color: light-dark(rgb(2, 8, 23), rgb(248, 250, 252));
     font-family: GeistMono;
     font-size: 0.875rem;

@@ -24,59 +24,40 @@
  */
 import WebComponent from "web-component";
 
-export default class OrderConfirmation extends WebComponent {
+export default class ConfirmOrder extends WebComponent {
 
 	static get templateNames() {
-		return ["order-confirmation"];
+		return ["confirm-order"];
 	}
 
 	static get observedAttributes() {
-		return ["data-stripe-payment-intent-id"];
+		return ["data-guest-email", "data-payment-intent"];
 	}
 
 	constructor() {
 		super();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		const a = this.closest("app-element");
-		const u = new URL(`${a.dataset.apiUrl}/orders/poll`, location.href);
-		u.searchParams.append("stripePaymentIntentId", this.dataset.stripePaymentIntentId);
-		this.eventSource = new EventSource(u);
-		this.eventSource.onopen = () => {
-			console.log("Connection to server opened.");
-		};
-		this.eventSource.onmessage = async e => {
-			console.log(e.data);
-			//this.querySelector("textarea").value += e.data + "\n";
-		};
-		this.eventSource.onerror = () => {
-			console.log("EventSource failed.");
-			this.eventSource.close();
-		};
-		/*
-		this.eventSource.addEventListener("ping", e => {
-		  const o = JSON.parse(e.data);
-		  console.log("ping at " + o.time);
-		});
-		*/
-		this.eventSource.addEventListener("order", e => {
-			const o = JSON.parse(e.data);
-			console.log("order", o);
-			history.pushState({}, "", `/orders/${o.id}`);
-			dispatchEvent(new CustomEvent("popstate"));
-		});
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.eventSource.close();
-	}
-
 	async updateDisplay() {
 		this.appendChild(this.interpolateDom({
 			$template: ""
 		}));
+		const a = this.closest("app-element");
+		const j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
+		    method: "POST",
+		    headers: { "content-type": "application/json" },
+		    body: JSON.stringify({
+		        guestEmail: this.dataset.guestEmail,
+		        paymentIntent: this.dataset.paymentIntent
+		    })
+		})).json();
+		if (j?.order) {
+		    //await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
+		    //localStorage.removeItem("cart");
+		    const u = new URL(`/orders/${j.order}`, location.href);
+		    if (this.dataset.guestEmail)
+		        u.searchParams.append("guestEmail", this.dataset.guestEmail);
+		    a.navigate(u);
+		}
 	}
 }

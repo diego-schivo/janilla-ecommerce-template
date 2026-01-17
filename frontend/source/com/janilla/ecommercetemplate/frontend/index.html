@@ -18,9 +18,19 @@
     <app-element data-api-url="${apiUrl}" data-stripe-publishable-key="${stripePublishableKey}">
       <script type="application/json">${state}</script>
     </app-element>
+    <!--${templates}-->
+
+    <ssr-template id="stripe">
+      <!--
+      <script src="https://js.stripe.com/clover/stripe.js"></script>
+      -->
+      <script src="https://js.stripe.com/v3"></script>
+    </ssr-template>
+
+    <ssr-template id="template">
+      <template id="${id}">
+        <!--${content}-->
+      </template>
+    </ssr-template>
   </body>
 </html>
-
-<template id="stripe">
-  <script src="https://js.stripe.com/clover/stripe.js"></script>
-</template>

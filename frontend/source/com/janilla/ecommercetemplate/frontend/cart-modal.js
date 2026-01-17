@@ -57,7 +57,7 @@ export default class CartModal extends WebComponent {
         const a = this.closest("app-element");
         const c = localStorage.getItem("cart");
         const u = new URL(`${a.dataset.apiUrl}/carts/${c}`, location.href);
-        if (!a.state.user)
+        if (!a.currentUser)
             u.searchParams.append("secret", localStorage.getItem("cart_secret"));
         s.cart ??= (c ? await (await fetch(u)).json() : null) ?? {};
         if (c && !s.cart.id)

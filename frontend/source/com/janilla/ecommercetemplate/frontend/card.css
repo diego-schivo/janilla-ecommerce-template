@@ -34,6 +34,17 @@ card-element {
 
   a {
     text-decoration: none;
+
+    &:hover {
+      img {
+        scale: 1.02;
+      }
+
+      h3,
+      intl-format {
+        color: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
+      }
+    }
   }
 
   picture {
@@ -48,6 +59,7 @@ card-element {
     aspect-ratio: 1;
     display: block;
     max-width: 100%;
+    transition: 0.3s ease-in-out;
   }
 
   div {

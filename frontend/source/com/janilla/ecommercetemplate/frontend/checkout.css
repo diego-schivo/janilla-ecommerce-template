@@ -65,6 +65,14 @@ checkout-element {
       border-radius: 0.5rem;
       padding: 1rem;
     }
+
+    form {
+      gap: 1rem;
+    }
+
+    button {
+      margin-top: 1rem;
+    }
   }
 
   .address {
@@ -119,6 +127,10 @@ checkout-element {
         display: flex;
         justify-content: space-between;
         padding-top: 0.5rem;
+
+        @media (min-width: 1441px) {
+          padding-top: 2rem;
+        }
       }
 
       dt {
@@ -127,6 +139,10 @@ checkout-element {
 
       dd {
         font-size: 1.875rem;
+
+        @media (min-width: 1441px) {
+          font-weight: 500;
+        }
       }
     }
   }

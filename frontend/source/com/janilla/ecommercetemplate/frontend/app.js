@@ -64,9 +64,9 @@ export default class App extends WebComponent {
         return this.state.user;
     }
 
-    set currentUser(user) {
-        this.state.user = user;
-        this.dispatchEvent(new CustomEvent("userchanged", { detail: user }));
+    set currentUser(currentUser) {
+        this.state.user = currentUser;
+        this.dispatchEvent(new CustomEvent("userchanged", { detail: currentUser }));
     }
 
     connectedCallback() {
@@ -117,12 +117,13 @@ export default class App extends WebComponent {
                     s.user = null;
                     break;
             }
-        else if (["/account"].includes(p) || p.startsWith("/account/")) {
+        else if (p === "/account" || p.startsWith("/account/")) {
             const u = new URL("/login", location.href);
             u.searchParams.append("warning", "Please login to access your account settings.");
             this.navigate(u);
             return;
-        }
+        } else if (p === "/orders" || p.startsWith("/orders/"))
+            s.notFound = true;
 
         const m = p.match(adminRegex);
         if (m) {
@@ -145,10 +146,6 @@ export default class App extends WebComponent {
             s.footer = ss && Object.hasOwn(ss, "footer")
                 ? ss.footer
                 : await (await fetch(`${this.dataset.apiUrl}/footer`)).json();
-        if (!Object.hasOwn(s, "enums"))
-            s.enums = ss && Object.hasOwn(ss, "enums")
-                ? ss.enums
-                : await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
         s.colorScheme = localStorage.getItem("janilla-ecommerce-template.color-scheme");
 
         this.appendChild(this.interpolateDom({
@@ -176,17 +173,25 @@ export default class App extends WebComponent {
                             return { $template: "addresses" };
                         case "/checkout":
                             if (!Array.from(document.head.querySelectorAll("script"))
-                                .some(x => x.src === "https://js.stripe.com/clover/stripe.js")) {
+                                //.some(x => x.src === "https://js.stripe.com/clover/stripe.js")) {
+                                .some(x => x.src === "https://js.stripe.com/v3")) {
                                 const el = document.createElement("script");
                                 el.onload = () => {
                                     if (!s.stripe && typeof Stripe !== "undefined")
                                         s.stripe = Stripe(this.dataset.stripePublishableKey);
                                 }
                                 document.head.append(el);
-                                el.src = "https://js.stripe.com/clover/stripe.js";
+                                //el.src = "https://js.stripe.com/clover/stripe.js";
+                                el.src = "https://js.stripe.com/v3";
                             } else if (!s.stripe && typeof Stripe !== "undefined")
                                 s.stripe = Stripe(this.dataset.stripePublishableKey);
                             return { $template: "checkout" };
+                        case "/checkout/confirm-order":
+                            return {
+                                $template: "confirm-order",
+                                guestEmail: spp.get("guest_email"),
+                                paymentIntent: spp.get("payment_intent")
+                            };
                         case "/create-account":
                             return { $template: "create-account" };
                         case "/find-order":
@@ -200,11 +205,6 @@ export default class App extends WebComponent {
                             return {
                                 $template: "logout",
                                 noOp: !u0
-                            };
-                        case "/order-confirmation":
-                            return {
-                                $template: "order-confirmation",
-                                stripePaymentIntentId: spp.get("payment_intent")
                             };
                     }
                     const m2 = p.match(productRegex);
@@ -253,8 +253,8 @@ export default class App extends WebComponent {
     handlePopState = () => {
         // console.log("handlePopState", JSON.stringify(history.state));
         delete this.serverState;
-        window.scrollTo(0, 0);
         delete this.state.notFound;
+        window.scrollTo(0, 0);
         this.requestDisplay();
     }
 
@@ -301,5 +301,12 @@ export default class App extends WebComponent {
     error() {
         const el = this.querySelector("toaster-element");
         el.error.apply(el, arguments);
+    }
+
+    async enumValues(name) {
+        const s = this.state;
+        if (!Object.hasOwn(s, "enums"))
+            s.enums = await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
+        return s.enums[name];
     }
 }

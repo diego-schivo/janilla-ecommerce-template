@@ -49,12 +49,11 @@ export default class ProductDescription extends WebComponent {
     }
 
     async updateDisplay() {
-        const pe = this.closest("product-element");
-        const p = pe.state.product;
+        const p = history.state.product;
         const aa = p.enableVariants ? p.variants.map(x => x.priceInUsd) : [p.priceInUsd];
         const la = aa ? Math.min(...aa) : null;
         const ha = aa ? Math.max(...aa) : null;
-        const pp = new URLSearchParams(pe.dataset.search);
+        const pp = new URLSearchParams(this.closest("product-element").dataset.search);
         this.appendChild(this.interpolateDom({
             $template: "",
             ...p,
@@ -75,12 +74,12 @@ export default class ProductDescription extends WebComponent {
 
     handleSubmit = async event => {
         event.preventDefault();
-        const p = this.closest("product-element").state.product;
+        const p = history.state.product;
         const v = p.variants.find(x => x.id == this.dataset.variant);
         const a = this.closest("app-element");
         const c = localStorage.getItem("cart");
         const u = new URL(c ? `${a.dataset.apiUrl}/carts/${c}` : `${a.dataset.apiUrl}/carts`, location.href);
-        if (!a.state.user)
+        if (!a.currentUser)
             u.searchParams.append("secret", localStorage.getItem("cart_secret"));
         const o = c ? await (await fetch(u)).json() : null;
         const ii = o ? o.items.map(x => ({

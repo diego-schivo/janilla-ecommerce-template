@@ -110,7 +110,8 @@ public class StripeApi extends PaymentApi {
 			var q = new UriQueryBuilder()
 					.append("amount", String.valueOf(cart.subtotal().multiply(BigDecimal.valueOf(100)).longValue()))
 					.append("automatic_payment_methods[enabled]", "true")
-					.append("currency", cart.currency().toString().toLowerCase()).append("customer", c.id())
+					.append("currency", cart.currency().toString().toLowerCase())
+					.append("customer", c.id())
 					.append("metadata[cartId]", cart.id().toString())
 					.append("metadata[cartItems]", Json.format(cart.items(), true))
 					.append("metadata[shippingAddress]", Json.format(shippingAddress, true)).toString();

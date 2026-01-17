@@ -24,6 +24,7 @@
  */
 package com.janilla.ecommercetemplate.frontend;
 
+import java.util.List;
 import java.util.Map;
 
 import com.janilla.ioc.DiFactory;
@@ -34,8 +35,8 @@ import com.janilla.web.Renderer;
 
 @Render(template = "index.html")
 public record Index(@Render(renderer = JsonRenderer.class) Map<String, String> imports, String apiUrl,
-		@Render(renderer = StateRenderer.class) Map<String, Object> state, @Render(template = "stripe") Object stripe,
-		String stripePublishableKey) {
+		@Render(renderer = StateRenderer.class) Map<String, Object> state, List<Template> templates,
+		@Render(template = "stripe") Object stripe, String stripePublishableKey) {
 
 	public static class JsonRenderer<T> extends Renderer<T> {
 
@@ -58,5 +59,9 @@ public record Index(@Render(renderer = JsonRenderer.class) Map<String, String> i
 			return Json.format(
 					diFactory.create(ReflectionJsonIterator.class, Map.of("object", value, "includeType", true)));
 		}
+	}
+
+	@Render(template = "template")
+	public record Template(String id, String content) {
 	}
 }

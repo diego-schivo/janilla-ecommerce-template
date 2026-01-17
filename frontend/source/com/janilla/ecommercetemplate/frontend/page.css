@@ -24,11 +24,7 @@
  */
 page-element {
   .placeholder {
-    padding-top: 4rem;
-
-    @media (min-width: 1441px) {
-      padding-top: 6rem;
-    }
+    padding: 6rem 0 4rem;
 
     h1 {
       font-size: 2.25rem;

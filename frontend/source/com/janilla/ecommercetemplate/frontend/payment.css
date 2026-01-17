@@ -23,4 +23,14 @@
  * SOFTWARE.
  */
 payment-element {
+  button[name="cancel"] {
+    color: oklab(0.983828 -0.00126734 -0.00320476 / 0.5);
+    font-family: GeistMono, ui-monospace, SFMono-Regular, Roboto Mono, Menlo, Monaco, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-top: 2rem;
+    padding: 0.5rem 1rem;
+    text-transform: uppercase;
+  }
 }

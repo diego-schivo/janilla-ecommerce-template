@@ -30,12 +30,13 @@ export default class Checkout extends WebComponent {
         return ["checkout"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
     constructor() {
         super();
+    }
+
+    set paymentData(paymentData) {
+        this.state.paymentData = paymentData;
+        this.requestDisplay();
     }
 
     connectedCallback() {
@@ -57,23 +58,23 @@ export default class Checkout extends WebComponent {
     async updateDisplay() {
         const a = this.closest("app-element");
         const s = this.state;
-        s.guestEmailEditable ??= !a.state.user;
+        s.guestEmailEditable ??= !a.currentUser;
         if (s.billingAddress === undefined) {
-            const aa = a.state.user?.addresses;
+            const aa = a.currentUser?.addresses;
             s.billingAddress = aa?.length ? aa[aa.length - 1].id : null;
         }
         s.billingAddressSameAsShipping ??= true;
         const c = localStorage.getItem("cart");
         const u = new URL(`${a.dataset.apiUrl}/carts/${c}`, location.href);
-        if (!a.state.user)
+        if (!a.currentUser)
             u.searchParams.append("secret", localStorage.getItem("cart_secret"));
         s.cart ??= await (await fetch(u)).json();
         //r.updateSeo(null);
         this.appendChild(this.interpolateDom({
             $template: "",
-            contact: a.state.user ? {
+            contact: a.currentUser ? {
                 $template: "user",
-                text: a.state.user.email
+                text: a.currentUser.email
             } : {
                 $template: "guest",
                 value: s.guestEmail,
@@ -84,8 +85,9 @@ export default class Checkout extends WebComponent {
                 ...(typeof s.billingAddress === "object"
                     ? { data: JSON.stringify(s.billingAddress) }
                     : { id: s.billingAddress }),
-                name: "billingAddress"
-            } : a.state.user ? {
+                name: "billingAddress",
+                disabled: s.paymentData
+            } : a.currentUser ? {
                 $template: "checkout-addresses",
                 heading: "Billing address",
                 description: "Please select or add your shipping and billing addresses.",
@@ -96,14 +98,15 @@ export default class Checkout extends WebComponent {
                 disabled: !s.guestEmail || s.guestEmailEditable
             },
             billingAddressSameAsShipping: s.billingAddressSameAsShipping,
-			billingAddressSameAsShippingDisabled: true,
+            billingAddressSameAsShippingDisabled: !s.billingAddress || s.paymentData,
             shippingAddress: s.billingAddressSameAsShipping ? null : s.shippingAddress ? {
                 $template: "address-item",
                 ...(typeof s.shippingAddress === "object"
                     ? { data: JSON.stringify(s.shippingAddress) }
                     : { id: s.shippingAddress }),
-                name: "shippingAddress"
-            } : a.state.user ? {
+                name: "shippingAddress",
+                disabled: s.paymentData
+            } : a.currentUser ? {
                 $template: "checkout-addresses",
                 heading: "Shipping address",
                 description: "Please select a shipping address.",
@@ -121,14 +124,6 @@ export default class Checkout extends WebComponent {
                 //guestEmail: s.guestEmail,
                 //amount: s.cart.subtotal * 100
             },
-			/*
-            items: s.cart.items.map(x => ({
-                $template: "item",
-                ...x,
-                image: x.product.gallery.find(y => x.variant.options.some(z => z.id === y.variantOption.id)).image,
-                option: x.variant.options.map(y => y.label).join(", ")
-            })),
-			*/
             items: s.cart.items.map(x => ({
                 $template: "item",
                 item: JSON.stringify(x)
@@ -171,7 +166,7 @@ export default class Checkout extends WebComponent {
             case "go-to-payment":
                 const a = this.closest("app-element");
                 const [ba, sa] = [s.billingAddress, s.billingAddressSameAsShipping ? s.billingAddress : s.shippingAddress]
-                    .map(x => typeof x === "object" ? x : a.state.user.addresses.find(y => y.id === x));
+                    .map(x => typeof x === "object" ? x : a.currentUser.addresses.find(y => y.id === x));
                 const r = await fetch(`${a.dataset.apiUrl}/payments/stripe/initiate`, {
                     method: "POST",
                     headers: { "content-type": "application/json" },
@@ -183,10 +178,9 @@ export default class Checkout extends WebComponent {
                     })
                 });
                 const j = await r.json();
-                if (r.ok) {
-                    s.paymentData = j;
-                    this.requestDisplay();
-                } else
+                if (r.ok)
+                    this.paymentData = j;
+                else
                     a.error(j);
                 break;
             case "shippingAddress":

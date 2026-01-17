@@ -55,7 +55,7 @@ export default class CheckoutAddresses extends WebComponent {
 			$template: "",
 			...this.dataset,
 			...this.state,
-			items: a.state.user.addresses.map(x => ({
+			items: a.currentUser.addresses.map(x => ({
 				$template: "item",
 				id: x.id
 			}))

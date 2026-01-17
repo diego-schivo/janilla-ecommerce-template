@@ -80,7 +80,10 @@ header-element cart-modal {
 
   .content {
     flex: 1;
+    /*
     padding: 0 0.25rem;
+    */
+    padding: 3rem 0.25rem 0;
 
     &.empty {
       align-items: center;

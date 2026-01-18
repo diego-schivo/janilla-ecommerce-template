@@ -44,13 +44,13 @@ import java.util.stream.Collectors;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpRequest;
 import com.janilla.http.HttpResponse;
 import com.janilla.java.Converter;
 import com.janilla.json.Json;
 import com.janilla.net.UriQueryBuilder;
-import com.janilla.persistence.Persistence;
 import com.janilla.reflect.SimpleParameterizedType;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;

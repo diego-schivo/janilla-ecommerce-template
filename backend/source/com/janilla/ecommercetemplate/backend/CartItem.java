@@ -24,7 +24,7 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.cms.Types;
+import com.janilla.backend.cms.Types;
 
 public record CartItem(@Types(Product.class) Long product, @Types(Variant.class) Long variant, Long quantity) {
 }

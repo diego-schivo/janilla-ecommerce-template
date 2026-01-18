@@ -26,11 +26,11 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.time.Instant;
 
-import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
-import com.janilla.cms.Types;
-import com.janilla.persistence.Index;
-import com.janilla.persistence.Store;
+import com.janilla.backend.cms.Document;
+import com.janilla.backend.cms.DocumentStatus;
+import com.janilla.backend.cms.Types;
+import com.janilla.backend.persistence.Index;
+import com.janilla.backend.persistence.Store;
 
 @Store
 public record VariantOption(Long id, @Index @Types(VariantType.class) Long type, String label, String value,

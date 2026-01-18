@@ -26,7 +26,7 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.Properties;
 
-import com.janilla.persistence.Persistence;
+import com.janilla.backend.persistence.Persistence;
 import com.janilla.web.Handle;
 
 public abstract class PaymentApi {

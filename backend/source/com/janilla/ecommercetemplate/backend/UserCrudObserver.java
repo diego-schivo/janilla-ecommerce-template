@@ -24,8 +24,8 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.persistence.CrudObserver;
-import com.janilla.persistence.Persistence;
+import com.janilla.backend.persistence.CrudObserver;
+import com.janilla.backend.persistence.Persistence;
 
 public class UserCrudObserver implements CrudObserver<User> {
 

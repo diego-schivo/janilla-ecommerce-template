@@ -28,6 +28,6 @@ module com.janilla.ecommercetemplate.frontend {
 
 	opens com.janilla.ecommercetemplate.frontend;
 
-	requires transitive com.janilla;
+	requires transitive com.janilla.frontend;
 	requires transitive com.janilla.frontend.resources;
 }

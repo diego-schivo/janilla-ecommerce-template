@@ -28,5 +28,5 @@ module com.janilla.ecommercetemplate.backend {
 
 	opens com.janilla.ecommercetemplate.backend;
 
-	requires transitive com.janilla;
+	requires transitive com.janilla.backend;
 }

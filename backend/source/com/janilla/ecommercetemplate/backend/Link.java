@@ -24,8 +24,8 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.cms.DocumentReference;
-import com.janilla.cms.Types;
+import com.janilla.backend.cms.DocumentReference;
+import com.janilla.backend.cms.Types;
 
 public record Link(LinkType type, Boolean newTab, @Types( {
 		Page.class, Product.class }) DocumentReference<?, ?> document, String uri, String text,

@@ -29,12 +29,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
+import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpExchange;
-import com.janilla.persistence.Persistence;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/users")
-public class UserApi extends com.janilla.cms.UserApi<Long, UserRole, User> {
+public class UserApi extends com.janilla.backend.cms.UserApi<Long, UserRole, User> {
 
 	public static final AtomicReference<UserApi> INSTANCE = new AtomicReference<>();
 

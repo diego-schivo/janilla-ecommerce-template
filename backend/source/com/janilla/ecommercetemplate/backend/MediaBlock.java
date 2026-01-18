@@ -24,7 +24,7 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.cms.Types;
+import com.janilla.backend.cms.Types;
 
 public record MediaBlock(@Types(Media.class) Long media) {
 }

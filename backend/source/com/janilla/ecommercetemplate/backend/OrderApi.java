@@ -29,10 +29,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.janilla.cms.CollectionApi;
+import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpExchange;
 import com.janilla.json.Json;
-import com.janilla.persistence.Persistence;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
 import com.janilla.web.UnauthorizedException;

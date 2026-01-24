@@ -45,7 +45,7 @@ export default class App extends WebComponent {
     }
 
     get colorScheme() {
-        return this.state.colorScheme;
+        return this.customState.colorScheme;
     }
 
     set colorScheme(colorScheme) {
@@ -61,11 +61,11 @@ export default class App extends WebComponent {
     }
 
     get currentUser() {
-        return this.state.user;
+        return this.customState.user;
     }
 
     set currentUser(currentUser) {
-        this.state.user = currentUser;
+        this.customState.user = currentUser;
         this.dispatchEvent(new CustomEvent("userchanged", { detail: currentUser }));
     }
 
@@ -89,7 +89,7 @@ export default class App extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
         const ss = this.serverState;
 
         if (ss?.error?.code === 404)
@@ -253,7 +253,7 @@ export default class App extends WebComponent {
     handlePopState = () => {
         // console.log("handlePopState", JSON.stringify(history.state));
         delete this.serverState;
-        delete this.state.notFound;
+        delete this.customState.notFound;
         window.scrollTo(0, 0);
         this.requestDisplay();
     }
@@ -261,7 +261,7 @@ export default class App extends WebComponent {
     navigate(url) {
         this.querySelectorAll("dialog[open]").forEach(x => x.close());
         delete this.serverState;
-        delete this.state.notFound;
+        delete this.customState.notFound;
         if (url.pathname !== this.currentPath)
             window.scrollTo(0, 0);
         history.pushState({}, "", url.pathname + url.search);
@@ -289,7 +289,7 @@ export default class App extends WebComponent {
     }
 
     notFound() {
-        this.state.notFound = true;
+        this.customState.notFound = true;
         this.requestDisplay();
     }
 
@@ -304,7 +304,7 @@ export default class App extends WebComponent {
     }
 
     async enumValues(name) {
-        const s = this.state;
+        const s = this.customState;
         if (!Object.hasOwn(s, "enums"))
             s.enums = await (await fetch(`${this.dataset.apiUrl}/enums`)).json();
         return s.enums[name];

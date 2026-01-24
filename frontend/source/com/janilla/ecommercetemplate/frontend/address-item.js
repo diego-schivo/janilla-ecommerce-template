@@ -40,7 +40,7 @@ export default class AddressItem extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
         const a = this.closest("app-element");
         s.address ??= this.dataset.data
             ? JSON.parse(this.dataset.data)
@@ -63,7 +63,7 @@ export default class AddressItem extends WebComponent {
                 ].filter(x => x).join(", "),
                 [
                     s.address.city,
-                    s.address.state,
+                    s.address.customState,
                     s.address.postalCode
                 ].filter(x => x).join(", "),
                 [s.address.country]

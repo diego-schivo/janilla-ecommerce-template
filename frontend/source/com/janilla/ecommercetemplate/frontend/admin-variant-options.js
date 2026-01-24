@@ -51,12 +51,12 @@ export default class AdminVariantOptions extends WebComponent {
 	async updateDisplay() {
 		const e = this.closest("admin-edit");
 		const p = this.dataset.path;
-		const s = this.state;
+		const s = this.customState;
 		s.field ??= e.field(p);
 		s.values ??= (s.field.data ?? []).map(x => x.id);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			types: e.state.document.product.variantTypes
+			types: e.customState.document.product.variantTypes
 				.sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
 				.map(x => ({
 					$template: "type",
@@ -73,7 +73,7 @@ export default class AdminVariantOptions extends WebComponent {
 
 	handleClick = event => {
 		const el = event.target.closest("button");
-		const s = this.state;
+		const s = this.customState;
 		switch (el?.name) {
 			case "remove":
 				s.values = Array.from(this.querySelectorAll("select"))

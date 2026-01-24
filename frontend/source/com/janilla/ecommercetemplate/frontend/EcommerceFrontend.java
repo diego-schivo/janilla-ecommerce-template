@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
@@ -47,23 +46,21 @@ import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
-import com.janilla.net.Net;
+import com.janilla.net.SecureServer;
 import com.janilla.web.ApplicationHandlerFactory;
-import com.janilla.web.FileMap;
 import com.janilla.web.Invocable;
 import com.janilla.web.NotFoundException;
 import com.janilla.web.RenderableFactory;
+import com.janilla.web.ResourceMap;
 
 public class EcommerceFrontend {
-
-	public static final AtomicReference<EcommerceFrontend> INSTANCE = new AtomicReference<>();
 
 	public static void main(String[] args) {
 		try {
 			EcommerceFrontend a;
 			{
-				var f = new DiFactory(Stream.of(EcommerceFrontend.class.getPackageName(), "com.janilla.web")
-						.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), INSTANCE::get);
+				var f = new DiFactory(Stream.of("com.janilla.web", EcommerceFrontend.class.getPackageName())
+						.flatMap(x -> Java.getPackageClasses(x).stream()).toList());
 				a = f.create(EcommerceFrontend.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
@@ -75,8 +72,8 @@ public class EcommerceFrontend {
 			HttpServer s;
 			{
 				SSLContext c;
-				try (var x = Net.class.getResourceAsStream("localhost")) {
-					c = Net.getSSLContext(Map.entry("JKS", x), "passphrase".toCharArray());
+				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
+					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.frontend.server.port"));
 				s = a.diFactory.create(HttpServer.class,
@@ -94,7 +91,7 @@ public class EcommerceFrontend {
 
 	protected final DiFactory diFactory;
 
-	protected final FileMap fileMap;
+	protected final ResourceMap resourceMap;
 
 	protected final HttpHandler handler;
 
@@ -109,14 +106,13 @@ public class EcommerceFrontend {
 	public EcommerceFrontend(DiFactory diFactory, Path configurationFile) {
 //		IO.println("EcommerceFrontend, configurationFile=" + configurationFile);
 		this.diFactory = diFactory;
-		if (!INSTANCE.compareAndSet(null, this))
-			throw new IllegalStateException();
+		diFactory.context(this);
 		configuration = diFactory.create(Properties.class, Collections.singletonMap("file", configurationFile));
 
 		{
 			SSLContext c;
-			try (var x = Net.class.getResourceAsStream("localhost")) {
-				c = Net.getSSLContext(Map.entry("JKS", x), "passphrase".toCharArray());
+			try (var x = SecureServer.class.getResourceAsStream("localhost")) {
+				c = Java.sslContext(x, "passphrase".toCharArray());
 			} catch (IOException e) {
 				throw new UncheckedIOException(e);
 			}
@@ -124,10 +120,9 @@ public class EcommerceFrontend {
 		}
 		dataFetching = diFactory.create(DataFetching.class);
 
-		fileMap = diFactory.create(FileMap.class,
-				Map.of("paths",
-						Stream.of("com.janilla.frontend", "com.janilla.cms", EcommerceFrontend.class.getPackageName())
-								.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList()));
+		resourceMap = diFactory.create(ResourceMap.class,
+				Map.of("paths", Stream.of("com.janilla.frontend", EcommerceFrontend.class.getPackageName())
+						.flatMap(x -> Java.getPackagePaths(x).stream().filter(Files::isRegularFile)).toList()));
 		indexFactory = diFactory.create(IndexFactory.class);
 
 		invocables = types().stream()
@@ -160,8 +155,8 @@ public class EcommerceFrontend {
 		return diFactory;
 	}
 
-	public FileMap fileMap() {
-		return fileMap;
+	public ResourceMap resourceMap() {
+		return resourceMap;
 	}
 
 	public HttpHandler handler() {

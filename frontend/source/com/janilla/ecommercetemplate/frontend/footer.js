@@ -52,9 +52,9 @@ export default class Footer extends WebComponent {
         const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            navigation: a.state.footer?.navItems?.length ? {
+            navigation: a.customState.footer?.navItems?.length ? {
                 $template: "navigation",
-                items: a.state.footer.navItems.map(x => ({
+                items: a.customState.footer.navItems.map(x => ({
                     $template: "list-item",
                     ...x,
                     document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,

@@ -35,7 +35,7 @@ export default class Checkout extends WebComponent {
     }
 
     set paymentData(paymentData) {
-        this.state.paymentData = paymentData;
+        this.customState.paymentData = paymentData;
         this.requestDisplay();
     }
 
@@ -57,7 +57,7 @@ export default class Checkout extends WebComponent {
 
     async updateDisplay() {
         const a = this.closest("app-element");
-        const s = this.state;
+        const s = this.customState;
         s.guestEmailEditable ??= !a.currentUser;
         if (s.billingAddress === undefined) {
             const aa = a.currentUser?.addresses;
@@ -134,7 +134,7 @@ export default class Checkout extends WebComponent {
 
     handleChange = event => {
         const el = event.target;
-        const s = this.state;
+        const s = this.customState;
         switch (el?.name) {
             case "billingAddress":
                 s.billingAddress = parseInt(el.value);
@@ -153,7 +153,7 @@ export default class Checkout extends WebComponent {
 
     handleClick = async event => {
         const el = event.target;
-        const s = this.state;
+        const s = this.customState;
         switch (el?.name) {
             case "billingAddress":
                 s.billingAddress = null;
@@ -192,7 +192,7 @@ export default class Checkout extends WebComponent {
 
     handleInput = event => {
         const t = event.target;
-        const s = this.state;
+        const s = this.customState;
         if (t.matches('[name="guestEmail"]')) {
             s.guestEmail = t.value;
             this.requestDisplay();
@@ -201,7 +201,7 @@ export default class Checkout extends WebComponent {
 
     handleSubmit = event => {
         const f = event.target;
-        const s = this.state;
+        const s = this.customState;
 
         if (f.closest(".contact")) {
             event.preventDefault();

@@ -52,7 +52,7 @@ export default class ConfirmOrder extends WebComponent {
 		    })
 		})).json();
 		if (j?.order) {
-		    //await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
+		    //await fetch(`${a.dataset.apiUrl}/carts/${c.customState.cart.id}`, { method: "DELETE" });
 		    //localStorage.removeItem("cart");
 		    const u = new URL(`/orders/${j.order}`, location.href);
 		    if (this.dataset.guestEmail)

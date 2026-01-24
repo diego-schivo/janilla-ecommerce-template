@@ -42,7 +42,7 @@ export default class Header extends WebComponent {
         const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            navItems: a.state.header?.navItems?.map(x => ({
+            navItems: a.customState.header?.navItems?.map(x => ({
                 $template: "nav-item",
                 ...x,
                 document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,

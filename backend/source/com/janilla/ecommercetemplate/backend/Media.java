@@ -35,9 +35,10 @@ public record Media(Long id, File file, String alt, String caption, Instant crea
 		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 
 	public String uri() {
-		return file != null
-				? (EcommerceBackend.INSTANCE.get().configuration().getProperty("ecommerce-template.api.url")
-						+ "/images/" + file.name())
-				: null;
+//		return file != null
+//				? (EcommerceBackend.INSTANCE.get().configuration().getProperty("ecommerce-template.api.url")
+//						+ "/images/" + file.name())
+//				: null;
+		throw new RuntimeException();
 	}
 }

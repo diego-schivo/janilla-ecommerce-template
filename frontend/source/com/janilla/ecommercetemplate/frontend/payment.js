@@ -51,7 +51,7 @@ export default class Payment extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
         this.appendChild(this.interpolateDom({
             $template: "",
             submit: {
@@ -63,7 +63,7 @@ export default class Payment extends WebComponent {
 
         if (!s.elements) {
             const a = this.closest("app-element");
-            s.elements = a.state.stripe.elements({
+            s.elements = a.customState.stripe.elements({
                 appearance: {
                     theme: "stripe",
                     variables: {
@@ -84,7 +84,7 @@ export default class Payment extends WebComponent {
                         spacingUnit: "4px"
                     }
                 },
-                clientSecret: this.closest("checkout-element").state.paymentData.clientSecret
+                clientSecret: this.closest("checkout-element").customState.paymentData.clientSecret
             });
             s.elements.create("payment").mount("#payment-element");
         }
@@ -99,17 +99,17 @@ export default class Payment extends WebComponent {
     handleSubmit = async event => {
         event.preventDefault();
 
-        const s = this.state;
+        const s = this.customState;
         s.submitting = true;
 		this.requestDisplay();
 
 		        const c = this.closest("checkout-element");
         const a = this.closest("app-element");
-        const [ba] = [c.state.billingAddress].map(x => typeof x === "object" ? x : a.currentUser.addresses.find(y => y.id === x));
+        const [ba] = [c.customState.billingAddress].map(x => typeof x === "object" ? x : a.currentUser.addresses.find(y => y.id === x));
         let u = new URL("/checkout/confirm-order", location.href);
         if (this.dataset.guestEmail)
             u.searchParams.append("guest_email", this.dataset.guestEmail);
-        let j = await a.state.stripe.confirmPayment({
+        let j = await a.customState.stripe.confirmPayment({
             confirmParams: {
                 return_url: u.toString(),
                 payment_method_data: {
@@ -120,7 +120,7 @@ export default class Payment extends WebComponent {
                             line1: ba.addressLine1,
                             line2: ba.addressLine2,
                             city: ba.city,
-                            state: ba.state,
+                            state: ba.customState,
                             postal_code: ba.postalCode,
                             country: ba.country,
                         },
@@ -140,7 +140,7 @@ export default class Payment extends WebComponent {
                 })
             })).json();
             if (j?.order) {
-                await fetch(`${a.dataset.apiUrl}/carts/${c.state.cart.id}`, { method: "DELETE" });
+                await fetch(`${a.dataset.apiUrl}/carts/${c.customState.cart.id}`, { method: "DELETE" });
                 localStorage.removeItem("cart");
                 u = new URL(`/orders/${j.order}`, location.href);
                 if (this.dataset.guestEmail)

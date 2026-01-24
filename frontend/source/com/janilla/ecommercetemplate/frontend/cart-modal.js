@@ -53,7 +53,7 @@ export default class CartModal extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
         const a = this.closest("app-element");
         const c = localStorage.getItem("cart");
         const u = new URL(`${a.dataset.apiUrl}/carts/${c}`, location.href);
@@ -88,7 +88,7 @@ export default class CartModal extends WebComponent {
     }
 
     handleCartChanged = event => {
-		this.state.cart = event.detail;
+		this.customState.cart = event.detail;
 		this.requestDisplay();
     }
 
@@ -106,7 +106,7 @@ export default class CartModal extends WebComponent {
 
     handleSubmit = async event => {
         event.preventDefault();
-        const s = this.state;
+        const s = this.customState;
         const fd = new FormData(event.target);
         const p = parseInt(fd.get("product"));
         const v = parseInt(fd.get("variant"));

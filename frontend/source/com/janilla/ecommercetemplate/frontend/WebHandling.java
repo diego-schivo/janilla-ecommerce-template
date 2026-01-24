@@ -46,121 +46,66 @@ public class WebHandling {
 	@Handle(method = "GET", path = "/account")
 	public Object account(FrontendExchange exchange) {
 //		IO.println("WebHandling.account");
-//		if (exchange.sessionUser() == null)
-//			return URI.create("/login?" + new UriQueryBuilder()
-//					.append("warning", "Please login to access your account settings.").toString());
-//		var i = indexFactory.index(exchange);
-//		i.state().put("orders", dataFetching.orders(exchange.tokenCookie()));
-//		Stream.of("account").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/account/addresses")
 	public Object addresses(FrontendExchange exchange) {
 //		IO.println("WebHandling.addresses");
-//		if (exchange.sessionUser() == null)
-//			return URI.create("/login?" + new UriQueryBuilder()
-//					.append("warning", "Please login to access your account settings.").toString());
-//		var i = indexFactory.index(exchange);
-//		Stream.of("addresses").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/admin(/[\\w\\d/-]*)?")
 	public Object admin(String path, FrontendExchange exchange) {
 //		IO.println("WebHandling.admin, path=" + path);
-//		if (path == null || path.isEmpty())
-//			path = "/";
-//		switch (path) {
-//		case "/":
-//			if (exchange.sessionUser() == null)
-//				return URI.create("/admin/login");
-//			break;
-//		case "/login":
-//			if (((List<?>) dataFetching.users(0l, 1l)).isEmpty())
-//				return URI.create("/admin/create-first-user");
-//			break;
-//		}
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/checkout")
 	public Object checkout(FrontendExchange exchange) {
 //		IO.println("WebHandling.checkout");
-//		var i = indexFactory.index(exchange);
-//		Stream.of("checkout").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/checkout/confirm-order")
 	public Object confirmOrder(FrontendExchange exchange) {
+//		IO.println("WebHandling.confirmOrder");
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/create-account")
 	public Object createAccount(FrontendExchange exchange) {
 //		IO.println("WebHandling.createAccount");
-//		if (exchange.sessionUser() != null)
-//			return URI.create("/account");
-//		var i = indexFactory.index(exchange);
-//		Stream.of("create-account").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/find-order")
 	public Object findOrder(FrontendExchange exchange) {
 //		IO.println("WebHandling.findOrder");
-//		var i = indexFactory.index(exchange);
-//		Stream.of("find-order").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/login")
 	public Object login(FrontendExchange exchange) {
 //		IO.println("WebHandling.login");
-//		if (exchange.sessionUser() != null)
-//			return URI.create(
-//					"/account?" + new UriQueryBuilder().append("warning", "You are already logged in.").toString());
-//		var i = indexFactory.index(exchange);
-//		Stream.of("login").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/logout")
 	public Object logout(FrontendExchange exchange) {
 //		IO.println("WebHandling.logout");
-//		var i = indexFactory.index(exchange);
-//		Stream.of("logout").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/orders/(\\d+)")
 	public Object order(Long id, String guestEmail, FrontendExchange exchange) {
 //		IO.println("WebHandling.order, id=" + id + ", email=" + email);
-//		var o = dataFetching.order(id, exchange.tokenCookie());
-//		if (o == null)
-//			throw new NotFoundException("id=" + id);
-//		var i = indexFactory.index(exchange);
-//		i.state().put("order", o);
-//		Stream.of("order").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 
 	@Handle(method = "GET", path = "/orders")
 	public Object orders(FrontendExchange exchange) {
 //		IO.println("WebHandling.orders");
-//		var i = indexFactory.index(exchange);
-//		i.state().put("orders", dataFetching.orders(exchange.tokenCookie()));
-//		Stream.of("orders").map(indexFactory::template).forEach(i.templates()::add);
-//		return i;
 		return indexFactory.index(exchange);
 	}
 

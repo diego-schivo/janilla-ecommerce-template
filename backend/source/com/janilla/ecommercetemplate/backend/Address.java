@@ -31,7 +31,7 @@ import com.janilla.backend.cms.DocumentStatus;
 import com.janilla.backend.cms.Types;
 import com.janilla.backend.persistence.Index;
 import com.janilla.backend.persistence.Store;
-import com.janilla.reflect.Flat;
+import com.janilla.java.Flat;
 
 @Store
 public record Address(Long id, @Index @Types(User.class) Long customer, @Flat AddressData data, Instant createdAt,

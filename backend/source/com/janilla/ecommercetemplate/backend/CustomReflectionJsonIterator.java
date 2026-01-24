@@ -24,8 +24,6 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.util.List;
-
 import com.janilla.backend.cms.CmsReflectionJsonIterator;
 import com.janilla.backend.persistence.Persistence;
 
@@ -37,8 +35,8 @@ public class CustomReflectionJsonIterator extends CmsReflectionJsonIterator {
 
 //	@Override
 //	protected List<?> list(List<?> list) {
-////		return super.list(list).stream()
-////				.map(x -> x instanceof User y && y.addresses() != null ? y.withAddresses(null) : x).toList();
+	//// return super.list(list).stream() .map(x -> x instanceof User y &&
+	/// y.addresses() != null ? y.withAddresses(null) : x).toList();
 //		throw new RuntimeException();
 //	}
 }

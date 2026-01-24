@@ -50,11 +50,11 @@ export default class CheckoutAddresses extends WebComponent {
 
 	async updateDisplay() {
 		const a = this.closest("app-element");
-		const s = this.state;
+		const s = this.customState;
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			...this.dataset,
-			...this.state,
+			...this.customState,
 			items: a.currentUser.addresses.map(x => ({
 				$template: "item",
 				id: x.id
@@ -69,7 +69,7 @@ export default class CheckoutAddresses extends WebComponent {
 
 	handleClick = event => {
 		const b = event.target.closest("button");
-		const s = this.state;
+		const s = this.customState;
 		switch (b?.name) {
 			case "close":
 				delete s.dialog;
@@ -86,7 +86,7 @@ export default class CheckoutAddresses extends WebComponent {
 					detail: { id: parseInt(b.value) }
 				}));
 				*/
-				this.state.value = b.value;
+				this.customState.value = b.value;
 				const i = this.querySelector(`input[name="${this.dataset.name}"]`);
 				i.value = b.value;
 				i.dispatchEvent(new Event("change", { bubbles: true }));

@@ -47,7 +47,7 @@ export default class Addresses extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
 		const a = this.closest("app-element");
 		a.updateSeo({ title: "Addresses" });
         this.appendChild(this.interpolateDom({
@@ -72,7 +72,7 @@ export default class Addresses extends WebComponent {
 
     handleClick = event => {
         const b = event.target.closest("button");
-        const s = this.state;
+        const s = this.customState;
         switch (b?.name) {
             case "add":
             case "edit":
@@ -96,7 +96,7 @@ export default class Addresses extends WebComponent {
             customer: a.currentUser.id,
             ...Object.fromEntries(new FormData(f))
         };
-        const s = this.state;
+        const s = this.customState;
         const r = await fetch(`${a.dataset.apiUrl}/addresses${s.dialog.id ? `/${s.dialog.id}` : ""}`, {
             method: s.dialog.id ? "PUT" : "POST",
             headers: { "content-type": "application/json" },
@@ -104,7 +104,7 @@ export default class Addresses extends WebComponent {
         });
         const j = await r.json();
         if (r.ok) {
-            delete this.state.dialog;
+            delete this.customState.dialog;
             this.requestDisplay();
             this.dispatchEvent(new CustomEvent("user-change", {
                 bubbles: true,

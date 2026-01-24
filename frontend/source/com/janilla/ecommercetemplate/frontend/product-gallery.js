@@ -49,7 +49,7 @@ export default class ProductGallery extends WebComponent {
     }
 
     async updateDisplay() {
-        const s = this.state;
+        const s = this.customState;
         const p = history.state.product;
         s.index ??= p.enableVariants ? (() => {
             const oo = this.dataset.variantOptions.split(",");
@@ -71,7 +71,7 @@ export default class ProductGallery extends WebComponent {
         const b = event.target.closest("button");
         const ul = b?.closest("ul");
         if (ul) {
-            this.state.index = Array.from(ul.children).findIndex(x => x.contains(b));
+            this.customState.index = Array.from(ul.children).findIndex(x => x.contains(b));
             this.requestDisplay();
         }
     }

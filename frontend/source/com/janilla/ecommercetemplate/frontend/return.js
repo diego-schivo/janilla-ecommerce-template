@@ -39,7 +39,7 @@ export default class Return extends WebComponent {
 		const r = this.closest("app-element");
 		const u = new URL(location);
 		const pics = u.searchParams.get("payment_intent_client_secret");
-		const { error, paymentIntent } = await r.state.stripe.retrievePaymentIntent(pics);
+		const { error, paymentIntent } = await r.customState.stripe.retrievePaymentIntent(pics);
 		r.addMessage(error ? error.message : `Payment ${paymentIntent.status}: ${paymentIntent.id}`);
 	}
 }

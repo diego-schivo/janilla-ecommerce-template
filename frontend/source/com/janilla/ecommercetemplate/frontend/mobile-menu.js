@@ -37,11 +37,11 @@ export default class MobileMenu extends WebComponent {
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("click", this.handleClick);
-        (this.state.app = this.closest("app-element")).addEventListener("userchanged", this.handleUserChanged);
+        (this.customState.app = this.closest("app-element")).addEventListener("userchanged", this.handleUserChanged);
     }
 
     disconnectedCallback() {
-        const a = this.state.app;
+        const a = this.customState.app;
         super.disconnectedCallback();
         this.removeEventListener("click", this.handleClick);
         a.removeEventListener("userchanged", this.handleUserChanged);
@@ -51,7 +51,7 @@ export default class MobileMenu extends WebComponent {
         const a = this.closest("app-element");
         this.appendChild(this.interpolateDom({
             $template: "",
-            storeItems: a.state.header?.navItems?.map(x => ({
+            storeItems: a.customState.header?.navItems?.map(x => ({
                 $template: "list-item",
                 ...x,
                 document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,

@@ -36,7 +36,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -52,9 +51,9 @@ import com.janilla.backend.sqlite.SqliteDatabase;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Converter;
 import com.janilla.java.Java;
+import com.janilla.java.Reflection;
 import com.janilla.java.TypeResolver;
 import com.janilla.json.Json;
-import com.janilla.reflect.Reflection;
 
 public class CustomPersistence extends CmsPersistence {
 
@@ -62,31 +61,37 @@ public class CustomPersistence extends CmsPersistence {
 
 	protected final Properties configuration;
 
-	public CustomPersistence(SqliteDatabase database, Collection<Class<? extends Entity<?>>> types,
-			TypeResolver typeResolver, DiFactory diFactory, Properties configuration) {
+	public CustomPersistence(SqliteDatabase database, List<Class<? extends Entity<?>>> storables, TypeResolver typeResolver,
+			DiFactory diFactory, Properties configuration) {
 		this.diFactory = diFactory;
 		this.configuration = configuration;
-		super(database, types, typeResolver);
+		super(database, storables, typeResolver);
 	}
 
 	@Override
 	protected <E extends Entity<?>> Crud<?, E> newCrud(Class<E> type) {
 //		if (type == User.class)
 //			return (Crud<?, E>) new UserCrud(this);
-		var x = super.newCrud(type);
-		if (x != null) {
+		var c = super.newCrud(type);
+		if (c != null) {
+			Class<? extends CrudObserver<?>> t;
 			if (type == Cart.class)
-				x.observers().add((CrudObserver) diFactory.create(CartCrudObserver.class, Map.of("persistence", this)));
+				t = CartCrudObserver.class;
 			else if (type == Product.class)
-				x.observers()
-						.add((CrudObserver) diFactory.create(ProductCrudObserver.class, Map.of("persistence", this)));
+				t = ProductCrudObserver.class;
 			else if (type == User.class)
-				x.observers().add((CrudObserver) diFactory.create(UserCrudObserver.class, Map.of("persistence", this)));
+				t = UserCrudObserver.class;
 			else if (type == VariantType.class)
-				x.observers().add(
-						(CrudObserver) diFactory.create(VariantTypeCrudObserver.class, Map.of("persistence", this)));
+				t = VariantTypeCrudObserver.class;
+			else
+				t = null;
+			if (t != null) {
+				@SuppressWarnings("unchecked")
+				var o = (CrudObserver<E>) diFactory.create(t, Map.of("persistence", this));
+				c.observers().add(o);
+			}
 		}
-		return x;
+		return c;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

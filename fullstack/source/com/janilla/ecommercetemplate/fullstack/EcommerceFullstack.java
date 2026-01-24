@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
@@ -43,18 +42,15 @@ import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
-import com.janilla.net.Net;
+import com.janilla.net.SecureServer;
 
 public class EcommerceFullstack {
-
-	public static final AtomicReference<EcommerceFullstack> INSTANCE = new AtomicReference<>();
 
 	public static void main(String[] args) {
 		try {
 			EcommerceFullstack a;
 			{
-				var f = new DiFactory(Java.getPackageClasses(EcommerceFullstack.class.getPackageName()), INSTANCE::get,
-						"fullstack");
+				var f = new DiFactory(Java.getPackageClasses(EcommerceFullstack.class.getPackageName()), "fullstack");
 				a = f.create(EcommerceFullstack.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
@@ -66,8 +62,8 @@ public class EcommerceFullstack {
 			HttpServer s;
 			{
 				SSLContext c;
-				try (var x = Net.class.getResourceAsStream("localhost")) {
-					c = Net.getSSLContext(Map.entry("JKS", x), "passphrase".toCharArray());
+				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
+					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.fullstack.server.port"));
 				s = a.diFactory.create(HttpServer.class,
@@ -92,8 +88,7 @@ public class EcommerceFullstack {
 	public EcommerceFullstack(DiFactory diFactory, Path configurationFile) {
 //		IO.println("EcommerceFullstack, configurationFile=" + configurationFile);
 		this.diFactory = diFactory;
-		if (!INSTANCE.compareAndSet(null, this))
-			throw new IllegalStateException();
+		diFactory.context(this);
 		configuration = diFactory.create(Properties.class, Collections.singletonMap("file", configurationFile));
 
 		var cf = Optional.ofNullable(configurationFile).orElseGet(() -> {
@@ -106,26 +101,22 @@ public class EcommerceFullstack {
 		backend = diFactory
 				.create(EcommerceBackend.class,
 						Java.hashMap("diFactory",
-								new DiFactory(
-										Stream.concat(
-												Stream.of("fullstack", "backend")
+								new DiFactory(Stream
+										.concat(Stream.of("com.janilla.web"),
+												Stream.of("backend", "fullstack")
 														.map(x -> EcommerceBackend.class.getPackageName()
-																.replace(".backend", "." + x)),
-												Stream.of("com.janilla.web"))
-												.flatMap(x -> Java.getPackageClasses(x).stream()).toList(),
-										EcommerceBackend.INSTANCE::get, "backend"),
+																.replace(".backend", "." + x)))
+										.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), "backend"),
 								"configurationFile", cf));
 		frontend = diFactory
 				.create(EcommerceFrontend.class,
 						Java.hashMap("diFactory",
-								new DiFactory(
-										Stream.concat(
-												Stream.of("fullstack", "frontend")
+								new DiFactory(Stream
+										.concat(Stream.of("com.janilla.web"),
+												Stream.of("frontend", "fullstack")
 														.map(x -> EcommerceFrontend.class.getPackageName()
-																.replace(".frontend", "." + x)),
-												Stream.of("com.janilla.web"))
-												.flatMap(x -> Java.getPackageClasses(x).stream()).toList(),
-										EcommerceFrontend.INSTANCE::get, "frontend"),
+																.replace(".frontend", "." + x)))
+										.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), "frontend"),
 								"configurationFile", cf));
 
 		handler = x -> {

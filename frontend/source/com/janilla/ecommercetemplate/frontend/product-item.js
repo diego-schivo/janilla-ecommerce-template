@@ -39,7 +39,7 @@ export default class ProductItem extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const s = this.state;
+		const s = this.customState;
 		s.item ??= JSON.parse(this.dataset.item);
 		this.appendChild(this.interpolateDom({
 			$template: "",

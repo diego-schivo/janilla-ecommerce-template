@@ -39,7 +39,7 @@ export default class Order extends WebComponent {
 	}
 
 	async updateDisplay() {
-		const s = this.state;
+		const s = this.customState;
 		const a = this.closest("app-element");
 		s.order ??= await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
 		a.updateSeo({ title: `Order ${s.order.id}` });

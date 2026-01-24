@@ -36,11 +36,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.janilla.ecommercetemplate.frontend.Index.Template;
-import com.janilla.frontend.Frontend;
-import com.janilla.frontend.cms.CmsFrontend;
+import com.janilla.frontend.ImportMaps;
+import com.janilla.frontend.cms.CmsImportMaps;
 import com.janilla.frontend.resources.FrontendResources;
-import com.janilla.web.DefaultFile;
-import com.janilla.web.FileMap;
+import com.janilla.web.DefaultResource;
+import com.janilla.web.ResourceMap;
 
 public class IndexFactory {
 
@@ -48,12 +48,12 @@ public class IndexFactory {
 
 	protected final DataFetching dataFetching;
 
-	protected final FileMap fileMap;
+	protected final ResourceMap resourceMap;
 
-	public IndexFactory(Properties configuration, DataFetching dataFetching, FileMap fileMap) {
+	public IndexFactory(Properties configuration, DataFetching dataFetching, ResourceMap resourceMap) {
 		this.configuration = configuration;
 		this.dataFetching = dataFetching;
-		this.fileMap = fileMap;
+		this.resourceMap = resourceMap;
 	}
 
 	public Index index(FrontendExchange exchange) {
@@ -78,9 +78,9 @@ public class IndexFactory {
 			synchronized (A.class) {
 				if (A.x == null) {
 					A.x = new LinkedHashMap<String, String>();
-					Frontend.putImports(A.x);
+					ImportMaps.putImports(A.x);
 					FrontendResources.putImports(A.x);
-					CmsFrontend.putImports(A.x);
+					CmsImportMaps.putImports(A.x);
 					Stream.of("admin", "admin-dashboard", "admin-fields")
 							.forEach(x -> A.x.put(x, "/custom-" + x + ".js"));
 					Stream.of("account", "account-nav", "address-edit", "address-item", "addresses",
@@ -108,7 +108,7 @@ public class IndexFactory {
 		if (!A.x.containsKey(name))
 			synchronized (A.class) {
 				if (!A.x.containsKey(name)) {
-					var f = (DefaultFile) fileMap.get("/" + name + ".html");
+					var f = (DefaultResource) resourceMap.get("/" + name + ".html");
 					try (var in = f != null ? f.newInputStream() : null) {
 						A.x.put(name, in != null ? new Template(name, new String(in.readAllBytes())) : null);
 					} catch (IOException e) {

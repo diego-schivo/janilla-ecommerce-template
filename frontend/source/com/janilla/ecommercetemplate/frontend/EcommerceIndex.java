@@ -22,23 +22,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate.frontend;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
-import com.janilla.backend.cms.Document;
-import com.janilla.backend.cms.DocumentStatus;
-import com.janilla.backend.cms.Types;
-import com.janilla.backend.cms.Versions;
-import com.janilla.backend.persistence.Index;
-import com.janilla.backend.persistence.Store;
+import com.janilla.blanktemplate.frontend.Index;
+import com.janilla.web.Render;
 
-@Store
-//@Index(sort = "-createdAt")
-@Versions(drafts = true)
-public record Page(Long id, String title, Hero hero, List<@Types( {
-		CallToAction.class, Content.class, MediaBlock.class }) ?> layout, Meta meta, @Index String slug,
-		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long>{
+@Render(template = "index.html")
+public record EcommerceIndex(@Render(renderer = JsonRenderer.class) Map<String, String> imports, String apiUrl,
+		@Render(renderer = StateRenderer.class) Map<String, Object> state, List<Template> templates,
+		@Render(template = "stripe") Object stripe, String stripePublishableKey) implements Index {
 }

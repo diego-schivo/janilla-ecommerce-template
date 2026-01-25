@@ -22,9 +22,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate.frontend;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Properties;
 
-public record Content(List<Column> columns) {
+import com.janilla.http.HttpClient;
+import com.janilla.http.HttpCookie;
+import com.janilla.java.UriQueryBuilder;
+import com.janilla.websitetemplate.frontend.WebsiteDataFetching;
+
+public class EcommerceDataFetching extends WebsiteDataFetching {
+
+	public EcommerceDataFetching(Properties configuration, String configurationKey, HttpClient httpClient) {
+		super(configuration, configurationKey, httpClient);
+	}
+
+	public List<?> categories() {
+		return (List<?>) httpClient.getJson(URI.create(apiUrl + "/categories"));
+	}
+
+	public List<?> products(String slug, String query, Long category, String sort, HttpCookie token) {
+		return (List<?>) httpClient.getJson(
+				URI.create(apiUrl + "/products?" + new UriQueryBuilder().append("slug", slug).append("q", query)
+						.append("category", category != null ? category.toString() : null).append("sort", sort)),
+				token != null ? token.format() : null);
+	}
 }

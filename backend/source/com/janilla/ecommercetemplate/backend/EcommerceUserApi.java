@@ -24,27 +24,30 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Predicate;
 
-import com.janilla.backend.cms.GlobalApi;
+import com.janilla.backend.cms.UserApi;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.blanktemplate.backend.BlankBackendHttpExchange;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
-@Handle(path = "/api/header")
-public class HeaderApi extends GlobalApi<Long, Header> {
+@Handle(path = "/api/users")
+public class EcommerceUserApi extends UserApi<Long, EcommerceUserRole, EcommerceUser> {
 
-	public static final AtomicReference<HeaderApi> INSTANCE = new AtomicReference<>();
-
-	public HeaderApi(Predicate<HttpExchange> drafts, Persistence persistence) {
-		super(Header.class, drafts, persistence);
-		if (!INSTANCE.compareAndSet(null, this))
-			throw new IllegalStateException();
+	public EcommerceUserApi(Predicate<HttpExchange> drafts, Persistence persistence, Properties configuration,
+			String configurationKey) {
+		super(EcommerceUser.class, drafts, persistence, configuration.getProperty(configurationKey + ".jwt.key"));
 	}
 
-	@Override
-	protected Long id() {
-		return 1L;
+	@Handle(method = "POST")
+	public EcommerceUser create(CreateData<EcommerceUser> data, BlankBackendHttpExchange exchange) {
+		if (exchange.sessionUser() == null) {
+			var u = data.user().withRoles(Set.of(EcommerceUserRole.CUSTOMER));
+			data = data.withUser(u);
+		}
+		return super.create(data);
 	}
 }

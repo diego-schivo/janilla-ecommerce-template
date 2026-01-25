@@ -24,28 +24,42 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.http.HttpExchange;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Properties;
+import java.util.function.Function;
+
 import com.janilla.http.HttpHandlerFactory;
-import com.janilla.web.Error;
-import com.janilla.web.ExceptionHandlerFactory;
+import com.janilla.http.HttpRequest;
+import com.janilla.ioc.DiFactory;
+import com.janilla.web.Invocable;
+import com.janilla.web.Invocation;
 import com.janilla.web.RenderableFactory;
+import com.janilla.websitetemplate.backend.WebsiteBackendInvocationHandlerFactory;
 
-public class CustomExceptionHandlerFactory extends ExceptionHandlerFactory {
+public class EcommerceInvocationHandlerFactory extends WebsiteBackendInvocationHandlerFactory {
 
-	protected final RenderableFactory renderableFactory;
-
-	protected final HttpHandlerFactory rootFactory;
-
-	public CustomExceptionHandlerFactory(RenderableFactory renderableFactory, HttpHandlerFactory rootFactory) {
-		this.renderableFactory = renderableFactory;
-		this.rootFactory = rootFactory;
+	public EcommerceInvocationHandlerFactory(List<Invocable> invocables, Function<Class<?>, Object> instanceResolver,
+			Comparator<Invocation> invocationComparator, RenderableFactory renderableFactory,
+			HttpHandlerFactory rootFactory, Properties configuration, String configurationKey, DiFactory diFactory) {
+		super(invocables, instanceResolver, invocationComparator, renderableFactory, rootFactory, configuration,
+				configurationKey, diFactory);
+		guestPost.add("/api/carts");
+		guestPost.add("/api/users");
+//		guestPost.add("/api/payments/stripe/initiate");
+//		guestPost.add("/api/payments/stripe/confirm-order");
+		guestPost.add("/api/payments/stripe/webhooks");
 	}
 
 	@Override
-	protected boolean handle(Error error, HttpExchange exchange) {
-		super.handle(error, exchange);
-		var r = renderableFactory.createRenderable(null, exchange.exception().getMessage());
-		var h = rootFactory.createHandler(r);
-		return h.handle(exchange);
+	protected boolean requireSessionEmail(HttpRequest rq) {
+		if (!super.requireSessionEmail(rq))
+			return false;
+		switch (rq.getMethod()) {
+		case "DELETE", "PATCH":
+			return rq.getPath().startsWith("/api/carts/");
+		default:
+			return true;
+		}
 	}
 }

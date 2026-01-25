@@ -25,6 +25,7 @@
 package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.cms.Types;
+import com.janilla.blanktemplate.backend.Media;
 
 public record GalleryItem(@Types(Media.class) Long image, @Types(VariantOption.class) Long variantOption) {
 }

@@ -30,4 +30,5 @@ module com.janilla.ecommercetemplate.fullstack {
 
 	requires transitive com.janilla.ecommercetemplate.backend;
 	requires transitive com.janilla.ecommercetemplate.frontend;
+	requires transitive com.janilla.websitetemplate.fullstack;
 }

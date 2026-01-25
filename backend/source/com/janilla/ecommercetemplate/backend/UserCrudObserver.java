@@ -27,7 +27,7 @@ package com.janilla.ecommercetemplate.backend;
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
 
-public class UserCrudObserver implements CrudObserver<User> {
+public class UserCrudObserver implements CrudObserver<EcommerceUser> {
 
 	protected final Persistence persistence;
 
@@ -36,7 +36,7 @@ public class UserCrudObserver implements CrudObserver<User> {
 	}
 
 	@Override
-	public User afterRead(User entity) {
+	public EcommerceUser afterRead(EcommerceUser entity) {
 		var e = entity;
 		var cc = persistence.crud(Cart.class).filter("customer", e.id());
 		e = e.withCarts(cc);
@@ -46,7 +46,7 @@ public class UserCrudObserver implements CrudObserver<User> {
 	}
 
 	@Override
-	public User beforeCreate(User entity) {
+	public EcommerceUser beforeCreate(EcommerceUser entity) {
 		var e = entity;
 		if (e.carts() != null)
 			e = e.withCarts(null);
@@ -56,7 +56,7 @@ public class UserCrudObserver implements CrudObserver<User> {
 	}
 
 	@Override
-	public User beforeUpdate(User entity) {
+	public EcommerceUser beforeUpdate(EcommerceUser entity) {
 		return beforeCreate(entity);
 	}
 
@@ -74,7 +74,7 @@ public class UserCrudObserver implements CrudObserver<User> {
 //	}
 
 	@Override
-	public void afterDelete(User entity) {
+	public void afterDelete(EcommerceUser entity) {
 		var cc = persistence.crud(Cart.class).filter("customer", entity.id());
 		persistence.crud(Cart.class).delete(cc);
 		var aa = persistence.crud(Address.class).filter("customer", entity.id());

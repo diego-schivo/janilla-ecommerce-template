@@ -24,124 +24,49 @@
  */
 package com.janilla.ecommercetemplate.fullstack;
 
-import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.List;
 import java.util.stream.Stream;
 
-import javax.net.ssl.SSLContext;
-
-import com.janilla.ecommercetemplate.backend.BackendExchange;
+import com.janilla.blanktemplate.fullstack.BlankFullstack;
 import com.janilla.ecommercetemplate.backend.EcommerceBackend;
 import com.janilla.ecommercetemplate.frontend.EcommerceFrontend;
-import com.janilla.http.HttpHandler;
-import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
-import com.janilla.net.SecureServer;
+import com.janilla.websitetemplate.fullstack.WebsiteFullstack;
 
-public class EcommerceFullstack {
+public class EcommerceFullstack extends WebsiteFullstack {
 
 	public static void main(String[] args) {
-		try {
-			EcommerceFullstack a;
-			{
-				var f = new DiFactory(Java.getPackageClasses(EcommerceFullstack.class.getPackageName()), "fullstack");
-				a = f.create(EcommerceFullstack.class,
-						Java.hashMap("diFactory", f, "configurationFile",
-								args.length > 0 ? Path.of(
-										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
-												: args[0])
-										: null));
-			}
-
-			HttpServer s;
-			{
-				SSLContext c;
-				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
-					c = Java.sslContext(x, "passphrase".toCharArray());
-				}
-				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.fullstack.server.port"));
-				s = a.diFactory.create(HttpServer.class,
-						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
-			}
-			s.serve();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		IO.println(ProcessHandle.current().pid());
+		var f = new DiFactory(Stream
+				.of(BlankFullstack.class.getPackageName(), WebsiteFullstack.class.getPackageName(),
+						EcommerceFullstack.class.getPackageName())
+				.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), "fullstack");
+		serve(f, EcommerceFullstack.class, args.length > 0 ? args[0] : null);
 	}
-
-	protected final EcommerceBackend backend;
-
-	protected final Properties configuration;
-
-	protected final DiFactory diFactory;
-
-	protected final EcommerceFrontend frontend;
-
-	protected final HttpHandler handler;
 
 	public EcommerceFullstack(DiFactory diFactory, Path configurationFile) {
-//		IO.println("EcommerceFullstack, configurationFile=" + configurationFile);
-		this.diFactory = diFactory;
-		diFactory.context(this);
-		configuration = diFactory.create(Properties.class, Collections.singletonMap("file", configurationFile));
-
-		var cf = Optional.ofNullable(configurationFile).orElseGet(() -> {
-			try {
-				return Path.of(EcommerceFullstack.class.getResource("configuration.properties").toURI());
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
-		});
-		backend = diFactory
-				.create(EcommerceBackend.class,
-						Java.hashMap("diFactory",
-								new DiFactory(Stream
-										.concat(Stream.of("com.janilla.web"),
-												Stream.of("backend", "fullstack")
-														.map(x -> EcommerceBackend.class.getPackageName()
-																.replace(".backend", "." + x)))
-										.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), "backend"),
-								"configurationFile", cf));
-		frontend = diFactory
-				.create(EcommerceFrontend.class,
-						Java.hashMap("diFactory",
-								new DiFactory(Stream
-										.concat(Stream.of("com.janilla.web"),
-												Stream.of("frontend", "fullstack")
-														.map(x -> EcommerceFrontend.class.getPackageName()
-																.replace(".frontend", "." + x)))
-										.flatMap(x -> Java.getPackageClasses(x).stream()).toList(), "frontend"),
-								"configurationFile", cf));
-
-		handler = x -> {
-			var h = x instanceof BackendExchange ? backend.handler() : frontend.handler();
-			return h.handle(x);
-		};
+		this(diFactory, configurationFile, "ecommerce-template");
 	}
 
-	public EcommerceBackend backend() {
-		return backend;
+	public EcommerceFullstack(DiFactory diFactory, Path configurationFile, String configurationKey) {
+		super(diFactory, configurationFile, configurationKey);
 	}
 
-	public Properties configuration() {
-		return configuration;
+	@Override
+	protected List<Class<?>> backendTypes() {
+		return Stream.concat(super.backendTypes().stream(),
+				Stream.of(EcommerceBackend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
+						.flatMap(x -> Java.getPackageClasses(x).stream()))
+				.toList();
 	}
 
-	public DiFactory diFactory() {
-		return diFactory;
-	}
-
-	public EcommerceFrontend frontend() {
-		return frontend;
-	}
-
-	public HttpHandler handler() {
-		return handler;
+	@Override
+	protected List<Class<?>> frontendTypes() {
+		return Stream.concat(super.frontendTypes().stream(),
+				Stream.of(EcommerceFrontend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
+						.flatMap(x -> Java.getPackageClasses(x).stream()))
+				.toList();
 	}
 }

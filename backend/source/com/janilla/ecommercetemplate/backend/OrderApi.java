@@ -31,8 +31,8 @@ import java.util.function.Predicate;
 
 import com.janilla.backend.cms.CollectionApi;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.blanktemplate.backend.BlankBackendHttpExchange;
 import com.janilla.http.HttpExchange;
-import com.janilla.json.Json;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
 import com.janilla.web.UnauthorizedException;
@@ -45,12 +45,12 @@ public class OrderApi extends CollectionApi<Long, Order> {
 	}
 
 	@Handle(method = "GET")
-	public List<Order> read(Long customer, BackendExchange exchange) {
-		var u = exchange.sessionUser();
-		if (u == null || !(u.hasRole(UserRole.ADMIN) || u.hasRole(UserRole.CUSTOMER)))
+	public List<Order> read(Long customer, BlankBackendHttpExchange exchange) {
+		var u = (EcommerceUser) exchange.sessionUser();
+		if (u == null || !(u.hasRole(EcommerceUserRole.ADMIN) || u.hasRole(EcommerceUserRole.CUSTOMER)))
 			throw new UnauthorizedException();
 
-		if (u.hasRole(UserRole.CUSTOMER)) {
+		if (u.hasRole(EcommerceUserRole.CUSTOMER)) {
 			if (customer == null)
 				customer = u.id();
 			else if (!customer.equals(u.id()))
@@ -65,43 +65,13 @@ public class OrderApi extends CollectionApi<Long, Order> {
 
 	@Override
 	public Order read(Long id, HttpExchange exchange) {
-		var u = ((BackendExchange) exchange).sessionUser();
-		if (u == null || !(u.hasRole(UserRole.ADMIN) || u.hasRole(UserRole.CUSTOMER)))
+		var u = (EcommerceUser) ((BlankBackendHttpExchange) exchange).sessionUser();
+		if (u == null || !(u.hasRole(EcommerceUserRole.ADMIN) || u.hasRole(EcommerceUserRole.CUSTOMER)))
 			throw new UnauthorizedException();
 
 		var o = super.read(id, exchange);
-		if (u.hasRole(UserRole.CUSTOMER) && !u.id().equals(o.customer()))
+		if (u.hasRole(EcommerceUserRole.CUSTOMER) && !u.id().equals(o.customer()))
 			throw new ForbiddenException();
 		return o;
-	}
-
-//	@Handle(method = "GET", path = "poll")
-//	public void poll(String stripePaymentIntentId, HttpResponse response) throws InterruptedException, IOException {
-//		response.setStatus(200);
-//		response.setHeaderValue("content-type", "text/event-stream");
-//		response.setHeaderValue("cache-control", "no-cache");
-//		var ch = (WritableByteChannel) response.getBody();
-//		var q = StripeApi.ORDERS.computeIfAbsent(stripePaymentIntentId, _ -> new ArrayBlockingQueue<>(1));
-//		for (;;) {
-//			var o = q.poll(5, TimeUnit.SECONDS);
-//			if (o != null) {
-	////				IO.println("OutputApi.read, e=" + e);
-
-//				var s = format(new Event("order", o));
-	////				IO.println("OutputApi.read, s=" + s);
-//				ch.write(ByteBuffer.wrap(s.getBytes()));
-//			} else
-//				ch.write(ByteBuffer.wrap(format(new Event("ping", Map.of("time", new Date()))).getBytes()));
-//		}
-//	}
-
-	protected static String format(Event event) {
-//		IO.println("event=" + event);
-		var sb = new StringBuilder();
-		if (event.type() != null)
-			sb.append("event: ").append(event.type()).append("\n");
-		sb.append("data: ").append(event.type() != null ? Json.format(event.data(), true) : event.data())
-				.append("\n\n");
-		return sb.toString();
 	}
 }

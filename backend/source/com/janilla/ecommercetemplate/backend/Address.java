@@ -34,6 +34,6 @@ import com.janilla.backend.persistence.Store;
 import com.janilla.java.Flat;
 
 @Store
-public record Address(Long id, @Index @Types(User.class) Long customer, @Flat AddressData data, Instant createdAt,
+public record Address(Long id, @Index @Types(EcommerceUser.class) Long customer, @Flat AddressData data, Instant createdAt,
 		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 }

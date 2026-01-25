@@ -35,7 +35,7 @@ import com.janilla.ioc.Context;
 @Context("fullstack")
 public class CustomProperties extends Properties {
 
-	private static final long serialVersionUID = -2294199037395154052L;
+	private static final long serialVersionUID = -6694322871109301718L;
 
 	public CustomProperties(Path file) {
 		try {

@@ -112,25 +112,25 @@
 		"id": 1,
 		"navItems": [
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "/admin",
 				"text": "Admin"
 			},
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "/find-order",
 				"text": "Find my order"
 			},
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "https://github.com/diego-schivo/ecommerce-template",
 				"text": "Source Code"
 			},
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "https://janilla.com/",
 				"text": "Janilla"
@@ -142,19 +142,19 @@
 		"id": 1,
 		"navItems": [
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "/",
 				"text": "Home"
 			},
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "/shop",
 				"text": "Shop"
 			},
 			{
-				"$type": "Link",
+				"$type": "EcommerceLink",
 				"type": "CUSTOM",
 				"uri": "/account",
 				"text": "Account"
@@ -329,7 +329,7 @@
 					"richText": "<h3>This is a call to action</h3><p>This is a custom layout building block <a href=\"/admin\">configured in the admin dashboard</a>.</p>",
 					"links": [
 						{
-							"$type": "Link",
+							"$type": "EcommerceLink",
 							"type": "CUSTOM",
 							"uri": "/products",
 							"text": "All products",

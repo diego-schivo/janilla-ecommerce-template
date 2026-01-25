@@ -24,17 +24,9 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import java.nio.file.Path;
-import java.util.Properties;
+import com.janilla.backend.cms.UserRole;
 
-import com.janilla.backend.cms.CmsFileHandlerFactory;
+public enum EcommerceUserRole implements UserRole {
 
-public class CustomFileHandlerFactory extends CmsFileHandlerFactory {
-
-	public CustomFileHandlerFactory(Properties configuration) {
-		var d = configuration.getProperty("ecommerce-template.upload.directory");
-		if (d.startsWith("~"))
-			d = System.getProperty("user.home") + d.substring(1);
-		super(Path.of(d));
-	}
+	ADMIN, CUSTOMER
 }

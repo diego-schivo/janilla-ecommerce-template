@@ -27,6 +27,7 @@ package com.janilla.ecommercetemplate.backend;
 import java.util.Properties;
 
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.blanktemplate.backend.BlankBackendHttpExchange;
 import com.janilla.web.Handle;
 
 public abstract class PaymentApi {
@@ -47,9 +48,9 @@ public abstract class PaymentApi {
 	}
 
 	@Handle(method = "POST", path = "initiate")
-	public InitiateResult initiate(InitiateData data, BackendExchange exchange) {
+	public InitiateResult initiate(InitiateData data, BlankBackendHttpExchange exchange) {
 //		IO.println("PaymentApi.initiate, data=" + data);
-		var u = exchange.sessionUser();
+		var u = (EcommerceUser) exchange.sessionUser();
 		return initiate(u, data.guestEmail(), persistence.crud(Cart.class).read(data.cart()), data.billingAddress(),
 				data.shippingAddress());
 	}
@@ -61,14 +62,14 @@ public abstract class PaymentApi {
 	}
 
 	@Handle(method = "POST", path = "confirm-order")
-	public ConfirmOrderResult confirmOrder(ConfirmOrderData data, BackendExchange exchange) {
+	public ConfirmOrderResult confirmOrder(ConfirmOrderData data, BlankBackendHttpExchange exchange) {
 //		IO.println("PaymentApi.confirmOrder, data=" + data);
-		var u = exchange.sessionUser();
+		var u = (EcommerceUser) exchange.sessionUser();
 		return confirmOrder(u, data.guestEmail(), data.paymentIntent());
 	}
 
-	protected abstract InitiateResult initiate(User user, String guestEmail, Cart cart, AddressData billingAddress,
+	protected abstract InitiateResult initiate(EcommerceUser user, String guestEmail, Cart cart, AddressData billingAddress,
 			AddressData shippingAddress);
 
-	protected abstract ConfirmOrderResult confirmOrder(User user, String guestEmail, String paymentIntent);
+	protected abstract ConfirmOrderResult confirmOrder(EcommerceUser user, String guestEmail, String paymentIntent);
 }

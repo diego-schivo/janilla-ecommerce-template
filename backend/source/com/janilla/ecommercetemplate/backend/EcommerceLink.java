@@ -24,14 +24,14 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
-import com.janilla.web.Error;
+import com.janilla.backend.cms.DocumentReference;
+import com.janilla.backend.cms.Types;
+import com.janilla.websitetemplate.backend.Link;
+import com.janilla.websitetemplate.backend.LinkAppearance;
+import com.janilla.websitetemplate.backend.LinkType;
+import com.janilla.websitetemplate.backend.Page;
 
-@Error(code = 403, text = "Forbidden")
-public class MethodBlockedException extends RuntimeException {
-
-	private static final long serialVersionUID = 5976369240427557896L;
-
-	public MethodBlockedException() {
-		super("The requested action is disabled on this public server: please set up and run the application locally");
-	}
+public record EcommerceLink(LinkType type, Boolean newTab, @Types( {
+		Page.class, Product.class }) DocumentReference<?, ?> document, String uri, String text,
+		LinkAppearance appearance) implements Link{
 }

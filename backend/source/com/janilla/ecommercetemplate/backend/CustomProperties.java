@@ -32,7 +32,7 @@ import java.util.Properties;
 
 public class CustomProperties extends Properties {
 
-	private static final long serialVersionUID = -5374801142499744359L;
+	private static final long serialVersionUID = 1199181941011366598L;
 
 	public CustomProperties(Path file) {
 		try {

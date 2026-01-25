@@ -24,5 +24,7 @@
  */
 package com.janilla.ecommercetemplate.backend;
 
+import com.janilla.websitetemplate.backend.Globals;
+
 public record Data(Globals globals, Collections collections, Users users, Content2 content, Ecommerce ecommerce) {
 }

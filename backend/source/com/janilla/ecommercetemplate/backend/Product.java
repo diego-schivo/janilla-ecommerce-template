@@ -34,9 +34,13 @@ import com.janilla.backend.cms.Types;
 import com.janilla.backend.cms.Versions;
 import com.janilla.backend.persistence.Index;
 import com.janilla.backend.persistence.Store;
+import com.janilla.websitetemplate.backend.CallToAction;
+import com.janilla.websitetemplate.backend.Category;
+import com.janilla.websitetemplate.backend.Content;
+import com.janilla.websitetemplate.backend.MediaBlock;
+import com.janilla.websitetemplate.backend.Meta;
 
 @Store
-//@Index(sort = "title")
 @Versions(drafts = true)
 public record Product(Long id, String title, String description, List<GalleryItem> gallery, List<@Types( {
 		CallToAction.class, Content.class, MediaBlock.class }) ?> layout, Boolean enableVariants,

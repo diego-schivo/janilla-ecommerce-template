@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import com.janilla.blanktemplate.frontend.BlankDataFetching;
 import com.janilla.blanktemplate.frontend.BlankFrontendHttpExchange;
 import com.janilla.blanktemplate.frontend.BlankIndexFactory;
+import com.janilla.ecommercetemplate.frontend.IndexImpl.Stripe;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Bind;
 import com.janilla.web.Handle;
@@ -56,7 +57,8 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 	@Handle(method = "GET", path = "/checkout")
 	public Object checkout(HttpExchange exchange) {
 //		IO.println("WebHandling.checkout");
-		return indexFactory.index(exchange);
+		return ((IndexImpl) indexFactory.index(exchange))
+				.withStripe(new Stripe());
 	}
 
 	@Handle(method = "GET", path = "/checkout/confirm-order")
@@ -111,7 +113,8 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 		var i = indexFactory.index(exchange);
 		i.state().put("product", pp.getFirst());
 		Stream.of("call-to-action", "content", "media-block", "price", "product", "product-description",
-				"product-gallery", "variant-selector").map(indexFactory::template).forEach(i.templates()::add);
+				"product-gallery", "variant-selector").map(((EcommerceIndexFactory) indexFactory)::ecommerceTemplate)
+				.forEach(i.templates()::add);
 		return i;
 	}
 
@@ -122,7 +125,8 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 		i.state().put("categories", ((EcommerceDataFetching) dataFetching).categories());
 		i.state().put("products", ((EcommerceDataFetching) dataFetching).products(null, query, category, sort,
 				((BlankFrontendHttpExchange) exchange).tokenCookie()));
-		Stream.of("card", "shop").map(indexFactory::template).forEach(i.templates()::add);
+		Stream.of("card", "shop").map(((EcommerceIndexFactory) indexFactory)::ecommerceTemplate)
+				.forEach(i.templates()::add);
 		return i;
 	}
 }

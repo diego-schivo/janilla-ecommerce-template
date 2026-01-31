@@ -22,15 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import AdminDashboard from "./admin-dashboard.js";
+package com.janilla.ecommercetemplate.frontend;
 
-export default class CustomAdminDashboard extends AdminDashboard {
+import java.util.List;
+import java.util.Map;
 
-    static get templateNames() {
-        return ["custom-admin-dashboard", "admin-dashboard"];
-    }
+import com.janilla.blanktemplate.frontend.Index;
+import com.janilla.web.Render;
 
-    constructor() {
-        super();
-    }
+@Render(template = "index.html")
+public record IndexImpl(String title, @Render(renderer = JsonRenderer.class) Map<String, String> imports, String key,
+		String apiUrl, @Render(renderer = StateRenderer.class) Map<String, Object> state, List<Template> templates,
+		Stripe stripe, String stripePublishableKey, String stripeUrl) implements Index {
+
+	public IndexImpl withStripe(Stripe stripe) {
+		return new IndexImpl(title, imports, key, apiUrl, state, templates, stripe, stripePublishableKey, stripeUrl);
+	}
+
+	@Render(template = "stripe")
+	public record Stripe() {
+
+		public String url() {
+			var a = EcommerceFrontend.INSTANCE.get();
+			return a.configuration().getProperty(a.configurationKey() + ".stripe.url");
+		}
+	}
 }

@@ -22,87 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "web-component";
+import WebsiteApp from "website/app";
 
-const adminRegex = /^\/admin(\/.*)?$/;
 const ordersRegex = /^\/orders(\/.*)?$/;
 const productRegex = /^\/products(\/.*)$/;
 
-export default class App extends WebComponent {
+export default class App extends WebsiteApp {
+
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
     static get templateNames() {
-        return ["app"];
+        return ["/blank/app", "/website/app", "app"];
     }
 
-    static get observedAttributes() {
-        return ["data-api-url", "data-stripe-publishable-key"];
-    }
-
-    constructor() {
-        super();
-        if (!history.state)
-            history.replaceState({}, "");
-    }
-
-    get colorScheme() {
-        return this.customState.colorScheme;
-    }
-
-    set colorScheme(colorScheme) {
-        if (colorScheme)
-            localStorage.setItem("janilla-ecommerce-template.color-scheme", colorScheme);
-        else
-            localStorage.removeItem("janilla-ecommerce-template.color-scheme");
-        this.requestDisplay();
-    }
-
-    get currentPath() {
-        return location.pathname;
-    }
-
-    get currentUser() {
-        return this.customState.user;
-    }
-
-    set currentUser(currentUser) {
-        this.customState.user = currentUser;
-        this.dispatchEvent(new CustomEvent("userchanged", { detail: currentUser }));
-    }
-
-    connectedCallback() {
-        const el = this.children.length === 1 ? this.firstElementChild : null;
-        if (el?.matches('[type="application/json"]')) {
-            this.serverState = JSON.parse(el.text);
-            el.remove();
-        }
-        super.connectedCallback();
-        this.addEventListener("click", this.handleClick);
-        addEventListener("popstate", this.handlePopState);
-        this.addEventListener("submit", this.handleSubmit);
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener("click", this.handleClick);
-        removeEventListener("popstate", this.handlePopState);
-        this.removeEventListener("submit", this.handleSubmit);
-    }
-
-    async updateDisplay() {
+    async updateDisplaySite() {
         const s = this.customState;
-        const ss = this.serverState;
 
-        if (ss?.error?.code === 404)
-            s.notFound = true;
-
-        if (!Object.hasOwn(s, "user"))
-            s.user = ss && Object.hasOwn(ss, "user")
-                ? ss.user
-                : await (await fetch(`${this.dataset.apiUrl}/users/me`)).json();
-
-        const p = this.currentPath;
-        const spp = new URLSearchParams(location.search);
         const u0 = this.currentUser;
+        const p = this.currentPath;
 
         if (u0)
             switch (p) {
@@ -125,172 +64,83 @@ export default class App extends WebComponent {
         } else if (p === "/orders" || p.startsWith("/orders/"))
             s.notFound = true;
 
-        const m = p.match(adminRegex);
-        if (m) {
-            this.appendChild(this.interpolateDom({
-                $template: "",
-                admin: {
-                    $template: "admin",
-                    user: this.currentUser ? JSON.stringify(this.currentUser) : null,
-                    path: m[1] ?? "/"
-                }
-            }));
-            return;
-        }
+        await super.updateDisplaySite();
+    }
 
-        if (!Object.hasOwn(s, "header"))
-            s.header = ss && Object.hasOwn(ss, "header")
-                ? ss.header
-                : await (await fetch(`${this.dataset.apiUrl}/header`)).json();
-        if (!Object.hasOwn(s, "footer"))
-            s.footer = ss && Object.hasOwn(ss, "footer")
-                ? ss.footer
-                : await (await fetch(`${this.dataset.apiUrl}/footer`)).json();
-        s.colorScheme = localStorage.getItem("janilla-ecommerce-template.color-scheme");
-
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            site: {
-                $template: "site",
-                colorScheme: this.colorScheme ?? "light dark",
-                adminBar: this.currentUser?.roles?.some(x => x.name === "ADMIN") ? {
-                    $template: "admin-bar",
-                    userEmail: this.currentUser?.email
-                } : null,
-                header: {
-                    $template: "header",
-                    path: p
-                },
-                content: s.notFound ? { $template: "not-found" } : (() => {
-                    switch (p) {
-                        case "/account":
-                            return {
-                                $template: "account",
-                                success: spp.get("success"),
-                                warning: spp.get("warning")
-                            };
-                        case "/account/addresses":
-                            return { $template: "addresses" };
-                        case "/checkout":
-                            if (!Array.from(document.head.querySelectorAll("script"))
-                                //.some(x => x.src === "https://js.stripe.com/clover/stripe.js")) {
-                                .some(x => x.src === "https://js.stripe.com/v3")) {
-                                const el = document.createElement("script");
-                                el.onload = () => {
-                                    if (!s.stripe && typeof Stripe !== "undefined")
-                                        s.stripe = Stripe(this.dataset.stripePublishableKey);
-                                }
-                                document.head.append(el);
-                                //el.src = "https://js.stripe.com/clover/stripe.js";
-                                el.src = "https://js.stripe.com/v3";
-                            } else if (!s.stripe && typeof Stripe !== "undefined")
-                                s.stripe = Stripe(this.dataset.stripePublishableKey);
-                            return { $template: "checkout" };
-                        case "/checkout/confirm-order":
-                            return {
-                                $template: "confirm-order",
-                                guestEmail: spp.get("guest_email"),
-                                paymentIntent: spp.get("payment_intent")
-                            };
-                        case "/create-account":
-                            return { $template: "create-account" };
-                        case "/find-order":
-                            return { $template: "find-order" };
-                        case "/login":
-                            return {
-                                $template: "login",
-                                warning: spp.get("warning")
-                            };
-                        case "/logout":
-                            return {
-                                $template: "logout",
-                                noOp: !u0
-                            };
-                    }
-                    const m2 = p.match(productRegex);
-                    if (m2)
-                        return {
-                            $template: "product",
-                            slug: m2[1].substring(1),
-                            search: location.search
-                        };
-                    const m3 = p.match(ordersRegex);
-                    if (m3)
-                        return m3[1] ? {
-                            $template: "order",
-                            id: m3[1].substring(1)
-                        } : { $template: "orders" };
-                    return p === "/shop" ? (() => {
-                        return {
-                            $template: "shop",
-                            query: spp.get("q"),
-                            category: spp.get("category"),
-                            sort: spp.get("sort")
-                        };
-                    })() : {
-                        $template: "page",
-                        slug: p.split("/").map(x => x === "" ? "home" : x)[1]
+    contentData() {
+        const s = this.customState;
+        if (!s.notFound) {
+            const p = this.currentPath;
+            const spp = new URLSearchParams(location.search);
+            switch (p) {
+                case "/account":
+                    return {
+                        $template: "account",
+                        success: spp.get("success"),
+                        warning: spp.get("warning")
                     };
-                })(),
-                footer: {
-                    $template: "footer",
-                    colorScheme: this.colorScheme
-                }
+                case "/account/addresses":
+                    return { $template: "addresses" };
+                case "/checkout":
+                    if (!Array.from(document.head.querySelectorAll("script"))
+                        .some(x => x.src === this.dataset.stripeUrl)) {
+                        const el = document.createElement("script");
+                        el.onload = () => {
+                            if (!s.stripe && typeof Stripe !== "undefined")
+                                s.stripe = Stripe(this.dataset.stripePublishableKey);
+                        }
+                        document.head.append(el);
+                        el.src = this.dataset.stripeUrl;
+                    } else if (!s.stripe && typeof Stripe !== "undefined")
+                        s.stripe = Stripe(this.dataset.stripePublishableKey);
+                    return { $template: "checkout" };
+                case "/checkout/confirm-order":
+                    return {
+                        $template: "confirm-order",
+                        guestEmail: spp.get("guest_email"),
+                        paymentIntent: spp.get("payment_intent")
+                    };
+                case "/create-account":
+                    return { $template: "create-account" };
+                case "/find-order":
+                    return { $template: "find-order" };
+                case "/login":
+                    return {
+                        $template: "login",
+                        warning: spp.get("warning")
+                    };
+                case "/logout":
+                    return {
+                        $template: "logout",
+                        noOp: !u0
+                    };
             }
-        }));
-    }
-
-    handleClick = event => {
-        if (!event.defaultPrevented) {
-            const a = event.target.closest("a");
-            if (a?.href && !a.target) {
-                event.preventDefault();
-                this.navigate(new URL(a.href));
+            {
+                const m = p.match(productRegex);
+                if (m)
+                    return {
+                        $template: "product",
+                        slug: m[1].substring(1),
+                        search: location.search
+                    };
             }
+            {
+                const m = p.match(ordersRegex);
+                if (m)
+                    return m[1] ? {
+                        $template: "order",
+                        id: m[1].substring(1)
+                    } : { $template: "orders" };
+            }
+            if (p === "/shop")
+                return {
+                    $template: "shop",
+                    query: spp.get("q"),
+                    category: spp.get("category"),
+                    sort: spp.get("sort")
+                };
         }
-    }
-
-    handlePopState = () => {
-        // console.log("handlePopState", JSON.stringify(history.state));
-        delete this.serverState;
-        delete this.customState.notFound;
-        window.scrollTo(0, 0);
-        this.requestDisplay();
-    }
-
-    navigate(url) {
-        this.querySelectorAll("dialog[open]").forEach(x => x.close());
-        delete this.serverState;
-        delete this.customState.notFound;
-        if (url.pathname !== this.currentPath)
-            window.scrollTo(0, 0);
-        history.pushState({}, "", url.pathname + url.search);
-        this.requestDisplay();
-    }
-
-    updateSeo(meta) {
-        const sn = "Janilla Ecommerce Template";
-        const t = [meta?.title && meta.title !== sn ? meta.title : null, sn].filter(x => x).join(" | ");
-        const d = meta?.description ?? "";
-        for (const [k, v] of Object.entries({
-            title: t,
-            description: d,
-            "og:title": t,
-            "og:description": d,
-            "og:url": location.href,
-            "og:site_name": sn,
-            "og:image": meta?.image?.uri ? `${location.protocol}://${location.host}${meta.image.uri}` : null,
-            "og:type": "website"
-        }))
-            if (k === "title")
-                document.title = v ?? "";
-        //else
-        //	document.querySelector(`meta[name="${k}"]`).setAttribute("content", v ?? "");
-    }
-
-    notFound() {
-        this.customState.notFound = true;
-        this.requestDisplay();
+        return super.contentData();
     }
 
     success() {

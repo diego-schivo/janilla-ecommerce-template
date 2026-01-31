@@ -22,34 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "web-component";
+import WebsiteHeader from "website/header";
 
-export default class Header extends WebComponent {
+export default class Header extends WebsiteHeader {
+
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
     static get templateNames() {
-        return ["header"];
+        return ["/website/header", "header"];
     }
 
-    static get observedAttributes() {
-        return ["data-path"];
-    }
-
-    constructor() {
-        super();
-    }
-
-    async updateDisplay() {
-        const a = this.closest("app-element");
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            navItems: a.customState.header?.navItems?.map(x => ({
-                $template: "nav-item",
-                ...x,
-                document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-                href: x.type.name === "CUSTOM" ? x.uri : null,
-                target: x.newTab ? "_blank" : null,
-                class: this.dataset.path === x.uri || this.dataset.path.startsWith(x.uri + "/") ? "active" : null
-            }))
-        }));
+    contentData() {
+        return [
+            { $template: "mobile-menu" },
+            super.contentData(),
+            { $template: "cart-modal" }
+        ];
     }
 }

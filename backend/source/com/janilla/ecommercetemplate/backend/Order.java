@@ -35,7 +35,7 @@ import com.janilla.backend.persistence.Index;
 import com.janilla.backend.persistence.Store;
 
 @Store
-public record Order(Long id, List<CartItem> items, AddressData shippingAddress, @Index @Types(EcommerceUser.class) Long customer,
+public record Order(Long id, List<CartItem> items, AddressData shippingAddress, @Index @Types(UserImpl.class) Long customer,
 		String customerEmail, List<@Types(Transaction.class) Long> transactions, OrderStatus status, BigDecimal amount,
 		Currency currency, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
 		implements Document<Long> {

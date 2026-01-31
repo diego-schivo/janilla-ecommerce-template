@@ -73,7 +73,7 @@ public class StripeApi extends PaymentApi {
 	}
 
 	@Override
-	protected InitiateResult initiate(EcommerceUser user, String guestEmail, Cart cart, AddressData billingAddress,
+	protected InitiateResult initiate(UserImpl user, String guestEmail, Cart cart, AddressData billingAddress,
 			AddressData shippingAddress) {
 		record C(String id) {
 		}
@@ -133,7 +133,7 @@ public class StripeApi extends PaymentApi {
 	}
 
 	@Override
-	protected ConfirmOrderResult confirmOrder(EcommerceUser user, String guestEmail, String paymentIntent) {
+	protected ConfirmOrderResult confirmOrder(UserImpl user, String guestEmail, String paymentIntent) {
 		Transaction t;
 		{
 			var x = persistence.crud(Transaction.class);

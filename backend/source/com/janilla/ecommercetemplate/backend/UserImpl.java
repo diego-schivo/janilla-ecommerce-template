@@ -44,11 +44,11 @@ import com.janilla.backend.persistence.Index;
 import com.janilla.backend.persistence.Store;
 
 @Store
-public record EcommerceUser(Long id, String name, @Index String email, String salt, String hash,
-		@Index String resetPasswordToken, Instant resetPasswordExpiration, Set<EcommerceUserRole> roles,
+public record UserImpl(Long id, String name, @Index String email, String salt, String hash,
+		@Index String resetPasswordToken, Instant resetPasswordExpiration, Set<UserRoleImpl> roles,
 		@Index String stripeCustomerId, List<@Types(Cart.class) Long> carts, List<@Types(Address.class) Long> addresses,
 		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements User<Long, EcommerceUserRole> {
+		implements User<Long, UserRoleImpl> {
 
 	private static final SecretKeyFactory SECRET;
 
@@ -73,7 +73,7 @@ public record EcommerceUser(Long id, String name, @Index String email, String sa
 		return k.getEncoded();
 	}
 
-	public boolean hasRole(EcommerceUserRole role) {
+	public boolean hasRole(UserRoleImpl role) {
 		return roles != null && roles.contains(role);
 	}
 
@@ -86,42 +86,43 @@ public record EcommerceUser(Long id, String name, @Index String email, String sa
 	}
 
 	@Override
-	public EcommerceUser withPassword(String password) {
+	public UserImpl withPassword(String password) {
 		if (password == null || password.isEmpty())
-			return new EcommerceUser(id, name, email, null, null, resetPasswordToken, resetPasswordExpiration, roles,
+			return new UserImpl(id, name, email, null, null, resetPasswordToken, resetPasswordExpiration, roles,
 					stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 		var s = new byte[16];
 		RANDOM.nextBytes(s);
 		var h = hash(password.toCharArray(), s);
 		var f = HexFormat.of();
-		return new EcommerceUser(id, name, email, f.formatHex(s), f.formatHex(h), resetPasswordToken, resetPasswordExpiration,
-				roles, stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
+		return new UserImpl(id, name, email, f.formatHex(s), f.formatHex(h), resetPasswordToken,
+				resetPasswordExpiration, roles, stripeCustomerId, carts, addresses, createdAt, updatedAt,
+				documentStatus, publishedAt);
 	}
 
 	@Override
-	public EcommerceUser withResetPassword(String resetPasswordToken, Instant resetPasswordExpiration) {
-		return new EcommerceUser(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
+	public UserImpl withResetPassword(String resetPasswordToken, Instant resetPasswordExpiration) {
+		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
 	@Override
-	public EcommerceUser withRoles(Set<EcommerceUserRole> roles) {
-		return new EcommerceUser(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
+	public UserImpl withRoles(Set<UserRoleImpl> roles) {
+		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public EcommerceUser withStripeCustomerId(String stripeCustomerId) {
-		return new EcommerceUser(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
+	public UserImpl withStripeCustomerId(String stripeCustomerId) {
+		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public EcommerceUser withCarts(List<Long> carts) {
-		return new EcommerceUser(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
+	public UserImpl withCarts(List<Long> carts) {
+		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public EcommerceUser withAddresses(List<Long> addresses) {
-		return new EcommerceUser(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
+	public UserImpl withAddresses(List<Long> addresses) {
+		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

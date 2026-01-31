@@ -22,7 +22,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-hero-element {
+@import "/website/hero.css";
+
+:where(hero-element) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  article {
+    margin-top: 6rem;
+    min-height: auto;
+    padding: 0 1rem;
+  }
+
+  section {
+    padding-bottom: 0;
+  }
+
+  /*
   margin-top: 6rem;
 
   article,
@@ -63,4 +80,5 @@ hero-element {
       text-decoration: underline;
     }
   }
+  */
 }

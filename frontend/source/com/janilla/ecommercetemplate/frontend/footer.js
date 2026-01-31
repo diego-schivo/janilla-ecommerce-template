@@ -22,58 +22,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import WebComponent from "web-component";
+import WebsiteFooter from "website/footer";
 
-export default class Footer extends WebComponent {
+export default class Footer extends WebsiteFooter {
+
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
     static get templateNames() {
-        return ["footer"];
+        return ["/website/footer", "footer"];
     }
 
-    static get observedAttributes() {
-        return ["data-color-scheme"];
-    }
-
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener("change", this.handleChange);
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener("change", this.handleChange);
-    }
-
-    async updateDisplay() {
-        const a = this.closest("app-element");
-        this.appendChild(this.interpolateDom({
-            $template: "",
-            navigation: a.customState.footer?.navItems?.length ? {
-                $template: "navigation",
-                items: a.customState.footer.navItems.map(x => ({
-                    $template: "list-item",
-                    ...x,
-                    document: x.type.name === "REFERENCE" ? `${x.document.$type}:${x.document.slug}` : null,
-                    href: x.type.name === "CUSTOM" ? x.uri : null,
-                    target: x.newTab ? "_blank" : null
-                }))
-            } : null,
-            options: ["auto", "light", "dark"].map(x => ({
-                $template: "option",
-                value: x,
-                text: x.charAt(0).toUpperCase() + x.substring(1),
-                selected: x === (this.dataset.colorScheme ?? "auto")
-            }))
-        }));
-    }
-
-    handleChange = event => {
-        const el = event.target.closest("select");
-        if (el)
-            this.closest("app-element").colorScheme = el.value === "auto" ? null : el.value;
+    contentData() {
+        return [
+            super.contentData(),
+            { $template: "copy" }
+        ];
     }
 }

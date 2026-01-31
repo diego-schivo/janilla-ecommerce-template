@@ -485,7 +485,7 @@
 	],
 	"users": [
 		{
-			"$type": "User",
+			"$type": "UserImpl",
 			"id": 1,
 			"name": "Demo Author",
 			"email": "demo-author@janilla.com",
@@ -493,13 +493,13 @@
 			"hash": "c73c5f4d61cf1f9ef10ec1a0eb7b4d49ddd8ad2bf6815b2b3bf0a07dfb795d1e32eb7a89565bb8f844f85d5cb08b400fe8ea925a1b05f6720453d766a1a6941d",
 			"roles": [
 				{
-					"$type": "UserRole",
+					"$type": "UserRoleImpl",
 					"name": "ADMIN"
 				}
 			]
 		},
 		{
-			"$type": "User",
+			"$type": "UserImpl",
 			"id": 2,
 			"name": "Customer",
 			"email": "customer@example.com",
@@ -507,7 +507,7 @@
 			"hash": "9fd3dc9061b1325907d33f15bee49ed3de5ae11967f7515fa9d6272dc83595776a981bb88fce843d24a1b19fbd37e03bbedbe566477ca5769953e922ab77c90d",
 			"roles": [
 				{
-					"$type": "UserRole",
+					"$type": "UserRoleImpl",
 					"name": "CUSTOMER"
 				}
 			]

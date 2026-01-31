@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
+import com.janilla.blanktemplate.frontend.BlankFrontend;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
@@ -46,7 +47,7 @@ public class EcommerceFrontend extends WebsiteFrontend {
 			EcommerceFrontend a;
 			{
 				var f = new DiFactory(Stream.of("com.janilla.web", EcommerceFrontend.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x).stream()).toList());
+						.flatMap(x -> Java.getPackageClasses(x, true).stream()).toList());
 				a = f.create(EcommerceFrontend.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
@@ -80,9 +81,15 @@ public class EcommerceFrontend extends WebsiteFrontend {
 	}
 
 	@Override
-	protected List<Path> resourcePaths() {
-		return Stream.concat(super.resourcePaths().stream(),
-				Java.getPackagePaths(EcommerceFrontend.class.getPackageName()).stream().filter(Files::isRegularFile))
+	protected Map<String, List<Path>> resourcePaths() {
+		var pp1 = Java.getPackagePaths("com.janilla.frontend.cms", false).filter(Files::isRegularFile).toList();
+		var pp2 = Java.getPackagePaths(BlankFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
 				.toList();
+		var pp3 = Java.getPackagePaths(WebsiteFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+				.toList();
+		var pp4 = Stream
+				.of("com.janilla.frontend", "com.janilla.frontend.resources", EcommerceFrontend.class.getPackageName())
+				.flatMap(x -> Java.getPackagePaths(x, false).filter(Files::isRegularFile)).toList();
+		return Map.of("/cms", pp1, "/blank", pp2, "/website", pp3, "", pp4);
 	}
 }

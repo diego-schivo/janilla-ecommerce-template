@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Janilla Ecommerce Template</title>
+    <title>${title}</title>
     <link rel="icon" href="/images/favicon.svg" />
     <link rel="stylesheet" href="/style.css" />
     <!--${stripe}-->
@@ -15,22 +15,20 @@
     <script type="module" src="/script.js"></script>
   </head>
   <body>
-    <app-element data-api-url="${apiUrl}" data-stripe-publishable-key="${stripePublishableKey}">
+    <app-element data-title="${title}" data-key="${key}" data-api-url="${apiUrl}"
+      data-stripe-publishable-key="${stripePublishableKey}" data-stripe-url="${stripeUrl}">
       <script type="application/json">${state}</script>
-    </app-element>
+    </app-element data-title="${title}" data-key="${key}">
     <!--${templates}-->
-
-    <ssr-template id="stripe">
-      <!--
-      <script src="https://js.stripe.com/clover/stripe.js"></script>
-      -->
-      <script src="https://js.stripe.com/v3"></script>
-    </ssr-template>
 
     <ssr-template id="template">
       <template id="${id}">
         <!--${content}-->
       </template>
+    </ssr-template>
+
+    <ssr-template id="stripe">
+      <script src="${url}"></script>
     </ssr-template>
   </body>
 </html>

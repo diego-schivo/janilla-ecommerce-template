@@ -22,38 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-footer-element {
-  margin-top: auto;
+@import "/website/footer.css";
 
+:where(footer-element) {
   footer {
     background: light-dark(rgb(255, 255, 255), rgb(10, 10, 10));
+    border-top: 0;
     font-size: 0.875rem;
     line-height: 1.4286;
   }
 
   .logo {
     border-top: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
-    display: flex;
-    gap: 1rem;
-    margin: 0 2rem;
+    margin: 0 1rem;
     padding: 3rem 0;
-
-    @media (max-width: 1440px) {
-      flex-direction: column;
-    }
 
     @media (min-width: 1441px) {
       align-items: start;
-      box-sizing: border-box;
       gap: 3rem;
-      margin-left: auto;
-      margin-right: auto;
       max-width: 72.125rem;
-      width: 100%;
-    }
-
-    a:not(:hover) {
-      text-decoration: none;
     }
   }
 
@@ -63,11 +50,17 @@ footer-element {
     width: 1.25rem;
   }
 
-  nav ul {
-    display: flex;
-    flex-direction: column;
+  nav {
+    font-size: 0.875rem;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
   }
 
+  /*
   select,
   ::picker(select) {
     appearance: base-select;
@@ -129,6 +122,17 @@ footer-element {
 
     lucide-icon {
       display: none;
+    }
+  }
+  */
+
+  theme-selector {
+    @media (max-width: 1440px) {
+      align-self: end;
+    }
+
+    @media (min-width: 1441px) {
+      margin-left: auto;
     }
   }
 

@@ -22,16 +22,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.frontend;
+package com.janilla.ecommercetemplate.backend;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
-import com.janilla.blanktemplate.frontend.Index;
-import com.janilla.web.Render;
+import com.janilla.backend.cms.AbstractUserHttpExchange;
+import com.janilla.backend.persistence.Persistence;
+import com.janilla.http.HttpRequest;
+import com.janilla.http.HttpResponse;
 
-@Render(template = "index.html")
-public record EcommerceIndex(@Render(renderer = JsonRenderer.class) Map<String, String> imports, String apiUrl,
-		@Render(renderer = StateRenderer.class) Map<String, Object> state, List<Template> templates,
-		@Render(template = "stripe") Object stripe, String stripePublishableKey) implements Index {
+public class BackendHttpExchange extends AbstractUserHttpExchange<UserImpl> {
+
+	public BackendHttpExchange(HttpRequest request, HttpResponse response, Properties configuration,
+			String configurationKey, Persistence persistence) {
+		super(request, response, configuration.getProperty(configurationKey + ".jwt.cookie"),
+				configuration.getProperty(configurationKey + ".jwt.key"), persistence.crud(UserImpl.class));
+	}
 }

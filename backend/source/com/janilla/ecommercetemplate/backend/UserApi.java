@@ -22,5 +22,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "admin.css";
-@import "cms-variant-options.css";
+package com.janilla.ecommercetemplate.backend;
+
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import com.janilla.backend.cms.AbstractUserApi;
+import com.janilla.backend.persistence.Persistence;
+import com.janilla.blanktemplate.backend.BackendHttpExchange;
+import com.janilla.http.HttpExchange;
+import com.janilla.web.Handle;
+
+@Handle(path = "/api/users")
+public class UserApi extends AbstractUserApi<Long, UserImpl, UserRoleImpl> {
+
+	public UserApi(Predicate<HttpExchange> drafts, Persistence persistence, Properties configuration,
+			String configurationKey) {
+		super(UserImpl.class, drafts, persistence, configuration.getProperty(configurationKey + ".jwt.key"));
+	}
+
+	@Handle(method = "POST")
+	public UserImpl create(CreateData<UserImpl> data, BackendHttpExchange exchange) {
+		if (exchange.sessionUser() == null) {
+			var u = data.user().withRoles(Set.of(UserRoleImpl.CUSTOMER));
+			data = data.withUser(u);
+		}
+		return super.create(data);
+	}
+}

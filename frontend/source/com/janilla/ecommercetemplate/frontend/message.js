@@ -26,6 +26,10 @@ import WebComponent from "web-component";
 
 export default class Message extends WebComponent {
 
+    static get moduleUrl() {
+        return import.meta.url;
+    }
+
     static get templateNames() {
         return ["message"];
     }

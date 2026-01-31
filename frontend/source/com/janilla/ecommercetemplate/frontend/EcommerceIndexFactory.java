@@ -45,25 +45,46 @@ public class EcommerceIndexFactory extends WebsiteIndexFactory {
 
 	@Override
 	public Index index(HttpExchange exchange) {
-		return new EcommerceIndex(imports(), configuration.getProperty(configurationKey + ".api.url"), state(exchange),
-				templates(), null, configuration.getProperty(configurationKey + ".stripe.publishable-key"));
+		return new IndexImpl(configuration.getProperty(configurationKey + ".title"), imports(), configurationKey,
+				configuration.getProperty(configurationKey + ".api.url"), state(exchange), templates(), null,
+				configuration.getProperty(configurationKey + ".stripe.publishable-key"),
+				configuration.getProperty(configurationKey + ".stripe.url"));
+	}
+
+	@Override
+	public Template websiteTemplate(String name) {
+		return template("website/" + name);
+	}
+
+	public Template ecommerceTemplate(String name) {
+		return template(name);
 	}
 
 	@Override
 	protected void putImports(Map<String, String> map) {
 		super.putImports(map);
-		Stream.of("admin-fields").forEach(x -> map.put(x, "/custom-" + x + ".js"));
-		Stream.of("account", "account-nav", "address-edit", "address-item", "addresses", "admin-variant-options",
-				"card", "cart-modal", "checkout", "checkout-addresses", "confirm-order", "create-account",
-				"create-address-modal", "find-order", "intl-format", "loading-spinner", "login", "logout", "message",
+		Stream.of("account", "account-nav", "address-edit", "address-item", "addresses", "admin",
+				"admin-create-first-user", "admin-fields", "admin-variant-options", "app", "card", "cart-modal",
+				"checkout", "checkout-addresses", "confirm-order", "create-account", "create-address-modal",
+				"find-order", "footer", "header", "intl-format", "loading-spinner", "login", "logout", "message",
 				"mobile-menu", "order", "order-item", "orders", "payment", "price", "product", "product-description",
-				"product-gallery", "product-item", "select", "shop", "variant-selector")
+				"product-gallery", "product-item", "select", "shop", "variant-selector").map(this::ecommerceImportKey)
 				.forEach(x -> map.put(x, "/" + x + ".js"));
+	}
+
+	@Override
+	protected String websiteImportKey(String name) {
+		return "website/" + name;
+	}
+
+	protected String ecommerceImportKey(String name) {
+		return name;
 	}
 
 	@Override
 	protected void addTemplates(List<Template> list) {
 		super.addTemplates(list);
-		Stream.of("cart-modal", "mobile-menu", "toaster").map(this::template).forEach(list::add);
+		Stream.of("toaster").map(this::frontendTemplate).forEach(list::add);
+		Stream.of("app", "cart-modal", "mobile-menu").map(this::ecommerceTemplate).forEach(list::add);
 	}
 }

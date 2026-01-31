@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
-import com.janilla.blanktemplate.backend.BlankBackendHttpExchange;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
@@ -45,12 +45,12 @@ public class OrderApi extends CollectionApi<Long, Order> {
 	}
 
 	@Handle(method = "GET")
-	public List<Order> read(Long customer, BlankBackendHttpExchange exchange) {
-		var u = (EcommerceUser) exchange.sessionUser();
-		if (u == null || !(u.hasRole(EcommerceUserRole.ADMIN) || u.hasRole(EcommerceUserRole.CUSTOMER)))
+	public List<Order> read(Long customer, UserHttpExchange<UserImpl> exchange) {
+		var u = (UserImpl) exchange.sessionUser();
+		if (u == null || !(u.hasRole(UserRoleImpl.ADMIN) || u.hasRole(UserRoleImpl.CUSTOMER)))
 			throw new UnauthorizedException();
 
-		if (u.hasRole(EcommerceUserRole.CUSTOMER)) {
+		if (u.hasRole(UserRoleImpl.CUSTOMER)) {
 			if (customer == null)
 				customer = u.id();
 			else if (!customer.equals(u.id()))
@@ -65,12 +65,13 @@ public class OrderApi extends CollectionApi<Long, Order> {
 
 	@Override
 	public Order read(Long id, HttpExchange exchange) {
-		var u = (EcommerceUser) ((BlankBackendHttpExchange) exchange).sessionUser();
-		if (u == null || !(u.hasRole(EcommerceUserRole.ADMIN) || u.hasRole(EcommerceUserRole.CUSTOMER)))
+		@SuppressWarnings("unchecked")
+		var u = ((UserHttpExchange<UserImpl>) exchange).sessionUser();
+		if (u == null || !(u.hasRole(UserRoleImpl.ADMIN) || u.hasRole(UserRoleImpl.CUSTOMER)))
 			throw new UnauthorizedException();
 
 		var o = super.read(id, exchange);
-		if (u.hasRole(EcommerceUserRole.CUSTOMER) && !u.id().equals(o.customer()))
+		if (u.hasRole(UserRoleImpl.CUSTOMER) && !u.id().equals(o.customer()))
 			throw new ForbiddenException();
 		return o;
 	}

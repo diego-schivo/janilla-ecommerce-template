@@ -36,7 +36,7 @@ import com.janilla.backend.persistence.Store;
 
 @Store
 public record Transaction(Long id, List<CartItem> items, PaymentMethod paymentMethod, AddressData billingAddress,
-		Status status, @Types(EcommerceUser.class) Long customer, String customerEmail, @Types(Order.class) Long order,
+		Status status, @Types(UserImpl.class) Long customer, String customerEmail, @Types(Order.class) Long order,
 		@Types(Cart.class) Long cart, BigDecimal amount, Currency currency, String stripeCustomer,
 		@Index String stripePaymentIntent, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
 		Instant publishedAt) implements Document<Long> {

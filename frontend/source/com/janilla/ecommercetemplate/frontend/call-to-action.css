@@ -22,29 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-call-to-action {
-  article,
-  section {
-    display: flex;
-    flex-direction: column;
-  }
-  
+@import "/website/call-to-action.css";
+
+:where(call-to-action) {
   article {
     background: light-dark(rgb(244, 244, 245), rgb(20, 20, 20));
     border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
-    border-radius: 0.2rem;
     gap: 1rem;
-    padding: 1rem;
-
-    @media (max-width: 1440px) {
-      margin: 0 2rem;
-    }
-
-    @media (min-width: 1441px) {
-      align-items: center;
-      flex-direction: row;
-      justify-content: space-between;
-    }
   }
 
   p {
@@ -55,10 +39,9 @@ call-to-action {
     }
   }
 
-  section {
-    > .button {
-      padding-left: 2rem;
-      padding-right: 2rem;
+  link-element {
+    .button {
+      display: block;
     }
   }
 }

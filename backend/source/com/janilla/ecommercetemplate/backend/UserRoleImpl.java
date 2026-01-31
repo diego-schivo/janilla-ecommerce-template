@@ -26,7 +26,7 @@ package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.cms.UserRole;
 
-public enum EcommerceUserRole implements UserRole {
+public enum UserRoleImpl implements UserRole {
 
 	ADMIN, CUSTOMER
 }

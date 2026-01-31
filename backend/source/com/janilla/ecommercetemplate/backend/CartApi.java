@@ -27,8 +27,9 @@ package com.janilla.ecommercetemplate.backend;
 import java.util.function.Predicate;
 
 import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
-import com.janilla.blanktemplate.backend.BlankBackendHttpExchange;
+import com.janilla.blanktemplate.backend.UserImpl;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
@@ -42,16 +43,16 @@ public class CartApi extends CollectionApi<Long, Cart> {
 	}
 
 	@Handle(method = "POST")
-	public Cart create(Cart entity, BlankBackendHttpExchange exchange) {
+	public Cart create(Cart entity, UserHttpExchange<UserImpl> exchange) {
 		var e = entity;
-		var u = (EcommerceUser) exchange.sessionUser();
+		var u = exchange.sessionUser();
 		if (u != null)
 			e = entity.withCustomer(u.id());
 		return super.create(e);
 	}
 
 	@Handle(method = "GET", path = "(\\d+)")
-	public Cart read(Long id, String secret, BlankBackendHttpExchange exchange) {
+	public Cart read(Long id, String secret, UserHttpExchange<UserImpl> exchange) {
 		var u = exchange.sessionUser();
 		if (u == null && (secret == null || secret.isBlank()))
 			throw new UnauthorizedException();

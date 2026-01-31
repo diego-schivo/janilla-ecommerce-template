@@ -22,49 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@import "/website/content.css";
+
 content-element {
   line-height: 1.75;
 
-  article {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-
-    @media (max-width: 1440px) {
-      padding: 0 2rem;
-    }
-
-    @media (min-width: 1441px) {
-      column-gap: 4rem;
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-    }
-  }
-
-  section {
-    &[data-size="ONE_THIRD"] {
-      grid-column: span 2;
-    }
-
-    &[data-size="HALF"] {
-      grid-column: span 3;
-    }
-
-    &[data-size="TWO_THIRDS"] {
-      grid-column: span 4;
-    }
-
-    &[data-size="FULL"] {
-      grid-column: span 6;
-    }
-  }
-
   h1 {
     font-weight: 800;
-  }
-
-  h2 {
-    line-height: 1.3333;
   }
 
   a {

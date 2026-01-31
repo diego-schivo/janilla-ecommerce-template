@@ -38,7 +38,6 @@ import com.janilla.backend.sqlite.SqliteDatabase;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Property;
 import com.janilla.java.TypeResolver;
-import com.janilla.websitetemplate.backend.SeedData;
 import com.janilla.websitetemplate.backend.WebsitePersistence;
 
 public class EcommercePersistence extends WebsitePersistence {
@@ -57,7 +56,7 @@ public class EcommercePersistence extends WebsitePersistence {
 				t = CartCrudObserver.class;
 			else if (type == Product.class)
 				t = ProductCrudObserver.class;
-			else if (type == EcommerceUser.class)
+			else if (type == UserImpl.class)
 				t = UserCrudObserver.class;
 			else if (type == VariantType.class)
 				t = VariantTypeCrudObserver.class;

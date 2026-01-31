@@ -1,6 +1,3 @@
-<!--${site}-->
-<!--${admin}-->
-
 <template id="site">
   <!--${adminBar}-->
   <div data-color-scheme="${colorScheme}">
@@ -9,14 +6,6 @@
     <!--${footer}-->
   </div>
   <toaster-element></toaster-element>
-</template>
-
-<template id="admin-bar">
-  <admin-bar data-user-email="${userEmail}"></admin-bar>
-</template>
-
-<template id="header">
-  <header-element data-path="${path}"></header-element>
 </template>
 
 <template id="account">
@@ -51,20 +40,12 @@
   <logout-element class="login" data-no-op="${noOp}"></logout-element>
 </template>
 
-<template id="not-found">
-  <not-found></not-found>
-</template>
-
 <template id="order">
   <order-element class="account" data-id="${id}"></order-element>
 </template>
 
 <template id="orders">
   <orders-element class="account"></orders-element>
-</template>
-
-<template id="page">
-  <page-element data-slug="${slug}"></page-element>
 </template>
 
 <template id="product">
@@ -77,12 +58,4 @@
 
 <template id="shop">
   <shop-element data-query="${query}" data-category="${category}" data-sort="${sort}"></shop-element>
-</template>
-
-<template id="footer">
-  <footer-element data-color-scheme="${colorScheme}"></footer-element>
-</template>
-
-<template id="admin">
-  <admin-element class="admin" data-user="${user}" data-path="${path}"></admin-element>
 </template>

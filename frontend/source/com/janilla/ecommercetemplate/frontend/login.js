@@ -26,6 +26,10 @@ import WebComponent from "web-component";
 
 export default class Login extends WebComponent {
 
+    static get moduleUrl() {
+        return import.meta.url;
+    }
+
     static get templateNames() {
         return ["login"];
     }

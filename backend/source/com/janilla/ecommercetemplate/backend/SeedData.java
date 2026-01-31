@@ -34,6 +34,6 @@ import com.janilla.websitetemplate.backend.Page;
 
 public record SeedData(List<Address> addresses, List<Cart> carts, List<Category> categories, Footer footer,
 		Header header, List<Media> media, List<Order> orders, List<Page> pages, List<Product> products,
-		List<Transaction> transactions, List<EcommerceUser> users, List<VariantOption> variantOptions,
+		List<Transaction> transactions, List<UserImpl> users, List<VariantOption> variantOptions,
 		List<VariantType> variantTypes, List<Variant> variants) {
 }

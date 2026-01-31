@@ -26,6 +26,10 @@ import WebComponent from "web-component";
 
 export default class Addresses extends WebComponent {
 
+    static get moduleUrl() {
+        return import.meta.url;
+    }
+
     static get templateNames() {
         return ["addresses"];
     }
@@ -48,8 +52,8 @@ export default class Addresses extends WebComponent {
 
     async updateDisplay() {
         const s = this.customState;
-		const a = this.closest("app-element");
-		a.updateSeo({ title: "Addresses" });
+        const a = this.closest("app-element");
+        a.updateSeo({ title: "Addresses" });
         this.appendChild(this.interpolateDom({
             $template: "",
             nav: {

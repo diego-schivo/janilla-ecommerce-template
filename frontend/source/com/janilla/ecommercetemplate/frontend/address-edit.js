@@ -26,31 +26,35 @@ import WebComponent from "web-component";
 
 export default class AddressEdit extends WebComponent {
 
-	static get templateNames() {
-		return ["address-edit"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-id"];
-	}
+    static get templateNames() {
+        return ["address-edit"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-id"];
+    }
 
-	async updateDisplay() {
-		const a = this.closest("app-element");
-		const u = a.currentUser;
-		const a2 = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : u ? { customer: u.id } : {};
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			title: a2?.id ? "Edit address" : "Add a new address",
-			form: {
-				$template: "form",
-				...a2,
-				titleValues: await a.enumValues("Title"),
-				countryValues: await a.enumValues("Country")
-			}
-		}));
-	}
+    constructor() {
+        super();
+    }
+
+    async updateDisplay() {
+        const a = this.closest("app-element");
+        const u = a.currentUser;
+        const a2 = this.dataset.id ? u.addresses.find(x => x.id == this.dataset.id) : u ? { customer: u.id } : {};
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            title: a2?.id ? "Edit address" : "Add a new address",
+            form: {
+                $template: "form",
+                ...a2,
+                titleValues: await a.enumValues("Title"),
+                countryValues: await a.enumValues("Country")
+            }
+        }));
+    }
 }

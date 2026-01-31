@@ -22,6 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@import "/website/not-found.css";
+
+:where(not-found) {
+  display: block;
+  margin: 0;
+  padding: 7rem 1rem;
+
+  h1 {
+    font-size: 4rem;
+  }
+}
+
+/*
 div:has(> not-found) {
   gap: 6.5rem;
 }
@@ -48,3 +61,4 @@ not-found {
     height: 2.25rem;
   }
 }
+*/

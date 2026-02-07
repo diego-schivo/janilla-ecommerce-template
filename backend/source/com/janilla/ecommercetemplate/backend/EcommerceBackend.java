@@ -39,7 +39,6 @@ import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.SecureServer;
 import com.janilla.web.Handle;
-import com.janilla.websitetemplate.backend.Data;
 import com.janilla.websitetemplate.backend.WebsiteBackend;
 
 public class EcommerceBackend extends WebsiteBackend {
@@ -64,7 +63,7 @@ public class EcommerceBackend extends WebsiteBackend {
 				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
-				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey() + ".backend.server.port"));
+				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey() + ".server.port"));
 				s = a.diFactory.create(HttpServer.class,
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}

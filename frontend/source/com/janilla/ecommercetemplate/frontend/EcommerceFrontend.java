@@ -62,7 +62,7 @@ public class EcommerceFrontend extends WebsiteFrontend {
 				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
-				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.frontend.server.port"));
+				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.server.port"));
 				s = a.diFactory.create(HttpServer.class,
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}

@@ -44,7 +44,7 @@ public class EcommerceFullstack extends WebsiteFullstack {
 		var f = new DiFactory(Stream
 				.of(BlankFullstack.class.getPackageName(), WebsiteFullstack.class.getPackageName(),
 						EcommerceFullstack.class.getPackageName())
-				.flatMap(x -> Java.getPackageClasses(x, true).stream()).toList(), "fullstack");
+				.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList(), "fullstack");
 		serve(f, EcommerceFullstack.class, args.length > 0 ? args[0] : null);
 	}
 
@@ -60,7 +60,7 @@ public class EcommerceFullstack extends WebsiteFullstack {
 	protected List<Class<?>> backendTypes() {
 		return Stream.concat(super.backendTypes().stream(),
 				Stream.of(EcommerceBackend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, true).stream()))
+						.flatMap(x -> Java.getPackageClasses(x, false).stream()))
 				.toList();
 	}
 
@@ -68,7 +68,7 @@ public class EcommerceFullstack extends WebsiteFullstack {
 	protected List<Class<?>> frontendTypes() {
 		return Stream.concat(super.frontendTypes().stream(),
 				Stream.of(EcommerceFrontend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, true).stream()))
+						.flatMap(x -> Java.getPackageClasses(x, false).stream()))
 				.toList();
 	}
 

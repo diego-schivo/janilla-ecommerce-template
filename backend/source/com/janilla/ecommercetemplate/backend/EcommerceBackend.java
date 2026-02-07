@@ -49,7 +49,7 @@ public class EcommerceBackend extends WebsiteBackend {
 			EcommerceBackend a;
 			{
 				var f = new DiFactory(Stream.of("com.janilla.web", EcommerceBackend.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, true).stream()).toList());
+						.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
 				a = f.create(EcommerceBackend.class,
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(

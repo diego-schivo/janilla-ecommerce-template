@@ -2,6 +2,10 @@
 
 This is a porting of [Payload Ecommerce Template](https://github.com/payloadcms/payload/tree/main/templates/ecommerce).
 
+### View a live demo
+
+Open a browser and navigate to <https://ecommerce-template.janilla.com/>.
+
 ### How you can get started
 
 > **_Note:_**  if you are unfamiliar with the terminal, you can set up the project in an IDE (section below).

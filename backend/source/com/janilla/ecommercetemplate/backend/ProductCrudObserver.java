@@ -37,7 +37,7 @@ public class ProductCrudObserver implements CrudObserver<Product> {
 
 	@Override
 	public Product afterRead(Product entity) {
-		var xx = persistence.crud(Variant.class).filter("product", entity.id());
+		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity.id() });
 		return entity.withVariants(xx);
 	}
 
@@ -55,7 +55,7 @@ public class ProductCrudObserver implements CrudObserver<Product> {
 
 	@Override
 	public void afterUpdate(Product entity1, Product entity2) {
-		var xx = persistence.crud(Variant.class).filter("product", entity1.id());
+		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity1.id() });
 		if (entity2.variants() != null)
 			xx = xx.stream().filter(x -> !entity2.variants().contains(x)).toList();
 		persistence.crud(Variant.class).delete(xx);
@@ -63,7 +63,7 @@ public class ProductCrudObserver implements CrudObserver<Product> {
 
 	@Override
 	public void afterDelete(Product entity) {
-		var xx = persistence.crud(Variant.class).filter("product", entity.id());
+		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity.id() });
 		persistence.crud(Variant.class).delete(xx);
 	}
 }

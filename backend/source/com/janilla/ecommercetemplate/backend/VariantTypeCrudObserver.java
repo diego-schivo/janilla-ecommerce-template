@@ -37,7 +37,7 @@ public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 
 	@Override
 	public VariantType afterRead(VariantType entity) {
-		var xx = persistence.crud(VariantOption.class).filter("type", entity.id());
+		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity.id() });
 		return entity.withOptions(xx);
 	}
 
@@ -55,7 +55,7 @@ public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 
 	@Override
 	public void afterUpdate(VariantType entity1, VariantType entity2) {
-		var xx = persistence.crud(VariantOption.class).filter("type", entity1.id());
+		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity1.id() });
 		if (entity2.options() != null)
 			xx = xx.stream().filter(x -> !entity2.options().contains(x)).toList();
 		persistence.crud(VariantOption.class).delete(xx);
@@ -63,7 +63,7 @@ public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 
 	@Override
 	public void afterDelete(VariantType entity) {
-		var xx = persistence.crud(VariantOption.class).filter("type", entity.id());
+		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity.id() });
 		persistence.crud(VariantOption.class).delete(xx);
 	}
 }

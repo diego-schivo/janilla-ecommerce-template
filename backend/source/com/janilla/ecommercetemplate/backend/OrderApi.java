@@ -57,8 +57,9 @@ public class OrderApi extends CollectionApi<Long, Order> {
 				throw new ForbiddenException();
 		}
 
-		var oo = new ArrayList<>(crud().read(customer != null ? crud().filter("customer", customer) : crud().list(),
-				drafts.test(exchange)));
+		var oo = new ArrayList<>(
+				crud().read(customer != null ? crud().filter("customer", new Object[] { customer }) : crud().list(),
+						drafts.test(exchange)));
 		Collections.reverse(oo);
 		return oo;
 	}

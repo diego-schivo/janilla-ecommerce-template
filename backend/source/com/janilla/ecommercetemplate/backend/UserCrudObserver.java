@@ -38,9 +38,9 @@ public class UserCrudObserver implements CrudObserver<UserImpl> {
 	@Override
 	public UserImpl afterRead(UserImpl entity) {
 		var e = entity;
-		var cc = persistence.crud(Cart.class).filter("customer", e.id());
+		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { e.id() });
 		e = e.withCarts(cc);
-		var aa = persistence.crud(Address.class).filter("customer", e.id());
+		var aa = persistence.crud(Address.class).filter("customer", new Object[] { e.id() });
 		e = e.withAddresses(aa);
 		return e;
 	}
@@ -75,9 +75,9 @@ public class UserCrudObserver implements CrudObserver<UserImpl> {
 
 	@Override
 	public void afterDelete(UserImpl entity) {
-		var cc = persistence.crud(Cart.class).filter("customer", entity.id());
+		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { entity.id() });
 		persistence.crud(Cart.class).delete(cc);
-		var aa = persistence.crud(Address.class).filter("customer", entity.id());
+		var aa = persistence.crud(Address.class).filter("customer", new Object[] { entity.id() });
 		persistence.crud(Address.class).delete(aa);
 	}
 }

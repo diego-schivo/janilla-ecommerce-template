@@ -33,14 +33,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Bind;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/products")
-public class ProductApi extends CollectionApi<Long, Product> {
+public class ProductApi extends AbstractCollectionApi<Long, Product> {
 
 	public static final AtomicReference<ProductApi> INSTANCE = new AtomicReference<>();
 
@@ -49,11 +49,6 @@ public class ProductApi extends CollectionApi<Long, Product> {
 		if (!INSTANCE.compareAndSet(null, this))
 			throw new IllegalStateException();
 	}
-
-//	@Override
-//	public List<Product> read(Long skip, Long limit) {
-//		throw new UnsupportedOperationException();
-//	}
 
 	@Handle(method = "GET")
 	public List<Product> read(String slug, @Bind("q") String query, @Bind("category") Long[] categories, String sort,
@@ -68,7 +63,7 @@ public class ProductApi extends CollectionApi<Long, Product> {
 				m.put(d ? "slugDraft" : "slug", new Object[] { slug });
 			if (categories != null && categories.length != 0)
 				m.put("categories", categories);
-			pp = crud().read(!m.isEmpty() ? crud().filter(m, 0, -1).ids() : crud().list(), d).stream();
+			pp = crud().read(!m.isEmpty() ? crud().filter(m, 0, -1).elements() : crud().list(), d).stream();
 		}
 		pp = query != null && !query.isBlank() ? pp.filter(x -> {
 			var m = x.meta();

@@ -26,7 +26,6 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.channels.Channels;
@@ -38,7 +37,6 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.crypto.Mac;
@@ -47,7 +45,6 @@ import javax.crypto.spec.SecretKeySpec;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpRequest;
-import com.janilla.http.HttpResponse;
 import com.janilla.java.Converter;
 import com.janilla.java.SimpleParameterizedType;
 import com.janilla.java.UriQueryBuilder;
@@ -60,13 +57,13 @@ public class StripeApi extends PaymentApi {
 
 	protected final String secretKey = configuration.getProperty("ecommerce-template.stripe.secret-key");
 
-	protected final Function<HttpResponse, Object> json = x -> {
-		try {
-			return Json.parse(new String(Channels.newInputStream((ReadableByteChannel) x.getBody()).readAllBytes()));
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	};
+//	protected final Function<HttpResponse, Object> json = x -> {
+//		try {
+//			return Json.parse(new String(Channels.newInputStream((ReadableByteChannel) x.getBody()).readAllBytes()));
+//		} catch (IOException e) {
+//			throw new UncheckedIOException(e);
+//		}
+//	};
 
 	public StripeApi(Properties configuration, Persistence persistence) {
 		super(configuration, persistence);
@@ -84,7 +81,7 @@ public class StripeApi extends PaymentApi {
 			var rq = new HttpRequest("GET", URI.create("https://api.stripe.com/v1/customers?"
 					+ new UriQueryBuilder().append("email", user != null ? user.email() : guestEmail)));
 			rq.setBasicAuthorization(secretKey + ":");
-			var r = new HttpClient().send(rq, json.andThen(x -> (R) new Converter().convert(x, R.class)));
+			var r = new HttpClient().send(rq, HttpClient.JSON.andThen(x -> (R) new Converter().convert(x, R.class)));
 //			IO.println("r=" + r);
 			c = !r.data().isEmpty() ? r.data().getFirst() : null;
 		}
@@ -97,7 +94,7 @@ public class StripeApi extends PaymentApi {
 			rq.setHeaderValue("content-type", "application/x-www-form-urlencoded");
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));
-			c = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, C.class)));
+			c = new HttpClient().send(rq, HttpClient.JSON.andThen(x -> new Converter().convert(x, C.class)));
 //			IO.println("c=" + c);
 		}
 
@@ -110,8 +107,7 @@ public class StripeApi extends PaymentApi {
 			var q = new UriQueryBuilder()
 					.append("amount", String.valueOf(cart.subtotal().multiply(BigDecimal.valueOf(100)).longValue()))
 					.append("automatic_payment_methods[enabled]", "true")
-					.append("currency", cart.currency().toString().toLowerCase())
-					.append("customer", c.id())
+					.append("currency", cart.currency().toString().toLowerCase()).append("customer", c.id())
 					.append("metadata[cartId]", cart.id().toString())
 					.append("metadata[cartItems]", Json.format(cart.items(), true))
 					.append("metadata[shippingAddress]", Json.format(shippingAddress, true)).toString();
@@ -120,7 +116,7 @@ public class StripeApi extends PaymentApi {
 			rq.setHeaderValue("content-type", "application/x-www-form-urlencoded");
 			rq.setHeaderValue("content-length", String.valueOf(bb.length));
 			rq.setBody(Channels.newChannel(new ByteArrayInputStream(bb)));
-			pi = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, PI.class)));
+			pi = new HttpClient().send(rq, HttpClient.JSON.andThen(x -> new Converter().convert(x, PI.class)));
 //			IO.println("pi=" + pi);
 		}
 
@@ -146,7 +142,7 @@ public class StripeApi extends PaymentApi {
 		{
 			var rq = new HttpRequest("GET", URI.create("https://api.stripe.com/v1/payment_intents/" + paymentIntent));
 			rq.setBasicAuthorization(configuration.getProperty("ecommerce-template.stripe.secret-key") + ":");
-			pi = new HttpClient().send(rq, json.andThen(x -> new Converter().convert(x, PI.class)));
+			pi = new HttpClient().send(rq, HttpClient.JSON.andThen(x -> new Converter().convert(x, PI.class)));
 //			IO.println("pi=" + pi);
 		}
 

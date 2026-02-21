@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="index">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,7 @@
     <!--${stripe}-->
     <script type="importmap">
       {
-        "imports": ${imports}
+        "imports": <!--${imports}-->
       }
     </script>
     <script type="module" src="/script.js"></script>
@@ -17,8 +17,10 @@
   <body>
     <app-element data-title="${title}" data-key="${key}" data-api-url="${apiUrl}"
       data-stripe-publishable-key="${stripePublishableKey}" data-stripe-url="${stripeUrl}">
-      <script type="application/json">${state}</script>
-    </app-element data-title="${title}" data-key="${key}">
+      <script type="application/json">
+        <!--${state}-->
+      </script>
+    </app-element>
     <!--${templates}-->
 
     <ssr-template id="template">

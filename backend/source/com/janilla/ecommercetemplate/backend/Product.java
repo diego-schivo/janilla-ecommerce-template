@@ -28,12 +28,12 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import com.janilla.backend.cms.Document;
-import com.janilla.backend.cms.DocumentStatus;
 import com.janilla.backend.cms.Types;
 import com.janilla.backend.cms.Versions;
-import com.janilla.backend.persistence.Index;
-import com.janilla.backend.persistence.Store;
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
 import com.janilla.websitetemplate.backend.CallToAction;
 import com.janilla.websitetemplate.backend.Category;
 import com.janilla.websitetemplate.backend.Content;

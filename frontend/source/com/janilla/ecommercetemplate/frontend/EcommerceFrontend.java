@@ -27,6 +27,7 @@ package com.janilla.ecommercetemplate.frontend;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -42,13 +43,17 @@ import com.janilla.websitetemplate.frontend.WebsiteFrontend;
 
 public class EcommerceFrontend extends WebsiteFrontend {
 
+	public static final String[] DI_PACKAGES = Stream
+			.concat(Arrays.stream(WebsiteFrontend.DI_PACKAGES), Stream.of("com.janilla.ecommercetemplate.frontend"))
+			.toArray(String[]::new);
+
 	public static void main(String[] args) {
 		try {
 			EcommerceFrontend a;
 			{
-				var f = new DiFactory(Stream.of("com.janilla.web", EcommerceFrontend.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
-				a = f.create(EcommerceFrontend.class,
+				var f = new DiFactory(
+						Arrays.stream(DI_PACKAGES).flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
+				a = f.create(f.actualType(EcommerceFrontend.class),
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -63,7 +68,7 @@ public class EcommerceFrontend extends WebsiteFrontend {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.server.port"));
-				s = a.diFactory.create(HttpServer.class,
+				s = a.diFactory.create(a.diFactory.actualType(HttpServer.class),
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}
 			s.serve();
@@ -82,14 +87,14 @@ public class EcommerceFrontend extends WebsiteFrontend {
 
 	@Override
 	protected Map<String, List<Path>> resourcePaths() {
-		var pp1 = Java.getPackagePaths("com.janilla.frontend.cms", false).filter(Files::isRegularFile).toList();
-		var pp2 = Java.getPackagePaths(BlankFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+		var pp1 = Java.getPackagePaths("com.janilla.frontend", false).filter(Files::isRegularFile).toList();
+		var pp2 = Java.getPackagePaths("com.janilla.frontend.cms", false).filter(Files::isRegularFile).toList();
+		var pp3 = Java.getPackagePaths(BlankFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
 				.toList();
-		var pp3 = Java.getPackagePaths(WebsiteFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+		var pp4 = Java.getPackagePaths(WebsiteFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
 				.toList();
-		var pp4 = Stream
-				.of("com.janilla.frontend", "com.janilla.frontend.resources", EcommerceFrontend.class.getPackageName())
-				.flatMap(x -> Java.getPackagePaths(x, false).filter(Files::isRegularFile)).toList();
-		return Map.of("/cms", pp1, "/blank", pp2, "/website", pp3, "", pp4);
+		var pp5 = Java.getPackagePaths(EcommerceFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+				.toList();
+		return Map.of("/base", pp1, "/cms", pp2, "/blank", pp3, "/website", pp4, "", pp5);
 	}
 }

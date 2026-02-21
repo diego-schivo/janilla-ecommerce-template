@@ -43,13 +43,17 @@ import com.janilla.websitetemplate.backend.WebsiteBackend;
 
 public class EcommerceBackend extends WebsiteBackend {
 
+	public static final String[] DI_PACKAGES = Stream
+			.concat(Arrays.stream(WebsiteBackend.DI_PACKAGES), Stream.of("com.janilla.ecommercetemplate.backend"))
+			.toArray(String[]::new);
+
 	public static void main(String[] args) {
 		try {
 			EcommerceBackend a;
 			{
-				var f = new DiFactory(Stream.of("com.janilla.web", EcommerceBackend.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
-				a = f.create(EcommerceBackend.class,
+				var f = new DiFactory(
+						Arrays.stream(DI_PACKAGES).flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
+				a = f.create(f.actualType(EcommerceBackend.class),
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -64,7 +68,7 @@ public class EcommerceBackend extends WebsiteBackend {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey() + ".server.port"));
-				s = a.diFactory.create(HttpServer.class,
+				s = a.diFactory.create(a.diFactory.actualType(HttpServer.class),
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}
 			s.serve();

@@ -26,13 +26,13 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.function.Predicate;
 
-import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/variant-options")
-public class VariantOptionApi extends CollectionApi<Long, VariantOption> {
+public class VariantOptionApi extends AbstractCollectionApi<Long, VariantOption> {
 
 	public VariantOptionApi(Predicate<HttpExchange> drafts, Persistence persistence) {
 		super(VariantOption.class, drafts, persistence);

@@ -26,13 +26,13 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.function.Predicate;
 
-import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/transactions")
-public class TransactionApi extends CollectionApi<Long, Transaction> {
+public class TransactionApi extends AbstractCollectionApi<Long, Transaction> {
 
 	public TransactionApi(Predicate<HttpExchange> drafts, Persistence persistence) {
 		super(Transaction.class, drafts, persistence);

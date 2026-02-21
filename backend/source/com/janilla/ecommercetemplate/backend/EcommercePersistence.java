@@ -33,11 +33,11 @@ import java.util.stream.Stream;
 
 import com.janilla.backend.persistence.Crud;
 import com.janilla.backend.persistence.CrudObserver;
-import com.janilla.backend.persistence.Entity;
 import com.janilla.backend.sqlite.SqliteDatabase;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Property;
 import com.janilla.java.TypeResolver;
+import com.janilla.persistence.Entity;
 import com.janilla.websitetemplate.backend.WebsitePersistence;
 
 public class EcommercePersistence extends WebsitePersistence {

@@ -26,7 +26,7 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.function.Predicate;
 
-import com.janilla.backend.cms.CollectionApi;
+import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.blanktemplate.backend.UserImpl;
@@ -36,7 +36,7 @@ import com.janilla.web.Handle;
 import com.janilla.web.UnauthorizedException;
 
 @Handle(path = "/api/carts")
-public class CartApi extends CollectionApi<Long, Cart> {
+public class CartApi extends AbstractCollectionApi<Long, Cart> {
 
 	public CartApi(Predicate<HttpExchange> drafts, Persistence persistence) {
 		super(Cart.class, drafts, persistence);

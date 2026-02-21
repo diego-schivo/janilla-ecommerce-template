@@ -41,7 +41,7 @@ export default class App extends WebsiteApp {
         const s = this.customState;
 
         const u0 = this.currentUser;
-        const p = this.currentPath;
+        const p = location.pathname;
 
         if (u0)
             switch (p) {
@@ -70,7 +70,7 @@ export default class App extends WebsiteApp {
     contentData() {
         const s = this.customState;
         if (!s.notFound) {
-            const p = this.currentPath;
+            const p = location.pathname;
             const spp = new URLSearchParams(location.search);
             switch (p) {
                 case "/account":

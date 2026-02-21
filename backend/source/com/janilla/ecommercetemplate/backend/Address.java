@@ -26,12 +26,12 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.time.Instant;
 
-import com.janilla.backend.cms.Document;
-import com.janilla.backend.cms.DocumentStatus;
 import com.janilla.backend.cms.Types;
-import com.janilla.backend.persistence.Index;
-import com.janilla.backend.persistence.Store;
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
 import com.janilla.java.Flat;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
 
 @Store
 public record Address(Long id, @Index @Types(UserImpl.class) Long customer, @Flat AddressData data, Instant createdAt,

@@ -67,7 +67,7 @@ public class EcommerceBackend extends WebsiteBackend {
 				try (var x = SecureServer.class.getResourceAsStream("localhost")) {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
-				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey() + ".server.port"));
+				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey + ".server.port"));
 				s = a.diFactory.create(a.diFactory.actualType(HttpServer.class),
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}

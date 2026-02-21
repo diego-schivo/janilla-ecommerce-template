@@ -4,7 +4,7 @@ This is a porting of [Payload Ecommerce Template](https://github.com/payloadcms/
 
 ### View a live demo
 
-Open a browser and navigate to <https://ecommerce-template.janilla.com/>.
+Open a browser and navigate to <https://ecommercetemplate.janilla.com/>.
 
 ### How you can get started
 

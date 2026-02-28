@@ -26,66 +26,66 @@ import WebComponent from "base/web-component";
 
 export default class VariantSelector extends WebComponent {
 
-	static get templateNames() {
-		return ["variant-selector"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-options"];
-	}
+    static get templateNames() {
+        return ["variant-selector"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-options"];
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("change", this.handleChange);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("change", this.handleChange);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("change", this.handleChange);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("change", this.handleChange);
+    }
 
-	async updateDisplay() {
-		const p = history.state.product;
-		const oo = this.dataset.options.split(",");
-		const fd = new FormData(this.closest("form"));
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			types: p.variantTypes
-				.sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
-				.map(x => ({
-					$template: "type",
-					...x,
-					options: x.options.map(y => ({
-						$template: "option",
-						name: x.name,
-						...y,
-						checked: oo.includes(y.id.toString()),
-						disabled: !p.variants
-							.filter(v => v.options.every(o => o.type.id === x.id
-								? o.id === y.id
-								: !fd.has(o.type.name) || fd.get(o.type.name) == o.id))
-							.some(v => v.inventory)
-					}))
-				}))
-		}));
-	}
+    async updateDisplay() {
+        const p = history.state.product;
+        const oo = this.dataset.options.split(",");
+        const fd = new FormData(this.closest("form"));
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            types: p.variantTypes
+                .sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
+                .map(x => ({
+                    $template: "type",
+                    ...x,
+                    options: x.options.map(y => ({
+                        $template: "option",
+                        name: x.name,
+                        ...y,
+                        checked: oo.includes(y.id.toString()),
+                        disabled: !p.variants
+                            .filter(v => v.options.every(o => o.type.id === x.id
+                                ? o.id === y.id
+                                : !fd.has(o.type.name) || fd.get(o.type.name) == o.id))
+                            .some(v => v.inventory)
+                    }))
+                }))
+        }));
+    }
 
-	handleChange = event => {
-		const el = event.target;
-		const u = new URL(location.href);
-		u.searchParams.set(el.name, el.value);
+    handleChange = event => {
+        const el = event.target;
+        const u = new URL(location.href);
+        u.searchParams.set(el.name, el.value);
 
-		const p = history.state.product;
-		const fd = new FormData(el.form);
-		const v = p.variants.find(x => x.options.every(y => y.id == fd.get(y.type.name)));
-		if (v)
-			u.searchParams.set("variant", v.id);
-		else
-			u.searchParams.delete("variant");
-		this.closest("app-element").navigate(u)
-	}
+        const p = history.state.product;
+        const fd = new FormData(el.form);
+        const v = p.variants.find(x => x.options.every(y => y.id == fd.get(y.type.name)));
+        if (v)
+            u.searchParams.set("variant", v.id);
+        else
+            u.searchParams.delete("variant");
+        this.closest("app-element").navigate(u)
+    }
 }

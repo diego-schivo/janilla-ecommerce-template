@@ -38,10 +38,6 @@ export default class CreateAddressModal extends WebComponent {
         return ["data-name", "data-disabled"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("click", this.handleClick);

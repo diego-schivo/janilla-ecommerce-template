@@ -22,11 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import com.janilla.backend.cms.UserRole;
+public enum OrderStatus {
 
-public enum UserRoleImpl implements UserRole {
-
-	ADMIN, CUSTOMER
+	PROCESSING, COMPLETED
 }

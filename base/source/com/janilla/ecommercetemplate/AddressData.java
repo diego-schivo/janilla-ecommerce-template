@@ -22,9 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-public enum OrderStatus {
-
-	PROCESSING, COMPLETED
+public record AddressData(Title title, String firstName, String lastName, String company, String addressLine1,
+		String addressLine2, String city, String state, String postalCode, Country country, String phone) {
 }

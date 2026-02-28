@@ -22,9 +22,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-public enum Currency {
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 
-	EUR, USD, GBP
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.User;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
+
+@Store
+public record Order(Long id, List<CartItem> items, AddressData shippingAddress, @Index User<?, ?> customer,
+		String customerEmail, List<Transaction> transactions, OrderStatus status, BigDecimal amount, Currency currency,
+		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
+		implements Document<Long> {
 }

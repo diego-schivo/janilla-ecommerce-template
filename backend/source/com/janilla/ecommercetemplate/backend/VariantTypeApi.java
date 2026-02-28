@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 
 import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.VariantType;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
@@ -35,6 +36,6 @@ import com.janilla.web.Handle;
 public class VariantTypeApi extends AbstractCollectionApi<Long, VariantType> {
 
 	public VariantTypeApi(Predicate<HttpExchange> drafts, Persistence persistence) {
-		super(VariantType.class, drafts, persistence);
+		super(VariantType.class, drafts, persistence, "title");
 	}
 }

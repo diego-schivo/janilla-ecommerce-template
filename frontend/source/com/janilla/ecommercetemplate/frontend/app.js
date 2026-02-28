@@ -67,6 +67,12 @@ export default class App extends WebsiteApp {
         await super.updateDisplaySite();
     }
 
+    siteData() {
+        const x = super.siteData();
+        x.after = { $template: "toaster" };
+        return x;
+    }
+
     contentData() {
         const s = this.customState;
         if (!s.notFound) {

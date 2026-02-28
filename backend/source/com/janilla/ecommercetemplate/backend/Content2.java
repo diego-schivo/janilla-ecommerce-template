@@ -26,9 +26,9 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.List;
 
-import com.janilla.blanktemplate.backend.Media;
-import com.janilla.websitetemplate.backend.Category;
-import com.janilla.websitetemplate.backend.Page;
+import com.janilla.blanktemplate.Media;
+import com.janilla.websitetemplate.Category;
+import com.janilla.websitetemplate.Page;
 
 public record Content2(List<Page> pages, List<Category> categories, List<Media> media) {
 }

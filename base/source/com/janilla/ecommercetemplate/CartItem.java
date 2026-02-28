@@ -22,9 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-public enum Status {
-
-	PENDING, SUCCEEDED, FAILED, CANCELLED, EXPIRED, REFUNDED
+public record CartItem(Product product, Variant variant, Long quantity) {
 }

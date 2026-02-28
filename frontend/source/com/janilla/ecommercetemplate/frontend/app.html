@@ -1,13 +1,3 @@
-<template id="site">
-  <!--${adminBar}-->
-  <div data-color-scheme="${colorScheme}">
-    <!--${header}-->
-    <!--${content}-->
-    <!--${footer}-->
-  </div>
-  <toaster-element></toaster-element>
-</template>
-
 <template id="account">
   <account-element class="account" data-success="${success}" data-warning="${warning}"></account-element>
 </template>
@@ -58,4 +48,8 @@
 
 <template id="shop">
   <shop-element data-query="${query}" data-category="${category}" data-sort="${sort}"></shop-element>
+</template>
+
+<template id="toaster">
+  <toaster-element></toaster-element>
 </template>

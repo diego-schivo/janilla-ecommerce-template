@@ -26,26 +26,26 @@ import WebComponent from "base/web-component";
 
 export default class ProductItem extends WebComponent {
 
-	static get templateNames() {
-		return ["product-item"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-item"];
-	}
+    static get templateNames() {
+        return ["product-item"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-item"];
+    }
 
-	async updateDisplay() {
-		const s = this.customState;
-		s.item ??= JSON.parse(this.dataset.item);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...s.item,
-			image: s.item.product.gallery.find(y => s.item.variant.options.some(z => z.id === y.variantOption.id)).image,
-			option: s.item.variant.options.map(y => y.label).join(", ")
-		}));
-	}
+    async updateDisplay() {
+        const s = this.customState;
+        s.item ??= JSON.parse(this.dataset.item);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...s.item,
+            image: s.item.product.gallery.find(y => s.item.variant.options.some(z => z.id === y.variantOption.id)).image,
+            option: s.item.variant.options.map(y => y.label).join(", ")
+        }));
+    }
 }

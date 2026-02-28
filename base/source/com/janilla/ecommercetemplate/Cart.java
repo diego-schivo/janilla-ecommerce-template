@@ -22,21 +22,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import com.janilla.backend.cms.Types;
 import com.janilla.cms.Document;
 import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.User;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Variant(Long id, String title, @Index @Types(Product.class) Long product,
-		List<@Types(VariantOption.class) Long> options, Long inventory, Boolean priceInUsdEnabled,
-		BigDecimal priceInUsd, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long> {
+public record Cart(Long id, List<CartItem> items, String secret, @Index User<?, ?> customer, Instant purchasedAt,
+		CartStatus status, BigDecimal subtotal, Currency currency, Instant createdAt, Instant updatedAt,
+		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+
+	public static final Cart EMPTY = new Cart(null, null, null, null, null, null, null, null, null, null, null, null);
+
+	public Cart withId(Long id) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
+	public Cart withCustomer(User<?, ?> customer) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
+	public Cart withPurchasedAt(Instant purchasedAt) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
+	public Cart withSecret(String secret) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
+
+	public Cart withSubtotal(BigDecimal subtotal) {
+		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
 }

@@ -38,10 +38,6 @@ export default class Message extends WebComponent {
         return ["data-text"];
     }
 
-    constructor() {
-        super();
-    }
-
     async updateDisplay() {
         this.appendChild(this.interpolateDom({
 			$template: "",

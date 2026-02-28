@@ -34,10 +34,6 @@ export default class MobileMenu extends WebComponent {
         return ["mobile-menu"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("click", this.handleClick);

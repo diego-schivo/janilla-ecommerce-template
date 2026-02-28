@@ -26,25 +26,25 @@ import WebComponent from "base/web-component";
 
 export default class OrderItem extends WebComponent {
 
-	static get templateNames() {
-		return ["order-item"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-item"];
-	}
+    static get templateNames() {
+        return ["order-item"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-item"];
+    }
 
-	async updateDisplay() {
-		const s = this.customState;
-		s.item ??= JSON.parse(this.dataset.item);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...s.item,
-			itemsLength: s.item.items.length
-		}));
-	}
+    async updateDisplay() {
+        const s = this.customState;
+        s.item ??= JSON.parse(this.dataset.item);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...s.item,
+            itemsLength: s.item.items.length
+        }));
+    }
 }

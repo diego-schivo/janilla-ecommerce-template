@@ -3,7 +3,10 @@
 		{
 			"$type": "Address",
 			"id": 1,
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"title": "DR",
 			"firstName": "Otto",
 			"lastName": "Octavius",
@@ -19,7 +22,10 @@
 		{
 			"$type": "Address",
 			"id": 2,
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"title": "MR",
 			"firstName": "Oliver",
 			"lastName": "Twist",
@@ -40,12 +46,21 @@
 			"items": [
 				{
 					"$type": "CartItem",
-					"product": 2,
-					"variant": 2,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 2
+					},
 					"quantity": 1
 				}
 			],
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"status": "ACTIVE",
 			"subtotal": 49.99,
 			"currency": "USD"
@@ -56,7 +71,10 @@
 			"items": [
 				{
 					"$type": "CartItem",
-					"product": 1,
+					"product": {
+						"$type": "Product",
+						"id": 1
+					},
 					"quantity": 1
 				}
 			],
@@ -70,18 +88,33 @@
 			"items": [
 				{
 					"$type": "CartItem",
-					"product": 2,
-					"variant": 1,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 1
+					},
 					"quantity": 1
 				},
 				{
 					"$type": "CartItem",
-					"product": 2,
-					"variant": 2,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 2
+					},
 					"quantity": 1
 				}
 			],
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"status": "PURCHASED",
 			"subtotal": 99.98,
 			"currency": "USD"
@@ -112,25 +145,25 @@
 		"id": 1,
 		"navItems": [
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "/admin",
 				"text": "Admin"
 			},
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "/find-order",
 				"text": "Find my order"
 			},
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "https://github.com/diego-schivo/ecommerce-template",
 				"text": "Source Code"
 			},
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "https://janilla.com/",
 				"text": "Janilla"
@@ -142,19 +175,19 @@
 		"id": 1,
 		"navItems": [
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "/",
 				"text": "Home"
 			},
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "/shop",
 				"text": "Shop"
 			},
 			{
-				"$type": "EcommerceLink",
+				"$type": "LinkImpl",
 				"type": "CUSTOM",
 				"uri": "/account",
 				"text": "Account"
@@ -207,13 +240,25 @@
 			"id": 1,
 			"items": [
 				{
-					"product": 2,
-					"variant": 1,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 1
+					},
 					"quantity": 1
 				},
 				{
-					"product": 2,
-					"variant": 3,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 3
+					},
 					"quantity": 1
 				}
 			],
@@ -230,9 +275,15 @@
 				"country": "US",
 				"phone": "1234567890"
 			},
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"transactions": [
-				2
+				{
+					"$type": "Transaction",
+					"id": 2
+				}
 			],
 			"status": "COMPLETED",
 			"amount": 74.99,
@@ -242,13 +293,25 @@
 			"id": 2,
 			"items": [
 				{
-					"product": 2,
-					"variant": 1,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 1
+					},
 					"quantity": 1
 				},
 				{
-					"product": 2,
-					"variant": 3,
+					"product": {
+						"$type": "Product",
+						"id": 2
+					},
+					"variant": {
+						"$type": "Variant",
+						"id": 3
+					},
 					"quantity": 1
 				}
 			],
@@ -265,9 +328,15 @@
 				"country": "US",
 				"phone": "1234567890"
 			},
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"transactions": [
-				2
+				{
+					"$type": "Transaction",
+					"id": 2
+				}
 			],
 			"status": "PROCESSING",
 			"amount": 74.99,
@@ -322,14 +391,17 @@
 				},
 				{
 					"$type": "MediaBlock",
-					"media": 3
+					"media": {
+						"$type": "Media",
+						"id": 3
+					}
 				},
 				{
 					"$type": "CallToAction",
 					"richText": "<h3>This is a call to action</h3><p>This is a custom layout building block <a href=\"/admin\">configured in the admin dashboard</a>.</p>",
 					"links": [
 						{
-							"$type": "EcommerceLink",
+							"$type": "LinkImpl",
 							"type": "CUSTOM",
 							"uri": "/products",
 							"text": "All products",
@@ -342,7 +414,10 @@
 				"$type": "Meta",
 				"title": "Janilla Ecommerce Template",
 				"description": "An open-source ecommerce site built with Janilla.",
-				"image": 2
+				"image": {
+					"$type": "Media",
+					"id": 2
+				}
 			},
 			"slug": "home",
 			"documentStatus": {
@@ -359,20 +434,29 @@
 			"description": "Top off your look with our classic hat, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
 			"gallery": [
 				{
-					"image": 2
+					"image": {
+						"$type": "Media",
+						"id": 2
+					}
 				}
 			],
 			"enableVariants": false,
 			"priceInUsdEnabled": true,
 			"priceInUsd": 25,
 			"categories": [
-				3
+				{
+					"$type": "Category",
+					"id": 3
+				}
 			],
 			"meta": {
 				"$type": "Meta",
 				"title": "Hat | Janilla Ecommerce Template",
 				"description": "Top off your look with our classic hat, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
-				"image": 2
+				"image": {
+					"$type": "Media",
+					"id": 2
+				}
 			},
 			"slug": "hat",
 			"documentStatus": {
@@ -387,18 +471,33 @@
 			"description": "Top off your look with our classic tshirt, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
 			"gallery": [
 				{
-					"image": 4,
-					"variantOption": 5
+					"image": {
+						"$type": "Media",
+						"id": 4
+					},
+					"variantOption": {
+						"$type": "VariantOption",
+						"id": 5
+					}
 				},
 				{
-					"image": 1,
-					"variantOption": 6
+					"image": {
+						"$type": "Media",
+						"id": 1
+					},
+					"variantOption": {
+						"$type": "VariantOption",
+						"id": 6
+					}
 				}
 			],
 			"layout": [
 				{
 					"$type": "MediaBlock",
-					"media": 3
+					"media": {
+						"$type": "Media",
+						"id": 3
+					}
 				},
 				{
 					"$type": "Content",
@@ -418,19 +517,31 @@
 			],
 			"enableVariants": true,
 			"variantTypes": [
-				1,
-				2
+				{
+					"$type": "VariantType",
+					"id": 1
+				},
+				{
+					"$type": "VariantType",
+					"id": 2
+				}
 			],
 			"priceInUsdEnabled": true,
 			"priceInUsd": 49.99,
 			"categories": [
-				2
+				{
+					"$type": "Category",
+					"id": 2
+				}
 			],
 			"meta": {
 				"$type": "Meta",
 				"title": "Tshirt | Janilla Ecommerce Template",
 				"description": "Top off your look with our classic tshirt, crafted for style and comfort. Made with breathable, high-quality materials and an adjustable strap for the perfect fit, it’s ideal for everyday wear or outdoor adventures. Available in a range of colors to match any outfit.",
-				"image": 4
+				"image": {
+					"$type": "Media",
+					"id": 4
+				}
 			},
 			"slug": "tshirt",
 			"documentStatus": {
@@ -457,7 +568,10 @@
 				"phone": "1234567890"
 			},
 			"status": "PENDING",
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"stripeCustomer": "cus_123",
 			"stripePaymentIntent": "pi_123"
 		},
@@ -478,7 +592,10 @@
 				"phone": "1234567890"
 			},
 			"status": "SUCCEEDED",
-			"customer": 2,
+			"customer": {
+				"$type": "UserImpl",
+				"id": 2
+			},
 			"stripeCustomer": "cus_123",
 			"stripePaymentIntent": "pi_123"
 		}
@@ -517,42 +634,60 @@
 		{
 			"$type": "VariantOption",
 			"id": 1,
-			"type": 1,
+			"type": {
+				"$type": "VariantType",
+				"id": 1
+			},
 			"label": "Small",
 			"value": "small"
 		},
 		{
 			"$type": "VariantOption",
 			"id": 2,
-			"type": 1,
+			"type": {
+				"$type": "VariantType",
+				"id": 1
+			},
 			"label": "Medium",
 			"value": "medium"
 		},
 		{
 			"$type": "VariantOption",
 			"id": 3,
-			"type": 1,
+			"type": {
+				"$type": "VariantType",
+				"id": 1
+			},
 			"label": "Large",
 			"value": "large"
 		},
 		{
 			"$type": "VariantOption",
 			"id": 4,
-			"type": 1,
+			"type": {
+				"$type": "VariantType",
+				"id": 1
+			},
 			"label": "X Large",
 			"value": "xlarge"
 		},
 		{
 			"$type": "VariantOption",
 			"id": 5,
-			"type": 2,
+			"type": {
+				"$type": "VariantType",
+				"id": 2
+			},
 			"label": "Black",
 			"value": "black"
 		},
 		{
 			"$type": "VariantOption",
 			"id": 6,
-			"type": 2,
+			"type": {
+				"$type": "VariantType",
+				"id": 2
+			},
 			"label": "White",
 			"value": "white"
 		}
@@ -576,10 +711,19 @@
 			"$type": "Variant",
 			"id": 1,
 			"title": "Tshirt — Small — White",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				1,
-				6
+				{
+					"$type": "VariantOption",
+					"id": 1
+				},
+				{
+					"$type": "VariantOption",
+					"id": 6
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -590,10 +734,19 @@
 			"$type": "Variant",
 			"id": 2,
 			"title": "Tshirt — Medium — White",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				2,
-				6
+				{
+					"$type": "VariantOption",
+					"id": 2
+				},
+				{
+					"$type": "VariantOption",
+					"id": 6
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -604,10 +757,19 @@
 			"$type": "Variant",
 			"id": 3,
 			"title": "Tshirt — Large — White",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				3,
-				6
+				{
+					"$type": "VariantOption",
+					"id": 3
+				},
+				{
+					"$type": "VariantOption",
+					"id": 6
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -618,10 +780,19 @@
 			"$type": "Variant",
 			"id": 4,
 			"title": "Tshirt — X Large — White",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				4,
-				6
+				{
+					"$type": "VariantOption",
+					"id": 4
+				},
+				{
+					"$type": "VariantOption",
+					"id": 6
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -632,10 +803,19 @@
 			"$type": "Variant",
 			"id": 5,
 			"title": "Tshirt — Small — Black",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				1,
-				5
+				{
+					"$type": "VariantOption",
+					"id": 1
+				},
+				{
+					"$type": "VariantOption",
+					"id": 5
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -646,10 +826,19 @@
 			"$type": "Variant",
 			"id": 6,
 			"title": "Tshirt — Medium — Black",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				2,
-				5
+				{
+					"$type": "VariantOption",
+					"id": 2
+				},
+				{
+					"$type": "VariantOption",
+					"id": 5
+				}
 			],
 			"inventory": 0,
 			"priceInUsdEnabled": true,
@@ -660,10 +849,19 @@
 			"$type": "Variant",
 			"id": 7,
 			"title": "Tshirt — Large — Black",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				3,
-				5
+				{
+					"$type": "VariantOption",
+					"id": 3
+				},
+				{
+					"$type": "VariantOption",
+					"id": 5
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,
@@ -674,10 +872,19 @@
 			"$type": "Variant",
 			"id": 8,
 			"title": "Tshirt — X Large — Black",
-			"product": 2,
+			"product": {
+				"$type": "Product",
+				"id": 2
+			},
 			"options": [
-				4,
-				5
+				{
+					"$type": "VariantOption",
+					"id": 4
+				},
+				{
+					"$type": "VariantOption",
+					"id": 5
+				}
 			],
 			"inventory": 492,
 			"priceInUsdEnabled": true,

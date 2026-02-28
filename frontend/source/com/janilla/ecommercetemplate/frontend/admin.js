@@ -35,7 +35,7 @@ export default class Admin extends WebsiteAdmin {
     }
 
     static get observedAttributes() {
-        return ["data-user", "data-path"];
+        return ["data-user", "data-uri"];
     }
 
     cell(object, key) {
@@ -62,6 +62,8 @@ export default class Admin extends WebsiteAdmin {
                 return ["id", "addressLine1", "city", "postalCode", "country"];
             case "carts":
                 return ["id", "createdAt", "currency", "items"];
+            case "categories":
+                return ["title", "slug", "updatedAt", "createdAt"];
             case "products":
                 return ["title", "enableVariants", "documentStatus"];
             case "variant-options":

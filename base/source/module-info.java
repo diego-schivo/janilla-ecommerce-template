@@ -22,18 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+module com.janilla.ecommercetemplate.base {
 
-import java.time.Instant;
+	exports com.janilla.ecommercetemplate;
 
-import com.janilla.backend.cms.Types;
-import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
-import com.janilla.persistence.Index;
-import com.janilla.persistence.Store;
+	opens com.janilla.ecommercetemplate;
 
-@Store
-public record VariantOption(Long id, @Index @Types(VariantType.class) Long type, String label, String value,
-		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long> {
+	requires transitive com.janilla.websitetemplate.base;
 }

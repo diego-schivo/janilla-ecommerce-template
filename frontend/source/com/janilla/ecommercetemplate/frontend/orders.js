@@ -34,10 +34,6 @@ export default class Orders extends WebComponent {
         return ["orders"];
     }
 
-    constructor() {
-        super();
-    }
-
     async updateDisplay() {
         const s = this.customState;
         const a = this.closest("app-element");

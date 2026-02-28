@@ -22,8 +22,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-public record AddressData(Title title, String firstName, String lastName, String company, String addressLine1,
-		String addressLine2, String city, String state, String postalCode, Country country, String phone) {
+import com.janilla.cms.Document;
+import com.janilla.cms.Types;
+import com.janilla.websitetemplate.Link;
+import com.janilla.websitetemplate.LinkAppearance;
+import com.janilla.websitetemplate.LinkType;
+import com.janilla.websitetemplate.Page;
+
+public record LinkImpl(LinkType type, Boolean newTab, @Types( {
+		Page.class, Product.class }) Document<?> document, String uri, String text, LinkAppearance appearance)
+		implements Link{
 }

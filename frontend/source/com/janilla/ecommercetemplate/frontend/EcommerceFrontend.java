@@ -44,7 +44,8 @@ import com.janilla.websitetemplate.frontend.WebsiteFrontend;
 public class EcommerceFrontend extends WebsiteFrontend {
 
 	public static final String[] DI_PACKAGES = Stream
-			.concat(Arrays.stream(WebsiteFrontend.DI_PACKAGES), Stream.of("com.janilla.ecommercetemplate.frontend"))
+			.concat(Arrays.stream(WebsiteFrontend.DI_PACKAGES),
+					Stream.of("com.janilla.ecommercetemplate", "com.janilla.ecommercetemplate.frontend"))
 			.toArray(String[]::new);
 
 	public static void main(String[] args) {

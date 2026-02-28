@@ -38,10 +38,6 @@ export default class ProductGallery extends WebComponent {
         return ["data-variant-options"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("click", this.handleClick);

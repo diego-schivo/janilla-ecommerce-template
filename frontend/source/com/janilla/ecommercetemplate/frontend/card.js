@@ -26,30 +26,30 @@ import WebComponent from "base/web-component";
 
 export default class Card extends WebComponent {
 
-	static get templateNames() {
-		return ["card"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-slug"];
-	}
+    static get templateNames() {
+        return ["card"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-slug"];
+    }
 
-	async updateDisplay() {
-		const el = this.closest("product-element, shop-element, search-element");
-		let hs = history.state;
-		const pp = el.matches("product-element")
-			? hs.product.relatedProducts
-			: el.matches("shop-element")
-				? hs.products
-				: hs.results;
-		const p = pp.find(x => x.slug === this.dataset.slug);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...p
-		}));
-	}
+    async updateDisplay() {
+        const el = this.closest("product-element, shop-element, search-element");
+        let hs = history.state;
+        const pp = el.matches("product-element")
+            ? hs.product.relatedProducts
+            : el.matches("shop-element")
+                ? hs.products
+                : hs.results;
+        const p = pp.find(x => x.slug === this.dataset.slug);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...p
+        }));
+    }
 }

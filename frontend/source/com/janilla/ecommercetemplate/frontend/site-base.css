@@ -248,3 +248,33 @@
   }
 }
 */
+
+:where(app-element) {
+  > .site {
+    color: light-dark(oklch(0.373 0.034 259.733), rgb(209, 213, 219));
+    gap: 2rem;
+
+    div:has(> [name="query"]) {
+      position: relative;
+
+      input {
+        width: 100%;
+      }
+
+      lucide-icon {
+        position: absolute;
+        right: .5rem;
+        top: 50%;
+        translate: 0 -50%;
+      }
+    }
+  }
+
+  main {
+    > * {
+      @media (min-width: 1441px) {
+        max-width: 76.125rem;
+      }
+    }
+  }
+}

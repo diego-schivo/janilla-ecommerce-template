@@ -26,11 +26,11 @@ import WebComponent from "base/web-component";
 
 export default class LoadingSpinner extends WebComponent {
 
-	static get templateNames() {
-		return ["loading-spinner"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	constructor() {
-		super();
-	}
+    static get templateNames() {
+        return ["loading-spinner"];
+    }
 }

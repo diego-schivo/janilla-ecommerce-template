@@ -22,9 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-public enum CartStatus {
+import com.janilla.cms.UserRole;
 
-	ACTIVE, PURCHASED, ABANDONED
+public enum UserRoleImpl implements UserRole {
+
+	ADMIN, CUSTOMER
 }

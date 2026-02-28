@@ -32,6 +32,9 @@ import java.util.Random;
 
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.Cart;
+import com.janilla.ecommercetemplate.Product;
+import com.janilla.ecommercetemplate.Variant;
 
 public class CartCrudObserver implements CrudObserver<Cart> {
 
@@ -63,9 +66,9 @@ public class CartCrudObserver implements CrudObserver<Cart> {
 		return cart.withSubtotal(cart.items().stream().map(x -> {
 			BigDecimal p;
 			if (x.variant() != null)
-				p = persistence.crud(Variant.class).read(x.variant()).priceInUsd();
+				p = persistence.crud(Variant.class).read(x.variant().id()).priceInUsd();
 			else if (x.product() != null)
-				p = persistence.crud(Product.class).read(x.product()).priceInUsd();
+				p = persistence.crud(Product.class).read(x.product().id()).priceInUsd();
 			else
 				p = null;
 			return p != null ? p.multiply(new BigDecimal(x.quantity())) : null;

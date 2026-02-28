@@ -26,38 +26,38 @@ import WebComponent from "base/web-component";
 
 export default class ConfirmOrder extends WebComponent {
 
-	static get templateNames() {
-		return ["confirm-order"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-guest-email", "data-payment-intent"];
-	}
+    static get templateNames() {
+        return ["confirm-order"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-guest-email", "data-payment-intent"];
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({
-			$template: ""
-		}));
-		const a = this.closest("app-element");
-		const j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
-		    method: "POST",
-		    headers: { "content-type": "application/json" },
-		    body: JSON.stringify({
-		        guestEmail: this.dataset.guestEmail,
-		        paymentIntent: this.dataset.paymentIntent
-		    })
-		})).json();
-		if (j?.order) {
-		    //await fetch(`${a.dataset.apiUrl}/carts/${c.customState.cart.id}`, { method: "DELETE" });
-		    //localStorage.removeItem("cart");
-		    const u = new URL(`/orders/${j.order}`, location.href);
-		    if (this.dataset.guestEmail)
-		        u.searchParams.append("guestEmail", this.dataset.guestEmail);
-		    a.navigate(u);
-		}
-	}
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
+            $template: ""
+        }));
+        const a = this.closest("app-element");
+        const j = await (await fetch(`${a.dataset.apiUrl}/payments/stripe/confirm-order`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                guestEmail: this.dataset.guestEmail,
+                paymentIntent: this.dataset.paymentIntent
+            })
+        })).json();
+        if (j?.order) {
+            //await fetch(`${a.dataset.apiUrl}/carts/${c.customState.cart.id}`, { method: "DELETE" });
+            //localStorage.removeItem("cart");
+            const u = new URL(`/orders/${j.order}`, location.href);
+            if (this.dataset.guestEmail)
+                u.searchParams.append("guestEmail", this.dataset.guestEmail);
+            a.navigate(u);
+        }
+    }
 }

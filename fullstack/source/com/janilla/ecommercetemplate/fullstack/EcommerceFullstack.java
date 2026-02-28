@@ -25,14 +25,13 @@
 package com.janilla.ecommercetemplate.fullstack;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import com.janilla.blanktemplate.fullstack.BlankFullstack;
-import com.janilla.ecommercetemplate.backend.BackendHttpExchange;
 import com.janilla.ecommercetemplate.backend.EcommerceBackend;
 import com.janilla.ecommercetemplate.frontend.EcommerceFrontend;
-import com.janilla.http.HttpExchange;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.websitetemplate.fullstack.WebsiteFullstack;
@@ -58,23 +57,23 @@ public class EcommerceFullstack extends WebsiteFullstack {
 
 	@Override
 	protected List<Class<?>> backendTypes() {
-		return Stream.concat(super.backendTypes().stream(),
-				Stream.of(EcommerceBackend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, false).stream()))
-				.toList();
+		return Stream
+				.concat(Arrays.stream(EcommerceBackend.DI_PACKAGES),
+						Stream.of("com.janilla.ecommercetemplate.fullstack"))
+				.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList();
 	}
 
 	@Override
 	protected List<Class<?>> frontendTypes() {
-		return Stream.concat(super.frontendTypes().stream(),
-				Stream.of(EcommerceFrontend.class.getPackageName(), EcommerceFullstack.class.getPackageName())
-						.flatMap(x -> Java.getPackageClasses(x, false).stream()))
-				.toList();
+		return Stream
+				.concat(Arrays.stream(EcommerceFrontend.DI_PACKAGES),
+						Stream.of("com.janilla.ecommercetemplate.fullstack"))
+				.flatMap(x -> Java.getPackageClasses(x, false).stream()).toList();
 	}
 
-	@Override
-	protected boolean handle(HttpExchange exchange) {
-		var h = exchange instanceof BackendHttpExchange ? backend.handler() : frontend.handler();
-		return h.handle(exchange);
-	}
+//	@Override
+//	protected boolean handle(HttpExchange exchange) {
+//		var h = exchange instanceof BackendHttpExchange ? backend.handler() : frontend.handler();
+//		return h.handle(exchange);
+//	}
 }

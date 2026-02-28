@@ -38,10 +38,6 @@ export default class Page extends WebComponent {
         return ["data-slug"];
     }
 
-    constructor() {
-        super();
-    }
-
     async updateDisplay() {
         let hs = history.state;
         const a = this.closest("app-element");

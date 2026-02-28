@@ -26,11 +26,15 @@ import DefaultAdminFields from "cms/admin-fields";
 
 export default class CustomAdminFields extends DefaultAdminFields {
 
-	static get templateNames() {
-		return ["cms/admin-fields", "admin-fields"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-array-key", "data-path", "data-updated-at"];
-	}
+    static get templateNames() {
+        return ["/cms/admin-fields", "admin-fields"];
+    }
+
+    static get observedAttributes() {
+        return ["data-array-key", "data-path", "data-updated-at"];
+    }
 }

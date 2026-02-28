@@ -38,10 +38,6 @@ export default class Payment extends WebComponent {
         return ["data-guest-email", "data-amount"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("click", this.handleClick);

@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 
 import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.Address;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
@@ -35,6 +36,6 @@ import com.janilla.web.Handle;
 public class AddressApi extends AbstractCollectionApi<Long, Address> {
 
 	public AddressApi(Predicate<HttpExchange> drafts, Persistence persistence) {
-		super(Address.class, drafts, persistence);
+		super(Address.class, drafts, persistence, "title");
 	}
 }

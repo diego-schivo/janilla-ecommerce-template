@@ -28,25 +28,36 @@ import java.net.URI;
 import java.util.List;
 import java.util.Properties;
 
+import com.janilla.ecommercetemplate.Product;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpCookie;
+import com.janilla.ioc.DiFactory;
+import com.janilla.java.SimpleParameterizedType;
 import com.janilla.java.UriQueryBuilder;
+import com.janilla.persistence.ListPortion;
+import com.janilla.websitetemplate.Category;
 import com.janilla.websitetemplate.frontend.WebsiteDataFetching;
 
 public class EcommerceDataFetching extends WebsiteDataFetching {
 
-	public EcommerceDataFetching(Properties configuration, String configurationKey, HttpClient httpClient) {
-		super(configuration, configurationKey, httpClient);
+	public EcommerceDataFetching(Properties configuration, String configurationKey, HttpClient httpClient,
+			DiFactory diFactory) {
+		super(configuration, configurationKey, httpClient, diFactory);
 	}
 
-	public List<?> categories() {
-		return (List<?>) httpClient.getJson(URI.create(apiUrl + "/categories"));
+	public ListPortion<Category> categories() {
+		var o = httpClient.getJson(URI.create(apiUrl + "/categories"));
+		return converter.convert(o, new SimpleParameterizedType(ListPortion.class, List.of(Category.class)));
 	}
 
-	public List<?> products(String slug, String query, Long category, String sort, HttpCookie token) {
-		return (List<?>) httpClient.getJson(
-				URI.create(apiUrl + "/products?" + new UriQueryBuilder().append("slug", slug).append("q", query)
-						.append("category", category != null ? category.toString() : null).append("sort", sort)),
+	public ListPortion<Product> products(String slug, String query, Long category, String sort, Integer depth,
+			HttpCookie token) {
+		var o = httpClient.getJson(
+				URI.create(apiUrl + "/products?"
+						+ new UriQueryBuilder().append("slug", slug).append("q", query)
+								.append("category", category != null ? category.toString() : null).append("sort", sort)
+								.append("depth", depth != null ? depth.toString() : null)),
 				token != null ? token.format() : null);
+		return converter.convert(o, new SimpleParameterizedType(ListPortion.class, List.of(Product.class)));
 	}
 }

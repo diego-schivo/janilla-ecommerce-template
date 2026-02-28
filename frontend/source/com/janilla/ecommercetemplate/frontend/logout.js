@@ -34,14 +34,6 @@ export default class Logout extends WebComponent {
         return ["logout"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
-    constructor() {
-        super();
-    }
-
     async updateDisplay() {
         document.title = "Logout";
         const a = this.closest("app-element");

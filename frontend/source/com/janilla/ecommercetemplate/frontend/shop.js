@@ -38,10 +38,6 @@ export default class Shop extends WebComponent {
         return ["data-category", "data-query", "data-sort"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("change", this.handleChange);
@@ -61,7 +57,7 @@ export default class Shop extends WebComponent {
         let pp = a.serverState?.products ?? hs.products;
         if (!pp)
             [cc, pp] = await Promise.all([
-                fetch(`${a.dataset.apiUrl}/categories`).then(async x => await x.json()),
+                fetch(`${a.dataset.apiUrl}/categories`).then(async x => (await x.json()).elements),
                 (() => {
                     const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
                     if (this.dataset.query)
@@ -70,7 +66,8 @@ export default class Shop extends WebComponent {
                         u.searchParams.append("category", this.dataset.category);
                     if (this.dataset.sort)
                         u.searchParams.append("sort", this.dataset.sort);
-                    return fetch(u).then(async x => await x.json());
+                    u.searchParams.append("depth", 1);
+                    return fetch(u).then(async x => (await x.json()).elements);
                 })()
             ]);
         history.replaceState(hs = {

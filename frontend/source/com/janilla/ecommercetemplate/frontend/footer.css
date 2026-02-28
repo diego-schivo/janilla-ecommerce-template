@@ -34,13 +34,18 @@
 
   .logo {
     border-top: 1px solid light-dark(oklch(0.922 0 0), oklch(0.371 0 0));
-    margin: 0 1rem;
-    padding: 3rem 0;
+
+    @media (max-width: 1440px) {
+      gap: 2rem;
+      margin: 0 1rem;
+      padding: 3rem 0;
+    }
 
     @media (min-width: 1441px) {
       align-items: start;
-      gap: 3rem;
-      max-width: 72.125rem;
+      /*gap: 3rem;*/
+      max-width: 82rem;
+      padding: 2rem 0;
     }
   }
 
@@ -60,72 +65,6 @@
     }
   }
 
-  /*
-  select,
-  ::picker(select) {
-    appearance: base-select;
-  }
-
-  select {
-    border: none;
-    color: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
-    font-size: 0.875rem;
-    line-height: 1.4286;
-
-    @media (max-width: 1440px) {
-      align-self: end;
-    }
-
-    @media (min-width: 1441px) {
-      margin-left: auto;
-    }
-
-    &::picker-icon {
-      display: none;
-    }
-
-    lucide-icon {
-      color: light-dark(rgb(100, 116, 139), rgb(148, 163, 184));
-    }
-  }
-
-  selectedcontent {
-    lucide-icon {
-      display: none;
-    }
-  }
-
-  ::picker(select) {
-    background: light-dark(rgb(255, 255, 255), rgb(2, 8, 23));
-    border: 1px solid light-dark(rgb(228, 228, 231), rgba(255, 255, 255, 0.1));
-    border-radius: 0.375rem;
-    padding: 0.25rem;
-  }
-
-  option {
-    border-radius: 0.25rem;
-    color: light-dark(rgb(15, 23, 42), rgb(248, 250, 252));
-    min-block-size: auto;
-    padding: 0.375rem 0.5rem;
-
-    &:checked {
-      background: light-dark(rgb(241, 245, 249), rgb(41, 194, 255));
-      
-      lucide-icon {
-        display: block;
-      }
-    }
-
-    &::checkmark {
-      content: none;
-    }
-
-    lucide-icon {
-      display: none;
-    }
-  }
-  */
-
   theme-selector {
     @media (max-width: 1440px) {
       align-self: end;
@@ -142,14 +81,18 @@
 
     article {
       color: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
+      display: flex;
       gap: 0.25rem;
+
+      @media (max-width: 1440px) {
+        flex-direction: column;
+      }
 
 	  @media (min-width: 1441px) {
         box-sizing: border-box;
-        flex-direction: row;
         margin-left: auto;
         margin-right: auto;
-        max-width: 72.125rem;
+        max-width: 82rem;
         width: 100%;
       }
     }

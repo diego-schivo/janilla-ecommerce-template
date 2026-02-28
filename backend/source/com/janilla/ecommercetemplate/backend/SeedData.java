@@ -26,11 +26,20 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.List;
 
-import com.janilla.blanktemplate.backend.Media;
-import com.janilla.websitetemplate.backend.Category;
-import com.janilla.websitetemplate.backend.Footer;
-import com.janilla.websitetemplate.backend.Header;
-import com.janilla.websitetemplate.backend.Page;
+import com.janilla.blanktemplate.Media;
+import com.janilla.ecommercetemplate.Address;
+import com.janilla.ecommercetemplate.Cart;
+import com.janilla.ecommercetemplate.Order;
+import com.janilla.ecommercetemplate.Product;
+import com.janilla.ecommercetemplate.Transaction;
+import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.ecommercetemplate.Variant;
+import com.janilla.ecommercetemplate.VariantOption;
+import com.janilla.ecommercetemplate.VariantType;
+import com.janilla.websitetemplate.Category;
+import com.janilla.websitetemplate.Footer;
+import com.janilla.websitetemplate.Header;
+import com.janilla.websitetemplate.Page;
 
 public record SeedData(List<Address> addresses, List<Cart> carts, List<Category> categories, Footer footer,
 		Header header, List<Media> media, List<Order> orders, List<Page> pages, List<Product> products,

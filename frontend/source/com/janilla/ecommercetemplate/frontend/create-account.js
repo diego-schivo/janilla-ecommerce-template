@@ -34,14 +34,6 @@ export default class CreateAccount extends WebComponent {
         return ["create-account"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("submit", this.handleSubmit);

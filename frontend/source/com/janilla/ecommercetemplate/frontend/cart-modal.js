@@ -34,14 +34,6 @@ export default class CartModal extends WebComponent {
         return ["cart-modal"];
     }
 
-    static get observedAttributes() {
-        return [];
-    }
-
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         addEventListener("cartchanged", this.handleCartChanged);

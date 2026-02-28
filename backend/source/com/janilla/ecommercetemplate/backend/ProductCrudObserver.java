@@ -26,6 +26,8 @@ package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.Product;
+import com.janilla.ecommercetemplate.Variant;
 
 public class ProductCrudObserver implements CrudObserver<Product> {
 
@@ -35,11 +37,11 @@ public class ProductCrudObserver implements CrudObserver<Product> {
 		this.persistence = persistence;
 	}
 
-	@Override
-	public Product afterRead(Product entity) {
-		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity.id() });
-		return entity.withVariants(xx);
-	}
+//	@Override
+//	public Product afterRead(Product entity) {
+//		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity.id() });
+//		return entity.withVariants(xx.stream().map(x -> Variant.EMPTY.withId(x)).toList());
+//	}
 
 	@Override
 	public Product beforeCreate(Product entity) {
@@ -57,7 +59,7 @@ public class ProductCrudObserver implements CrudObserver<Product> {
 	public void afterUpdate(Product entity1, Product entity2) {
 		var xx = persistence.crud(Variant.class).filter("product", new Object[] { entity1.id() });
 		if (entity2.variants() != null)
-			xx = xx.stream().filter(x -> !entity2.variants().contains(x)).toList();
+			xx = xx.stream().filter(x -> !entity2.variants().stream().allMatch(y -> !y.id().equals(x))).toList();
 		persistence.crud(Variant.class).delete(xx);
 	}
 

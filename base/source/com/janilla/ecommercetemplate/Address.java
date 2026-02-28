@@ -22,34 +22,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
-import com.janilla.backend.cms.Types;
 import com.janilla.cms.Document;
 import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.User;
+import com.janilla.java.Flat;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Transaction(Long id, List<CartItem> items, PaymentMethod paymentMethod, AddressData billingAddress,
-		Status status, @Types(UserImpl.class) Long customer, String customerEmail, @Types(Order.class) Long order,
-		@Types(Cart.class) Long cart, BigDecimal amount, Currency currency, String stripeCustomer,
-		@Index String stripePaymentIntent, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
-		Instant publishedAt) implements Document<Long> {
+public record Address(Long id, @Index User<?, ?> customer, @Flat AddressData data, Instant createdAt, Instant updatedAt,
+		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 
-	public Transaction withStatus(Status status) {
-		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
-				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
-				publishedAt);
-	}
+	public static final Address EMPTY = new Address(null, null, null, null, null, null, null);
 
-	public Transaction withOrder(Long order) {
-		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
-				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
-				publishedAt);
+	public Address withId(Long id) {
+		return new Address(id, customer, data, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

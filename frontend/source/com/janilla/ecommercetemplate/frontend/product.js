@@ -38,10 +38,6 @@ export default class Product extends WebComponent {
         return ["data-slug", "data-search"];
     }
 
-    constructor() {
-        super();
-    }
-
     async updateDisplay() {
         let hs = history.state;
         const a = this.closest("app-element");
@@ -55,14 +51,15 @@ export default class Product extends WebComponent {
         if (this.dataset.slug != hs.product?.slug) {
             const u = new URL(`${a.dataset.apiUrl}/products`, location.href);
             u.searchParams.append("slug", this.dataset.slug);
-            const p = (await (await fetch(u)).json())[0];
+            u.searchParams.append("depth", 3);
+            const p = (await (await fetch(u)).json()).elements[0];
             history.replaceState(hs = {
                 ...hs,
                 product: p
             }, "");
         }
 
-		a.updateSeo(hs.product.meta);
+        a.updateSeo(hs.product.meta);
         const pp = new URLSearchParams(this.dataset.search);
         this.appendChild(this.interpolateDom({
             $template: "",

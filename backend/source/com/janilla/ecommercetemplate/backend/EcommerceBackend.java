@@ -34,6 +34,8 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
+import com.janilla.ecommercetemplate.Country;
+import com.janilla.ecommercetemplate.Title;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
@@ -44,7 +46,8 @@ import com.janilla.websitetemplate.backend.WebsiteBackend;
 public class EcommerceBackend extends WebsiteBackend {
 
 	public static final String[] DI_PACKAGES = Stream
-			.concat(Arrays.stream(WebsiteBackend.DI_PACKAGES), Stream.of("com.janilla.ecommercetemplate.backend"))
+			.concat(Arrays.stream(WebsiteBackend.DI_PACKAGES),
+					Stream.of("com.janilla.ecommercetemplate", "com.janilla.ecommercetemplate.backend"))
 			.toArray(String[]::new);
 
 	public static void main(String[] args) {

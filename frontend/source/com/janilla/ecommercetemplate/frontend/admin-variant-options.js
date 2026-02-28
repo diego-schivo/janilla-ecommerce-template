@@ -26,61 +26,61 @@ import WebComponent from "base/web-component";
 
 export default class AdminVariantOptions extends WebComponent {
 
-	static get templateNames() {
-		return ["admin-variant-options"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-array-key", "data-path", "data-updated-at"];
-	}
+    static get templateNames() {
+        return ["admin-variant-options"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-array-key", "data-path", "data-updated-at"];
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("click", this.handleClick);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("click", this.handleClick);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+    }
 
-	async updateDisplay() {
-		const e = this.closest("admin-edit");
-		const p = this.dataset.path;
-		const s = this.customState;
-		s.field ??= e.field(p);
-		s.values ??= (s.field.data ?? []).map(x => x.id);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			types: e.customState.document.product.variantTypes
-				.sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
-				.map(x => ({
-					$template: "type",
-					...x,
-					options: x.options.map(y => ({
-						$template: "option",
-						value: y.id,
-						selected: s.values.some(z => z === y.id),
-						text: y.label
-					}))
-				}))
-		}));
-	}
+    async updateDisplay() {
+        const e = this.closest("admin-edit");
+        const p = this.dataset.path;
+        const s = this.customState;
+        s.field ??= e.field(p);
+        s.values ??= (s.field.data ?? []).map(x => x.id);
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            types: e.customState.document.product.variantTypes
+                .sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0)
+                .map(x => ({
+                    $template: "type",
+                    ...x,
+                    options: x.options.map(y => ({
+                        $template: "option",
+                        value: y.id,
+                        selected: s.values.some(z => z === y.id),
+                        text: y.label
+                    }))
+                }))
+        }));
+    }
 
-	handleClick = event => {
-		const el = event.target.closest("button");
-		const s = this.customState;
-		switch (el?.name) {
-			case "remove":
-				s.values = Array.from(this.querySelectorAll("select"))
-					.filter(x => !x.contains(el))
-					.map(x => x.value);
-				this.requestDisplay();
-				break;
-		}
-	}
+    handleClick = event => {
+        const el = event.target.closest("button");
+        const s = this.customState;
+        switch (el?.name) {
+            case "remove":
+                s.values = Array.from(this.querySelectorAll("select"))
+                    .filter(x => !x.contains(el))
+                    .map(x => x.value);
+                this.requestDisplay();
+                break;
+        }
+    }
 }

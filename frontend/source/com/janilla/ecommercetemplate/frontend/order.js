@@ -26,35 +26,35 @@ import WebComponent from "base/web-component";
 
 export default class Order extends WebComponent {
 
-	static get templateNames() {
-		return ["order"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-id"];
-	}
+    static get templateNames() {
+        return ["order"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-id"];
+    }
 
-	async updateDisplay() {
-		const s = this.customState;
-		const a = this.closest("app-element");
-		s.order ??= await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
-		a.updateSeo({ title: `Order ${s.order.id}` });
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			nav: {
-			    $template: "nav",
-			    path: a.currentPath
-			},
-			...s.order,
-			products: s.order.items.map(x => ({
-				$template: "product",
-				json: JSON.stringify(x)
-			})),
-			shippingAddress: JSON.stringify(s.order.shippingAddress)
-		}));
-	}
+    async updateDisplay() {
+        const s = this.customState;
+        const a = this.closest("app-element");
+        s.order ??= await (await fetch(`${a.dataset.apiUrl}/orders/${this.dataset.id}`)).json();
+        a.updateSeo({ title: `Order ${s.order.id}` });
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            nav: {
+                $template: "nav",
+                path: a.currentPath
+            },
+            ...s.order,
+            products: s.order.items.map(x => ({
+                $template: "product",
+                json: JSON.stringify(x)
+            })),
+            shippingAddress: JSON.stringify(s.order.shippingAddress)
+        }));
+    }
 }

@@ -22,16 +22,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import com.janilla.backend.cms.DocumentReference;
-import com.janilla.backend.cms.Types;
-import com.janilla.websitetemplate.backend.Link;
-import com.janilla.websitetemplate.backend.LinkAppearance;
-import com.janilla.websitetemplate.backend.LinkType;
-import com.janilla.websitetemplate.backend.Page;
+import java.time.Instant;
 
-public record EcommerceLink(LinkType type, Boolean newTab, @Types( {
-		Page.class, Product.class }) DocumentReference<?, ?> document, String uri, String text,
-		LinkAppearance appearance) implements Link{
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
+
+@Store
+public record VariantOption(Long id, @Index VariantType type, String label, String value, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+
+	public static final VariantOption EMPTY = new VariantOption(null, null, null, null, null, null, null, null);
+
+	public VariantOption withId(Long id) {
+		return new VariantOption(id, type, label, value, createdAt, updatedAt, documentStatus, publishedAt);
+	}
 }

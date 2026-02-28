@@ -26,28 +26,28 @@ import WebComponent from "base/web-component";
 
 export default class Select extends WebComponent {
 
-	static get templateNames() {
-		return ["select"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-name", "data-value", "data-values"];
-	}
+    static get templateNames() {
+        return ["select"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-name", "data-value", "data-values"];
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...this.dataset,
-			options: this.dataset.values.split(",").map(x => ({
-				$template: "option",
-				value: x,
-				selected: x == this.dataset.value,
-				text: x
-			}))
-		}));
-	}
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...this.dataset,
+            options: this.dataset.values.split(",").map(x => ({
+                $template: "option",
+                value: x,
+                selected: x == this.dataset.value,
+                text: x
+            }))
+        }));
+    }
 }

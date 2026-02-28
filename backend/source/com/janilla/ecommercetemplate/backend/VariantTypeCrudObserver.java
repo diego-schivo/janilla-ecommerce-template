@@ -26,6 +26,8 @@ package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.VariantOption;
+import com.janilla.ecommercetemplate.VariantType;
 
 public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 
@@ -35,11 +37,11 @@ public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 		this.persistence = persistence;
 	}
 
-	@Override
-	public VariantType afterRead(VariantType entity) {
-		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity.id() });
-		return entity.withOptions(xx);
-	}
+//	@Override
+//	public VariantType afterRead(VariantType entity) {
+//		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity.id() });
+//		return entity.withOptions(xx.stream().map(x -> VariantOption.EMPTY.withId(x)).toList());
+//	}
 
 	@Override
 	public VariantType beforeCreate(VariantType entity) {
@@ -57,7 +59,7 @@ public class VariantTypeCrudObserver implements CrudObserver<VariantType> {
 	public void afterUpdate(VariantType entity1, VariantType entity2) {
 		var xx = persistence.crud(VariantOption.class).filter("type", new Object[] { entity1.id() });
 		if (entity2.options() != null)
-			xx = xx.stream().filter(x -> !entity2.options().contains(x)).toList();
+			xx = xx.stream().filter(x -> entity2.options().stream().allMatch(y -> !y.id().equals(x))).toList();
 		persistence.crud(VariantOption.class).delete(xx);
 	}
 

@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -37,18 +37,16 @@ import java.util.Set;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.janilla.backend.cms.Types;
-import com.janilla.backend.cms.User;
 import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.User;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record UserImpl(Long id, String name, @Index String email, String salt, String hash,
+public record UserImpl(Long id, @Index String name, @Index String email, String salt, String hash,
 		@Index String resetPasswordToken, Instant resetPasswordExpiration, Set<UserRoleImpl> roles,
-		@Index String stripeCustomerId, List<@Types(Cart.class) Long> carts, List<@Types(Address.class) Long> addresses,
-		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements User<Long, UserRoleImpl> {
+		@Index String stripeCustomerId, List<Cart> carts, List<Address> addresses, Instant createdAt, Instant updatedAt,
+		DocumentStatus documentStatus, Instant publishedAt) implements User<Long, UserRoleImpl> {
 
 	private static final SecretKeyFactory SECRET;
 
@@ -116,12 +114,12 @@ public record UserImpl(Long id, String name, @Index String email, String salt, S
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public UserImpl withCarts(List<Long> carts) {
+	public UserImpl withCarts(List<Cart> carts) {
 		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public UserImpl withAddresses(List<Long> addresses) {
+	public UserImpl withAddresses(List<Address> addresses) {
 		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}

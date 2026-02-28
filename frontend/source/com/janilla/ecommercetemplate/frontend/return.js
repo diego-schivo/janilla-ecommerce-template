@@ -26,20 +26,20 @@ import WebComponent from "base/web-component";
 
 export default class Return extends WebComponent {
 
-	static get templateNames() {
-		return ["return"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	constructor() {
-		super();
-	}
+    static get templateNames() {
+        return ["return"];
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({ $template: "" }));
-		const r = this.closest("app-element");
-		const u = new URL(location);
-		const pics = u.searchParams.get("payment_intent_client_secret");
-		const { error, paymentIntent } = await r.customState.stripe.retrievePaymentIntent(pics);
-		r.addMessage(error ? error.message : `Payment ${paymentIntent.status}: ${paymentIntent.id}`);
-	}
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({ $template: "" }));
+        const r = this.closest("app-element");
+        const u = new URL(location);
+        const pics = u.searchParams.get("payment_intent_client_secret");
+        const { error, paymentIntent } = await r.customState.stripe.retrievePaymentIntent(pics);
+        r.addMessage(error ? error.message : `Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    }
 }

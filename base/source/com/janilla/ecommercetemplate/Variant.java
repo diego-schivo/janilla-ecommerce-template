@@ -22,10 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import com.janilla.backend.cms.Types;
-import com.janilla.blanktemplate.backend.Media;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 
-public record GalleryItem(@Types(Media.class) Long image, @Types(VariantOption.class) Long variantOption) {
+import com.janilla.cms.Document;
+import com.janilla.cms.DocumentStatus;
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
+
+@Store
+public record Variant(Long id, String title, @Index Product product, List<VariantOption> options, Long inventory,
+		Boolean priceInUsdEnabled, BigDecimal priceInUsd, Instant createdAt, Instant updatedAt,
+		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+
+	public static final Variant EMPTY = new Variant(null, null, null, null, null, null, null, null, null, null, null);
+
+	public Variant withId(Long id) {
+		return new Variant(id, title, product, options, inventory, priceInUsdEnabled, priceInUsd, createdAt, updatedAt,
+				documentStatus, publishedAt);
+	}
 }

@@ -34,10 +34,6 @@ export default class Checkout extends WebComponent {
         return ["checkout"];
     }
 
-    constructor() {
-        super();
-    }
-
     set paymentData(paymentData) {
         this.customState.paymentData = paymentData;
         this.requestDisplay();

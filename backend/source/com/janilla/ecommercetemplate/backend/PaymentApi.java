@@ -28,6 +28,9 @@ import java.util.Properties;
 
 import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.AddressData;
+import com.janilla.ecommercetemplate.Cart;
+import com.janilla.ecommercetemplate.UserImpl;
 import com.janilla.web.Handle;
 
 public abstract class PaymentApi {

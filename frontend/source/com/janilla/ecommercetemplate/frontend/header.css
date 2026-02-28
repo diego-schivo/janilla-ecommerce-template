@@ -34,6 +34,10 @@
     justify-content: space-between;
     padding: 0.75rem 1rem;
 
+    @media (min-width: 1441px) {
+      padding: 1rem 2rem;
+    }
+
     > nav {
       > ul {
         > li {
@@ -55,6 +59,12 @@
           }
         }
       }
+    }
+  }
+
+  mobile-menu {
+    @media (min-width: 1441px) {
+      display: none;
     }
   }
 

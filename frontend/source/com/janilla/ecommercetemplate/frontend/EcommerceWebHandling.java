@@ -57,8 +57,7 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 	@Handle(method = "GET", path = "/checkout")
 	public Object checkout(HttpExchange exchange) {
 //		IO.println("WebHandling.checkout");
-		return ((IndexImpl) indexFactory.index(exchange))
-				.withStripe(new Stripe());
+		return ((IndexImpl) indexFactory.index(exchange)).withStripe(new Stripe());
 	}
 
 	@Handle(method = "GET", path = "/checkout/confirm-order")
@@ -106,12 +105,12 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
 	public Object product(String slug, HttpExchange exchange) {
 //		IO.println("WebHandling.product, slug=" + slug);
-		var pp = ((EcommerceDataFetching) dataFetching).products(slug, null, null, null,
+		var pp = ((EcommerceDataFetching) dataFetching).products(slug, null, null, null, 3,
 				((BlankFrontendHttpExchange) exchange).tokenCookie());
-		if (pp.isEmpty())
+		if (pp.totalSize() == 0)
 			throw new NotFoundException("slug=" + slug);
 		var i = indexFactory.index(exchange);
-		i.state().put("product", pp.getFirst());
+		i.state().put("product", pp.elements().getFirst());
 		Stream.of("call-to-action", "content", "media-block", "price", "product", "product-description",
 				"product-gallery", "variant-selector").map(((EcommerceIndexFactory) indexFactory)::ecommerceTemplate)
 				.forEach(i.templates()::add);
@@ -122,9 +121,11 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 	public Object shop(@Bind("q") String query, Long category, String sort, HttpExchange exchange) {
 //		IO.println("WebHandling.shop, query=" + query + ", category=" + category);
 		var i = indexFactory.index(exchange);
-		i.state().put("categories", ((EcommerceDataFetching) dataFetching).categories());
-		i.state().put("products", ((EcommerceDataFetching) dataFetching).products(null, query, category, sort,
-				((BlankFrontendHttpExchange) exchange).tokenCookie()));
+		i.state().put("categories", ((EcommerceDataFetching) dataFetching).categories().elements());
+		i.state().put("products",
+				((EcommerceDataFetching) dataFetching)
+						.products(null, query, category, sort, 1, ((BlankFrontendHttpExchange) exchange).tokenCookie())
+						.elements());
 		Stream.of("card", "shop").map(((EcommerceIndexFactory) indexFactory)::ecommerceTemplate)
 				.forEach(i.templates()::add);
 		return i;

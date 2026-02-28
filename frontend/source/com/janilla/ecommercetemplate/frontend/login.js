@@ -38,10 +38,6 @@ export default class Login extends WebComponent {
         return ["data-warning"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("submit", this.handleSubmit);

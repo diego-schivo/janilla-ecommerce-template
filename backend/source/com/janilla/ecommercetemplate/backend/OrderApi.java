@@ -32,6 +32,9 @@ import java.util.function.Predicate;
 import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.Order;
+import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.ecommercetemplate.UserRoleImpl;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.ForbiddenException;
 import com.janilla.web.Handle;
@@ -41,7 +44,7 @@ import com.janilla.web.UnauthorizedException;
 public class OrderApi extends AbstractCollectionApi<Long, Order> {
 
 	public OrderApi(Predicate<HttpExchange> drafts, Persistence persistence) {
-		super(Order.class, drafts, persistence);
+		super(Order.class, drafts, persistence, "title");
 	}
 
 	@Handle(method = "GET")
@@ -59,20 +62,20 @@ public class OrderApi extends AbstractCollectionApi<Long, Order> {
 
 		var oo = new ArrayList<>(
 				crud().read(customer != null ? crud().filter("customer", new Object[] { customer }) : crud().list(),
-						drafts.test(exchange)));
+						drafts.test(exchange), 0));
 		Collections.reverse(oo);
 		return oo;
 	}
 
 	@Override
-	public Order read(Long id, HttpExchange exchange) {
+	public Order read(Long id, Integer depth, HttpExchange exchange) {
 		@SuppressWarnings("unchecked")
 		var u = ((UserHttpExchange<UserImpl>) exchange).sessionUser();
 		if (u == null || !(u.hasRole(UserRoleImpl.ADMIN) || u.hasRole(UserRoleImpl.CUSTOMER)))
 			throw new UnauthorizedException();
 
-		var o = super.read(id, exchange);
-		if (u.hasRole(UserRoleImpl.CUSTOMER) && !u.id().equals(o.customer()))
+		var o = super.read(id, depth, exchange);
+		if (u.hasRole(UserRoleImpl.CUSTOMER) && !u.id().equals(o.customer().id()))
 			throw new ForbiddenException();
 		return o;
 	}

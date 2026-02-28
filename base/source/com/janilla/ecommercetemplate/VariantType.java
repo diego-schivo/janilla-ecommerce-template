@@ -22,36 +22,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import com.janilla.backend.cms.Types;
-import com.janilla.backend.cms.Versions;
 import com.janilla.cms.Document;
 import com.janilla.cms.DocumentStatus;
-import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
-import com.janilla.websitetemplate.backend.CallToAction;
-import com.janilla.websitetemplate.backend.Category;
-import com.janilla.websitetemplate.backend.Content;
-import com.janilla.websitetemplate.backend.MediaBlock;
-import com.janilla.websitetemplate.backend.Meta;
 
 @Store
-@Versions(drafts = true)
-public record Product(Long id, String title, String description, List<GalleryItem> gallery, List<@Types( {
-		CallToAction.class, Content.class, MediaBlock.class }) ?> layout, Boolean enableVariants,
-		List<@Types({ VariantType.class }) Long> variantTypes, List<@Types(Variant.class) Long> variants,
-		Boolean priceInUsdEnabled, BigDecimal priceInUsd, @Index List<@Types(Category.class) Long> categories,
-		Meta meta, @Index String slug, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
-		Instant publishedAt) implements Document<Long>{
+public record VariantType(Long id, String label, String name, List<VariantOption> options, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 
-	public Product withVariants(List<Long> variants) {
-		return new Product(id, title, description, gallery, layout, enableVariants, variantTypes, variants,
-				priceInUsdEnabled, priceInUsd, categories, meta, slug, createdAt, updatedAt, documentStatus,
-				publishedAt);
+	public VariantType withOptions(List<VariantOption> options) {
+		return new VariantType(id, label, name, options, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 }

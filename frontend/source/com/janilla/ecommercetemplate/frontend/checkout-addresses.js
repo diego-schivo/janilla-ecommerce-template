@@ -26,71 +26,71 @@ import WebComponent from "base/web-component";
 
 export default class CheckoutAddresses extends WebComponent {
 
-	static get templateNames() {
-		return ["checkout-addresses"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-heading", "data-description", "data-name"];
-	}
+    static get templateNames() {
+        return ["checkout-addresses"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-heading", "data-description", "data-name"];
+    }
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("click", this.handleClick);
-	}
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener("click", this.handleClick);
+    }
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("click", this.handleClick);
-	}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener("click", this.handleClick);
+    }
 
-	async updateDisplay() {
-		const a = this.closest("app-element");
-		const s = this.customState;
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...this.dataset,
-			...this.customState,
-			items: a.currentUser.addresses.map(x => ({
-				$template: "item",
-				id: x.id
-			}))
-		}));
-		const d = this.querySelector("dialog");
-		if (s.dialog)
-			d.showModal();
-		else
-			d.close();
-	}
+    async updateDisplay() {
+        const a = this.closest("app-element");
+        const s = this.customState;
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            ...this.dataset,
+            ...this.customState,
+            items: a.currentUser.addresses.map(x => ({
+                $template: "item",
+                id: x.id
+            }))
+        }));
+        const d = this.querySelector("dialog");
+        if (s.dialog)
+            d.showModal();
+        else
+            d.close();
+    }
 
-	handleClick = event => {
-		const b = event.target.closest("button");
-		const s = this.customState;
-		switch (b?.name) {
-			case "close":
-				delete s.dialog;
-				this.requestDisplay();
-				break;
-			case "open":
-				s.dialog = true;
-				this.requestDisplay();
-				break;
-			case "select":
-				/*
-				this.dispatchEvent(new CustomEvent("addressselected", {
-					bubbles: true,
-					detail: { id: parseInt(b.value) }
-				}));
-				*/
-				this.customState.value = b.value;
-				const i = this.querySelector(`input[name="${this.dataset.name}"]`);
-				i.value = b.value;
-				i.dispatchEvent(new Event("change", { bubbles: true }));
-				break;
-		}
-	}
+    handleClick = event => {
+        const b = event.target.closest("button");
+        const s = this.customState;
+        switch (b?.name) {
+            case "close":
+                delete s.dialog;
+                this.requestDisplay();
+                break;
+            case "open":
+                s.dialog = true;
+                this.requestDisplay();
+                break;
+            case "select":
+                /*
+                this.dispatchEvent(new CustomEvent("addressselected", {
+                    bubbles: true,
+                    detail: { id: parseInt(b.value) }
+                }));
+                */
+                this.customState.value = b.value;
+                const i = this.querySelector(`input[name="${this.dataset.name}"]`);
+                i.value = b.value;
+                i.dispatchEvent(new Event("change", { bubbles: true }));
+                break;
+        }
+    }
 }

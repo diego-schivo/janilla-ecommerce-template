@@ -22,22 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import com.janilla.backend.cms.Types;
 import com.janilla.cms.Document;
 import com.janilla.cms.DocumentStatus;
+import com.janilla.cms.User;
+import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record VariantType(Long id, String label, String name, List<@Types(VariantOption.class) Long> options,
-		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long> {
+public record Transaction(Long id, List<CartItem> items, PaymentMethod paymentMethod, AddressData billingAddress,
+		Status status, User<?, ?> customer, String customerEmail, Order order, Cart cart, BigDecimal amount,
+		Currency currency, String stripeCustomer, @Index String stripePaymentIntent, Instant createdAt,
+		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
 
-	public VariantType withOptions(List<Long> options) {
-		return new VariantType(id, label, name, options, createdAt, updatedAt, documentStatus, publishedAt);
+	public Transaction withStatus(Status status) {
+		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
+				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
+				publishedAt);
+	}
+
+	public Transaction withOrder(Order order) {
+		return new Transaction(id, items, paymentMethod, billingAddress, status, customer, customerEmail, order, cart,
+				amount, currency, stripeCustomer, stripePaymentIntent, createdAt, updatedAt, documentStatus,
+				publishedAt);
 	}
 }

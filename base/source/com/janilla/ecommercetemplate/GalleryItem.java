@@ -22,9 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import com.janilla.backend.cms.Types;
+import com.janilla.blanktemplate.Media;
 
-public record CartItem(@Types(Product.class) Long product, @Types(Variant.class) Long variant, Long quantity) {
+public record GalleryItem(Media image, VariantOption variantOption) {
 }

@@ -43,6 +43,16 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.AddressData;
+import com.janilla.ecommercetemplate.Cart;
+import com.janilla.ecommercetemplate.CartItem;
+import com.janilla.ecommercetemplate.Currency;
+import com.janilla.ecommercetemplate.Order;
+import com.janilla.ecommercetemplate.OrderStatus;
+import com.janilla.ecommercetemplate.PaymentMethod;
+import com.janilla.ecommercetemplate.Status;
+import com.janilla.ecommercetemplate.Transaction;
+import com.janilla.ecommercetemplate.UserImpl;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpRequest;
 import com.janilla.java.Converter;
@@ -121,9 +131,9 @@ public class StripeApi extends PaymentApi {
 		}
 
 		persistence.crud(Transaction.class)
-				.create(new Transaction(null, cart.items(), PaymentMethod.STRIPE, billingAddress, Status.PENDING,
-						user != null ? user.id() : null, guestEmail, null, cart.id(), cart.subtotal(), cart.currency(),
-						c.id(), pi.id(), null, null, null, null));
+				.create(new Transaction(null, cart.items(), PaymentMethod.STRIPE, billingAddress, Status.PENDING, user,
+						guestEmail, null, cart, cart.subtotal(), cart.currency(), c.id(), pi.id(), null, null, null,
+						null));
 
 		return new InitiateResult(pi.id(), pi.client_secret());
 	}
@@ -133,7 +143,7 @@ public class StripeApi extends PaymentApi {
 		Transaction t;
 		{
 			var x = persistence.crud(Transaction.class);
-			t = x.read(x.find("stripePaymentIntent", paymentIntent));
+			t = x.read(x.find("stripePaymentIntent", new Object[] { paymentIntent }));
 		}
 
 		record PI(Long amount, String currency, Map<String, String> metadata) {
@@ -152,14 +162,14 @@ public class StripeApi extends PaymentApi {
 		var sa = (AddressData) new Converter().convert(Json.parse(pi.metadata().get("shippingAddress")),
 				AddressData.class);
 		var o = persistence.crud(Order.class)
-				.create(new Order(null, cii, sa, user != null ? user.id() : null, guestEmail, List.of(t.id()),
-						OrderStatus.PROCESSING, BigDecimal.valueOf(pi.amount(), 2),
-						Currency.valueOf(pi.currency().toUpperCase()), null, null, null, null));
+				.create(new Order(null, cii, sa, user, guestEmail, List.of(t), OrderStatus.PROCESSING,
+						BigDecimal.valueOf(pi.amount(), 2), Currency.valueOf(pi.currency().toUpperCase()), null, null,
+						null, null));
 
 		persistence.crud(Cart.class).update(Long.valueOf(pi.metadata().get("cartId")),
 				x -> x.withPurchasedAt(Instant.now()));
 
-		persistence.crud(Transaction.class).update(t.id(), x -> x.withOrder(o.id()).withStatus(Status.SUCCEEDED));
+		persistence.crud(Transaction.class).update(t.id(), x -> x.withOrder(o).withStatus(Status.SUCCEEDED));
 
 		return new ConfirmOrderResult(o.id(), t.id());
 	}

@@ -38,10 +38,6 @@ export default class ProductDescription extends WebComponent {
         return ["data-variant"];
     }
 
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         super.connectedCallback();
         this.addEventListener("submit", this.handleSubmit);

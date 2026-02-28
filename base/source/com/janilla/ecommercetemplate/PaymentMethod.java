@@ -22,14 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.ecommercetemplate.backend;
+package com.janilla.ecommercetemplate;
 
-import java.util.List;
+public enum PaymentMethod {
 
-import com.janilla.ecommercetemplate.Cart;
-import com.janilla.ecommercetemplate.Order;
-import com.janilla.ecommercetemplate.Product;
-import com.janilla.ecommercetemplate.Transaction;
-
-public record Ecommerce(List<Product> products, List<Cart> carts, List<Order> orders, List<Transaction> transactions) {
+	STRIPE
 }

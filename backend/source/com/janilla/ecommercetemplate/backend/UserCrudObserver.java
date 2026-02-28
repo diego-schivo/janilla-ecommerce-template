@@ -26,6 +26,9 @@ package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.ecommercetemplate.Address;
+import com.janilla.ecommercetemplate.Cart;
+import com.janilla.ecommercetemplate.UserImpl;
 
 public class UserCrudObserver implements CrudObserver<UserImpl> {
 
@@ -39,9 +42,9 @@ public class UserCrudObserver implements CrudObserver<UserImpl> {
 	public UserImpl afterRead(UserImpl entity) {
 		var e = entity;
 		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { e.id() });
-		e = e.withCarts(cc);
+		e = e.withCarts(cc.stream().map(x -> Cart.EMPTY.withId(x)).toList());
 		var aa = persistence.crud(Address.class).filter("customer", new Object[] { e.id() });
-		e = e.withAddresses(aa);
+		e = e.withAddresses(aa.stream().map(x -> Address.EMPTY.withId(x)).toList());
 		return e;
 	}
 

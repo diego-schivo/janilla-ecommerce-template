@@ -26,27 +26,27 @@ import WebComponent from "base/web-component";
 
 export default class Price extends WebComponent {
 
-	static get templateNames() {
-		return ["price"];
-	}
+    static get moduleUrl() {
+        return import.meta.url;
+    }
 
-	static get observedAttributes() {
-		return ["data-amount", "data-lowest-amount", "data-highest-amount"];
-	}
+    static get templateNames() {
+        return ["price"];
+    }
 
-	constructor() {
-		super();
-	}
+    static get observedAttributes() {
+        return ["data-amount", "data-lowest-amount", "data-highest-amount"];
+    }
 
-	async updateDisplay() {
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			amounts: (this.dataset.lowestAmount && this.dataset.highestAmount
-				? [this.dataset.lowestAmount, this.dataset.highestAmount]
-				: this.dataset.amount ? [this.dataset.amount] : []).map(x => ({
-					$template: "amount",
-					amount: x
-				}))
-		}));
-	}
+    async updateDisplay() {
+        this.appendChild(this.interpolateDom({
+            $template: "",
+            amounts: (this.dataset.lowestAmount && this.dataset.highestAmount
+                ? [this.dataset.lowestAmount, this.dataset.highestAmount]
+                : this.dataset.amount ? [this.dataset.amount] : []).map(x => ({
+                    $template: "amount",
+                    amount: x
+                }))
+        }));
+    }
 }

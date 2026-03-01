@@ -27,7 +27,7 @@ package com.janilla.ecommercetemplate.frontend;
 import java.util.List;
 import java.util.Map;
 
-import com.janilla.blanktemplate.Foo;
+import com.janilla.blanktemplate.Configuration;
 import com.janilla.blanktemplate.frontend.Index;
 import com.janilla.web.Render;
 
@@ -44,7 +44,7 @@ public record IndexImpl(String title, @Render(renderer = JsonRenderer.class) Map
 	public record Stripe() {
 
 		public String url() {
-			return Foo.PROPERTY_GETTER.get().apply("stripe.url");
+			return Configuration.PROPERTY_GETTER.get().apply("stripe.url");
 		}
 	}
 }

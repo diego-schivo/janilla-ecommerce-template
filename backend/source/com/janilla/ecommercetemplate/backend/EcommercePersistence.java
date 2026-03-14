@@ -34,21 +34,22 @@ import java.util.stream.Stream;
 import com.janilla.backend.persistence.Crud;
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.sqlite.SqliteDatabase;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.Cart;
 import com.janilla.ecommercetemplate.Product;
-import com.janilla.ecommercetemplate.UserImpl;
 import com.janilla.ecommercetemplate.VariantType;
 import com.janilla.ioc.DiFactory;
+import com.janilla.java.Converter;
 import com.janilla.java.Property;
-import com.janilla.java.TypeResolver;
 import com.janilla.persistence.Entity;
 import com.janilla.websitetemplate.backend.WebsitePersistence;
 
 public class EcommercePersistence extends WebsitePersistence {
 
 	public EcommercePersistence(SqliteDatabase database, List<Class<? extends Entity<?>>> storables,
-			TypeResolver typeResolver, DiFactory diFactory, Properties configuration, String configurationKey) {
-		super(database, storables, typeResolver, diFactory, configuration, configurationKey);
+//			TypeResolver typeResolver, 
+			Converter converter, DiFactory diFactory, Properties configuration, String configurationKey) {
+		super(database, storables, converter, diFactory, configuration, configurationKey);
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class EcommercePersistence extends WebsitePersistence {
 				t = CartCrudObserver.class;
 			else if (type == Product.class)
 				t = ProductCrudObserver.class;
-			else if (type == UserImpl.class)
+			else if (type == User.class)
 				t = UserCrudObserver.class;
 			else if (type == VariantType.class)
 				t = VariantTypeCrudObserver.class;
@@ -68,7 +69,7 @@ public class EcommercePersistence extends WebsitePersistence {
 				t = null;
 			if (t != null) {
 				@SuppressWarnings("unchecked")
-				var o = (CrudObserver<E>) diFactory.create(t, Map.of("persistence", this));
+				var o = (CrudObserver<E>) diFactory.newInstance(t, Map.of("persistence", this));
 				c.observers().add(o);
 			}
 		}

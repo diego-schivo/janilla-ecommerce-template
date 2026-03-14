@@ -25,18 +25,30 @@
 package com.janilla.ecommercetemplate;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.cms.User;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Order(Long id, List<CartItem> items, AddressData shippingAddress, @Index User<?, ?> customer,
-		String customerEmail, List<Transaction> transactions, OrderStatus status, BigDecimal amount, Currency currency,
-		Instant createdAt, Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt)
-		implements Document<Long> {
+public interface Order extends Document<Long> {
+
+	List<CartItem> items();
+
+	AddressData shippingAddress();
+
+	@Index
+	User<?> customer();
+
+	String customerEmail();
+
+	List<Transaction> transactions();
+
+	OrderStatus status();
+
+	BigDecimal amount();
+
+	Currency currency();
 }

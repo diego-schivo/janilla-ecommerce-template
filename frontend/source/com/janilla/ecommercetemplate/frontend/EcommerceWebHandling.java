@@ -24,82 +24,93 @@
  */
 package com.janilla.ecommercetemplate.frontend;
 
+import java.util.Properties;
 import java.util.stream.Stream;
 
-import com.janilla.blanktemplate.frontend.BlankDataFetching;
 import com.janilla.blanktemplate.frontend.BlankFrontendHttpExchange;
-import com.janilla.blanktemplate.frontend.BlankIndexFactory;
-import com.janilla.ecommercetemplate.frontend.IndexImpl.Stripe;
+import com.janilla.frontend.IndexFactory;
+import com.janilla.frontend.Script;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Bind;
 import com.janilla.web.Handle;
 import com.janilla.web.NotFoundException;
+import com.janilla.websitetemplate.WebsiteConstants;
+import com.janilla.websitetemplate.frontend.WebsiteDataFetching;
 import com.janilla.websitetemplate.frontend.WebsiteWebHandling;
 
 public class EcommerceWebHandling extends WebsiteWebHandling {
 
-	public EcommerceWebHandling(BlankDataFetching dataFetching, BlankIndexFactory indexFactory) {
-		super(dataFetching, indexFactory);
+	protected final Properties configuration;
+
+	protected final String configurationKey;
+
+	public EcommerceWebHandling(IndexFactory indexFactory, WebsiteConstants constants, WebsiteDataFetching dataFetching,
+			Properties configuration, String configurationKey) {
+		super(indexFactory, constants, dataFetching);
+		this.configuration = configuration;
+		this.configurationKey = configurationKey;
 	}
 
 	@Handle(method = "GET", path = "/account")
 	public Object account(HttpExchange exchange) {
 //		IO.println("WebHandling.account");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/account/addresses")
 	public Object addresses(HttpExchange exchange) {
 //		IO.println("WebHandling.addresses");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/checkout")
 	public Object checkout(HttpExchange exchange) {
 //		IO.println("WebHandling.checkout");
-		return ((IndexImpl) indexFactory.index(exchange)).withStripe(new Stripe());
+		var i = indexFactory.newIndex(exchange);
+		i.scripts().add(new Script(configuration.getProperty(configurationKey + ".stripe.url")));
+		return i;
 	}
 
 	@Handle(method = "GET", path = "/checkout/confirm-order")
 	public Object confirmOrder(HttpExchange exchange) {
 //		IO.println("WebHandling.confirmOrder");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/create-account")
 	public Object createAccount(HttpExchange exchange) {
 //		IO.println("WebHandling.createAccount");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/find-order")
 	public Object findOrder(HttpExchange exchange) {
 //		IO.println("WebHandling.findOrder");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/login")
 	public Object login(HttpExchange exchange) {
 //		IO.println("WebHandling.login");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/logout")
 	public Object logout(HttpExchange exchange) {
 //		IO.println("WebHandling.logout");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/orders/(\\d+)")
 	public Object order(Long id, String guestEmail, HttpExchange exchange) {
 //		IO.println("WebHandling.order, id=" + id + ", email=" + email);
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/orders")
 	public Object orders(HttpExchange exchange) {
 //		IO.println("WebHandling.orders");
-		return indexFactory.index(exchange);
+		return indexFactory.newIndex(exchange);
 	}
 
 	@Handle(method = "GET", path = "/products/([\\w\\d-]+)")
@@ -109,8 +120,8 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 				((BlankFrontendHttpExchange) exchange).tokenCookie());
 		if (pp.totalSize() == 0)
 			throw new NotFoundException("slug=" + slug);
-		var i = indexFactory.index(exchange);
-		i.state().put("product", pp.elements().getFirst());
+		var i = indexFactory.newIndex(exchange);
+		i.app().state().put("product", pp.elements().getFirst());
 		Stream.of("call-to-action", "content", "media-block", "price", "product", "product-description",
 				"product-gallery", "variant-selector").map(((EcommerceIndexFactory) indexFactory)::ecommerceTemplate)
 				.forEach(i.templates()::add);
@@ -120,9 +131,9 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 	@Handle(method = "GET", path = "/shop")
 	public Object shop(@Bind("q") String query, Long category, String sort, HttpExchange exchange) {
 //		IO.println("WebHandling.shop, query=" + query + ", category=" + category);
-		var i = indexFactory.index(exchange);
-		i.state().put("categories", ((EcommerceDataFetching) dataFetching).categories().elements());
-		i.state().put("products",
+		var i = indexFactory.newIndex(exchange);
+		i.app().state().put("categories", ((EcommerceDataFetching) dataFetching).categories().elements());
+		i.app().state().put("products",
 				((EcommerceDataFetching) dataFetching)
 						.products(null, query, category, sort, 1, ((BlankFrontendHttpExchange) exchange).tokenCookie())
 						.elements());

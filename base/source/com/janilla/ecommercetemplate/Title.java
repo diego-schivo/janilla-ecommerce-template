@@ -24,7 +24,7 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum Title {
+public interface Title {
 
-	MR, MRS, MS, DR, PROF, MX, OTHER
+	String name();
 }

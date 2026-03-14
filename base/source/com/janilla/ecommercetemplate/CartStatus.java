@@ -24,7 +24,5 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum CartStatus {
-
-	ACTIVE, PURCHASED, ABANDONED
+public interface CartStatus {
 }

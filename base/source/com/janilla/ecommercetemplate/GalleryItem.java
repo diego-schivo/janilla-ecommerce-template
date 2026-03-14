@@ -26,5 +26,9 @@ package com.janilla.ecommercetemplate;
 
 import com.janilla.blanktemplate.Media;
 
-public record GalleryItem(Media image, VariantOption variantOption) {
+public interface GalleryItem {
+
+	Media image();
+
+	VariantOption variantOption();
 }

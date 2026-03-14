@@ -25,11 +25,9 @@
 package com.janilla.ecommercetemplate;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.cms.Types;
 import com.janilla.cms.Versions;
 import com.janilla.persistence.Index;
@@ -42,15 +40,34 @@ import com.janilla.websitetemplate.Meta;
 
 @Store
 @Versions(drafts = true)
-public record Product(Long id, @Index String title, String description, List<GalleryItem> gallery, List<@Types( {
-		CallToAction.class, Content.class, MediaBlock.class }) ?> layout, Boolean enableVariants,
-		List<VariantType> variantTypes, List<Variant> variants, Boolean priceInUsdEnabled, BigDecimal priceInUsd,
-		@Index List<Category> categories, Meta meta, @Index String slug, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long>{
+public interface Product extends Document<Long> {
 
-	public Product withVariants(List<Variant> variants) {
-		return new Product(id, title, description, gallery, layout, enableVariants, variantTypes, variants,
-				priceInUsdEnabled, priceInUsd, categories, meta, slug, createdAt, updatedAt, documentStatus,
-				publishedAt);
-	}
+	@Index
+	String title();
+
+	String description();
+
+	List<GalleryItem> gallery();
+
+	List<@Types({ CallToAction.class, Content.class, MediaBlock.class }) ?> layout();
+
+	Boolean enableVariants();
+
+	List<VariantType> variantTypes();
+
+	List<Variant> variants();
+
+	Boolean priceInUsdEnabled();
+
+	BigDecimal priceInUsd();
+
+	@Index
+	List<Category> categories();
+
+	Meta meta();
+
+	@Index
+	String slug();
+
+	Product withVariants(List<Variant> variants);
 }

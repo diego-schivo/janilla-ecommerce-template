@@ -24,7 +24,7 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum Status {
+enum OrderStatusImpl implements OrderStatus {
 
-	PENDING, SUCCEEDED, FAILED, CANCELLED, EXPIRED, REFUNDED
+	PROCESSING, COMPLETED
 }

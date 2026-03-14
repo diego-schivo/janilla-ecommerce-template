@@ -24,7 +24,5 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum Currency {
-
-	EUR, USD, GBP
+public interface Currency {
 }

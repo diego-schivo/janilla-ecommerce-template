@@ -31,7 +31,7 @@ import com.janilla.websitetemplate.LinkAppearance;
 import com.janilla.websitetemplate.LinkType;
 import com.janilla.websitetemplate.Page;
 
-public record LinkImpl(LinkType type, Boolean newTab, @Types( {
+record LinkImpl(LinkType type, Boolean newTab, @Types( {
 		Page.class, Product.class }) Document<?> document, String uri, String text, LinkAppearance appearance)
 		implements Link{
 }

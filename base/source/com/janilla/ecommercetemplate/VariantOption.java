@@ -24,20 +24,17 @@
  */
 package com.janilla.ecommercetemplate;
 
-import java.time.Instant;
-
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record VariantOption(Long id, @Index VariantType type, String label, String value, Instant createdAt,
-		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public interface VariantOption extends Document<Long> {
 
-	public static final VariantOption EMPTY = new VariantOption(null, null, null, null, null, null, null, null);
+	@Index
+	VariantType type();
 
-	public VariantOption withId(Long id) {
-		return new VariantOption(id, type, label, value, createdAt, updatedAt, documentStatus, publishedAt);
-	}
+	String label();
+
+	String value();
 }

@@ -24,18 +24,19 @@
  */
 package com.janilla.ecommercetemplate;
 
-import java.time.Instant;
 import java.util.List;
 
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.persistence.Store;
 
 @Store
-public record VariantType(Long id, String label, String name, List<VariantOption> options, Instant createdAt,
-		Instant updatedAt, DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public interface VariantType extends Document<Long> {
 
-	public VariantType withOptions(List<VariantOption> options) {
-		return new VariantType(id, label, name, options, createdAt, updatedAt, documentStatus, publishedAt);
-	}
+	String label();
+
+	String name();
+
+	List<VariantOption> options();
+
+	VariantType withOptions(List<VariantOption> options);
 }

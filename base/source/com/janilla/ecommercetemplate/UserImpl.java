@@ -38,15 +38,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import com.janilla.cms.DocumentStatus;
-import com.janilla.cms.User;
+import com.janilla.cms.UserRole;
 import com.janilla.persistence.Index;
-import com.janilla.persistence.Store;
 
-@Store
-public record UserImpl(Long id, @Index String name, @Index String email, String salt, String hash,
-		@Index String resetPasswordToken, Instant resetPasswordExpiration, Set<UserRoleImpl> roles,
-		@Index String stripeCustomerId, List<Cart> carts, List<Address> addresses, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements User<Long, UserRoleImpl> {
+record UserImpl(Long id, @Index String name, String email, String salt, String hash, String resetPasswordToken,
+		Instant resetPasswordExpiration, Set<UserRole> roles, @Index String stripeCustomerId, List<Cart> carts,
+		List<Address> addresses, Instant createdAt, Instant updatedAt, DocumentStatus documentStatus,
+		Instant publishedAt) implements EcommerceUser<Long> {
 
 	private static final SecretKeyFactory SECRET;
 
@@ -71,7 +69,7 @@ public record UserImpl(Long id, @Index String name, @Index String email, String 
 		return k.getEncoded();
 	}
 
-	public boolean hasRole(UserRoleImpl role) {
+	public boolean hasRole(UserRole role) {
 		return roles != null && roles.contains(role);
 	}
 
@@ -104,7 +102,7 @@ public record UserImpl(Long id, @Index String name, @Index String email, String 
 	}
 
 	@Override
-	public UserImpl withRoles(Set<UserRoleImpl> roles) {
+	public UserImpl withRoles(Set<UserRole> roles) {
 		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
@@ -114,12 +112,14 @@ public record UserImpl(Long id, @Index String name, @Index String email, String 
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public UserImpl withCarts(List<Cart> carts) {
+	@Override
+	public EcommerceUser<Long> withCarts(List<Cart> carts) {
 		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}
 
-	public UserImpl withAddresses(List<Address> addresses) {
+	@Override
+	public EcommerceUser<Long> withAddresses(List<Address> addresses) {
 		return new UserImpl(id, name, email, salt, hash, resetPasswordToken, resetPasswordExpiration, roles,
 				stripeCustomerId, carts, addresses, createdAt, updatedAt, documentStatus, publishedAt);
 	}

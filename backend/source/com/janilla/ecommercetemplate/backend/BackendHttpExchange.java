@@ -28,15 +28,16 @@ import java.util.Properties;
 
 import com.janilla.backend.cms.AbstractUserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
-import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.cms.User;
 import com.janilla.http.HttpRequest;
 import com.janilla.http.HttpResponse;
 
-public class BackendHttpExchange extends AbstractUserHttpExchange<UserImpl> {
+public class BackendHttpExchange extends AbstractUserHttpExchange<User<?>> {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public BackendHttpExchange(HttpRequest request, HttpResponse response, Properties configuration,
 			String configurationKey, Persistence persistence) {
 		super(request, response, configuration.getProperty(configurationKey + ".jwt.cookie"),
-				configuration.getProperty(configurationKey + ".jwt.key"), persistence.crud(UserImpl.class));
+				configuration.getProperty(configurationKey + ".jwt.key"), persistence.crud((Class) User.class));
 	}
 }

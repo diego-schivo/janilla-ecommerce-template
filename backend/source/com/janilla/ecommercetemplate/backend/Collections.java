@@ -27,12 +27,12 @@ package com.janilla.ecommercetemplate.backend;
 import java.util.List;
 
 import com.janilla.blanktemplate.Media;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.Address;
 import com.janilla.ecommercetemplate.Cart;
 import com.janilla.ecommercetemplate.Order;
 import com.janilla.ecommercetemplate.Product;
 import com.janilla.ecommercetemplate.Transaction;
-import com.janilla.ecommercetemplate.UserImpl;
 import com.janilla.ecommercetemplate.Variant;
 import com.janilla.ecommercetemplate.VariantOption;
 import com.janilla.ecommercetemplate.VariantType;
@@ -41,6 +41,6 @@ import com.janilla.websitetemplate.Page;
 
 public record Collections(List<Address> addresses, List<Cart> carts, List<Category> categories, List<Media> media,
 		List<Order> orders, List<Page> pages, List<Product> products, List<Transaction> transactions,
-		List<UserImpl> users, List<VariantOption> variantOptions, List<VariantType> variantTypes,
+		List<User<?>> users, List<VariantOption> variantOptions, List<VariantType> variantTypes,
 		List<Variant> variants) {
 }

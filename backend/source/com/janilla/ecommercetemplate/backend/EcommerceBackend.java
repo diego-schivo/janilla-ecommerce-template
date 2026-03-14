@@ -29,14 +29,15 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
 import com.janilla.ecommercetemplate.Country;
+import com.janilla.ecommercetemplate.EcommerceConstants;
 import com.janilla.ecommercetemplate.Title;
 import com.janilla.http.HttpServer;
+import com.janilla.ioc.DefaultDiFactory;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.SecureServer;
@@ -54,9 +55,9 @@ public class EcommerceBackend extends WebsiteBackend {
 		try {
 			EcommerceBackend a;
 			{
-				var f = new DiFactory(
+				var f = new DefaultDiFactory(
 						Arrays.stream(DI_PACKAGES).flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
-				a = f.create(f.actualType(EcommerceBackend.class),
+				a = f.newInstance(f.classFor(EcommerceBackend.class),
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -71,7 +72,7 @@ public class EcommerceBackend extends WebsiteBackend {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty(a.configurationKey + ".server.port"));
-				s = a.diFactory.create(a.diFactory.actualType(HttpServer.class),
+				s = a.diFactory.newInstance(a.diFactory.classFor(HttpServer.class),
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}
 			s.serve();
@@ -89,13 +90,16 @@ public class EcommerceBackend extends WebsiteBackend {
 	}
 
 	@Override
-	protected Class<?> dataClass() {
+	protected Class<?> dataType() {
 		return Data.class;
 	}
 
 	@Handle(method = "GET", path = "/api/enums")
 	public Map<String, List<String>> enums() {
-		return Stream.of(Title.class, Country.class).collect(Collectors.toMap(x -> x.getSimpleName(),
-				x -> Arrays.stream(x.getEnumConstants()).map(Enum::name).toList()));
+//		return Stream.of(Title.class, Country.class).collect(Collectors.toMap(x -> x.getSimpleName(),
+//				x -> Arrays.stream(x.getEnumConstants()).map(Enum::name).toList()));
+		var cc = ((EcommerceConstants) constants);
+		return Map.of(Title.class.getSimpleName(), cc.titles().map(x -> x.name()).toList(),
+				Country.class.getSimpleName(), cc.countries().map(x -> x.name()).toList());
 	}
 }

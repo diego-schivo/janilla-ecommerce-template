@@ -25,23 +25,24 @@
 package com.janilla.ecommercetemplate;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Variant(Long id, String title, @Index Product product, List<VariantOption> options, Long inventory,
-		Boolean priceInUsdEnabled, BigDecimal priceInUsd, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public interface Variant extends Document<Long> {
+	String title();
 
-	public static final Variant EMPTY = new Variant(null, null, null, null, null, null, null, null, null, null, null);
+	@Index
+	Product product();
 
-	public Variant withId(Long id) {
-		return new Variant(id, title, product, options, inventory, priceInUsdEnabled, priceInUsd, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	List<VariantOption> options();
+
+	Long inventory();
+
+	Boolean priceInUsdEnabled();
+
+	BigDecimal priceInUsd();
 }

@@ -24,22 +24,20 @@
  */
 package com.janilla.ecommercetemplate;
 
-import java.time.Instant;
-
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.cms.User;
 import com.janilla.java.Flat;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Address(Long id, @Index User<?, ?> customer, @Flat AddressData data, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public interface Address extends Document<Long> {
 
-	public static final Address EMPTY = new Address(null, null, null, null, null, null, null);
+	@Index
+	User<?> customer();
 
-	public Address withId(Long id) {
-		return new Address(id, customer, data, createdAt, updatedAt, documentStatus, publishedAt);
-	}
+	@Flat
+	AddressData data();
+
+	Address withId(Long id);
 }

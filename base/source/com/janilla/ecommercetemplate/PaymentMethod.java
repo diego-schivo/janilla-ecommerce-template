@@ -24,7 +24,5 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum PaymentMethod {
-
-	STRIPE
+public interface PaymentMethod {
 }

@@ -36,6 +36,7 @@ import javax.net.ssl.SSLContext;
 
 import com.janilla.blanktemplate.frontend.BlankFrontend;
 import com.janilla.http.HttpServer;
+import com.janilla.ioc.DefaultDiFactory;
 import com.janilla.ioc.DiFactory;
 import com.janilla.java.Java;
 import com.janilla.net.SecureServer;
@@ -52,9 +53,9 @@ public class EcommerceFrontend extends WebsiteFrontend {
 		try {
 			EcommerceFrontend a;
 			{
-				var f = new DiFactory(
+				var f = new DefaultDiFactory(
 						Arrays.stream(DI_PACKAGES).flatMap(x -> Java.getPackageClasses(x, false).stream()).toList());
-				a = f.create(f.actualType(EcommerceFrontend.class),
+				a = f.newInstance(f.classFor(EcommerceFrontend.class),
 						Java.hashMap("diFactory", f, "configurationFile",
 								args.length > 0 ? Path.of(
 										args[0].startsWith("~") ? System.getProperty("user.home") + args[0].substring(1)
@@ -69,7 +70,7 @@ public class EcommerceFrontend extends WebsiteFrontend {
 					c = Java.sslContext(x, "passphrase".toCharArray());
 				}
 				var p = Integer.parseInt(a.configuration.getProperty("ecommerce-template.server.port"));
-				s = a.diFactory.create(a.diFactory.actualType(HttpServer.class),
+				s = a.diFactory.newInstance(a.diFactory.classFor(HttpServer.class),
 						Map.of("sslContext", c, "endpoint", new InetSocketAddress(p), "handler", a.handler));
 			}
 			s.serve();

@@ -24,5 +24,11 @@
  */
 package com.janilla.ecommercetemplate;
 
-public record CartItem(Product product, Variant variant, Long quantity) {
+public interface CartItem {
+
+	Product product();
+
+	Variant variant();
+
+	Long quantity();
 }

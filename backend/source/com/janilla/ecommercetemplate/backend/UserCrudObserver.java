@@ -26,31 +26,36 @@ package com.janilla.ecommercetemplate.backend;
 
 import com.janilla.backend.persistence.CrudObserver;
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.Address;
 import com.janilla.ecommercetemplate.Cart;
-import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.ecommercetemplate.EcommerceConstants;
+import com.janilla.ecommercetemplate.EcommerceUser;
 
-public class UserCrudObserver implements CrudObserver<UserImpl> {
+public class UserCrudObserver implements CrudObserver<User<?>> {
 
 	protected final Persistence persistence;
 
-	public UserCrudObserver(Persistence persistence) {
+	protected final EcommerceConstants constants;
+
+	public UserCrudObserver(Persistence persistence, EcommerceConstants constants) {
 		this.persistence = persistence;
+		this.constants = constants;
 	}
 
 	@Override
-	public UserImpl afterRead(UserImpl entity) {
-		var e = entity;
+	public User<?> afterRead(User<?> entity) {
+		var e = (EcommerceUser<?>) entity;
 		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { e.id() });
-		e = e.withCarts(cc.stream().map(x -> Cart.EMPTY.withId(x)).toList());
+		e = e.withCarts(cc.stream().map(x -> constants.emptyCart().withId(x)).toList());
 		var aa = persistence.crud(Address.class).filter("customer", new Object[] { e.id() });
-		e = e.withAddresses(aa.stream().map(x -> Address.EMPTY.withId(x)).toList());
+		e = e.withAddresses(aa.stream().map(x -> constants.emptyAddress().withId(x)).toList());
 		return e;
 	}
 
 	@Override
-	public UserImpl beforeCreate(UserImpl entity) {
-		var e = entity;
+	public User<?> beforeCreate(User<?> entity) {
+		var e = (EcommerceUser<?>) entity;
 		if (e.carts() != null)
 			e = e.withCarts(null);
 		if (e.addresses() != null)
@@ -59,7 +64,7 @@ public class UserCrudObserver implements CrudObserver<UserImpl> {
 	}
 
 	@Override
-	public UserImpl beforeUpdate(UserImpl entity) {
+	public User<?> beforeUpdate(User<?> entity) {
 		return beforeCreate(entity);
 	}
 
@@ -77,7 +82,7 @@ public class UserCrudObserver implements CrudObserver<UserImpl> {
 //	}
 
 	@Override
-	public void afterDelete(UserImpl entity) {
+	public void afterDelete(User<?> entity) {
 		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { entity.id() });
 		persistence.crud(Cart.class).delete(cc);
 		var aa = persistence.crud(Address.class).filter("customer", new Object[] { entity.id() });

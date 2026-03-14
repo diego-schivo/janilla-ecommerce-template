@@ -36,8 +36,8 @@ import com.janilla.websitetemplate.backend.WebsiteBackendInvocationHandlerFactor
 public class EcommerceInvocationHandlerFactory extends WebsiteBackendInvocationHandlerFactory {
 
 	public EcommerceInvocationHandlerFactory(InvocationResolver invocationResolver, RenderableFactory renderableFactory,
-			HttpHandlerFactory rootFactory, Properties configuration, String configurationKey, DiFactory diFactory) {
-		super(invocationResolver, renderableFactory, rootFactory, configuration, configurationKey, diFactory);
+			HttpHandlerFactory rootFactory, DiFactory diFactory, Properties configuration, String configurationKey) {
+		super(invocationResolver, renderableFactory, rootFactory, diFactory, configuration, configurationKey);
 		guestPost.add("/api/carts");
 		guestPost.add("/api/users");
 //		guestPost.add("/api/payments/stripe/initiate");

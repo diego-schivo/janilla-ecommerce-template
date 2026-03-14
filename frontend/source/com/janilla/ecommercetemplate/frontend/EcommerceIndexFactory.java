@@ -29,26 +29,27 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import com.janilla.blanktemplate.frontend.BlankDataFetching;
-import com.janilla.blanktemplate.frontend.Index;
-import com.janilla.blanktemplate.frontend.Index.Template;
+import com.janilla.frontend.Index;
+import com.janilla.frontend.Template;
+import com.janilla.frontend.cms.CmsDataFetching;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.ResourceMap;
 import com.janilla.websitetemplate.frontend.WebsiteIndexFactory;
 
 public class EcommerceIndexFactory extends WebsiteIndexFactory {
 
-	public EcommerceIndexFactory(Properties configuration, String configurationKey, BlankDataFetching dataFetching,
-			ResourceMap resourceMap) {
-		super(configuration, configurationKey, dataFetching, resourceMap);
+	public EcommerceIndexFactory(ResourceMap resourceMap, CmsDataFetching dataFetching, Properties configuration,
+			String configurationKey) {
+		super(resourceMap, dataFetching, configuration, configurationKey);
 	}
 
 	@Override
-	public Index index(HttpExchange exchange) {
-		return new IndexImpl(configuration.getProperty(configurationKey + ".title"), imports(), configurationKey,
-				configuration.getProperty(configurationKey + ".api.url"), state(exchange), templates(), null,
-				configuration.getProperty(configurationKey + ".stripe.publishable-key"),
-				configuration.getProperty(configurationKey + ".stripe.url"));
+	public Index newIndex(HttpExchange exchange) {
+		return new IndexImpl(configuration.getProperty(configurationKey + ".title"), imports(), scripts(),
+				new AppImpl(configurationKey, configuration.getProperty(configurationKey + ".api.url"),
+						configuration.getProperty(configurationKey + ".stripe.publishable-key"),
+						configuration.getProperty(configurationKey + ".stripe.url"), state(exchange)),
+				templates());
 	}
 
 	@Override

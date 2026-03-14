@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 import com.janilla.backend.cms.AbstractCollectionApi;
 import com.janilla.backend.cms.UserHttpExchange;
 import com.janilla.backend.persistence.Persistence;
-import com.janilla.blanktemplate.UserImpl;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.Cart;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.ForbiddenException;
@@ -44,7 +44,7 @@ public class CartApi extends AbstractCollectionApi<Long, Cart> {
 	}
 
 	@Handle(method = "POST")
-	public Cart create(Cart entity, UserHttpExchange<UserImpl> exchange) {
+	public Cart create(Cart entity, UserHttpExchange<User<?>> exchange) {
 		var e = entity;
 		var u = exchange.sessionUser();
 		if (u != null)
@@ -53,7 +53,7 @@ public class CartApi extends AbstractCollectionApi<Long, Cart> {
 	}
 
 	@Handle(method = "GET", path = "(\\d+)")
-	public Cart read(Long id, String secret, UserHttpExchange<UserImpl> exchange) {
+	public Cart read(Long id, String secret, UserHttpExchange<User<?>> exchange) {
 		var u = exchange.sessionUser();
 		if (u == null && (secret == null || secret.isBlank()))
 			throw new UnauthorizedException();

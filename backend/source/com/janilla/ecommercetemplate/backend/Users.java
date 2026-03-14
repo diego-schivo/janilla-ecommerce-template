@@ -26,7 +26,7 @@ package com.janilla.ecommercetemplate.backend;
 
 import java.util.List;
 
-import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.cms.User;
 
-public record Users(List<UserImpl> users) {
+public record Users(List<User<?>> users) {
 }

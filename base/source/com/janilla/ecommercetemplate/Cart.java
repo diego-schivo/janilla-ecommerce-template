@@ -29,40 +29,35 @@ import java.time.Instant;
 import java.util.List;
 
 import com.janilla.cms.Document;
-import com.janilla.cms.DocumentStatus;
 import com.janilla.cms.User;
 import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Cart(Long id, List<CartItem> items, String secret, @Index User<?, ?> customer, Instant purchasedAt,
-		CartStatus status, BigDecimal subtotal, Currency currency, Instant createdAt, Instant updatedAt,
-		DocumentStatus documentStatus, Instant publishedAt) implements Document<Long> {
+public interface Cart extends Document<Long> {
 
-	public static final Cart EMPTY = new Cart(null, null, null, null, null, null, null, null, null, null, null, null);
+	List<CartItem> items();
 
-	public Cart withId(Long id) {
-		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	String secret();
 
-	public Cart withCustomer(User<?, ?> customer) {
-		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	@Index
+	User<?> customer();
 
-	public Cart withPurchasedAt(Instant purchasedAt) {
-		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	Instant purchasedAt();
 
-	public Cart withSecret(String secret) {
-		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	CartStatus status();
 
-	public Cart withSubtotal(BigDecimal subtotal) {
-		return new Cart(id, items, secret, customer, purchasedAt, status, subtotal, currency, createdAt, updatedAt,
-				documentStatus, publishedAt);
-	}
+	BigDecimal subtotal();
+
+	Currency currency();
+
+	Cart withId(Long id);
+
+	Cart withCustomer(User<?> customer);
+
+	Cart withPurchasedAt(Instant purchasedAt);
+
+	Cart withSecret(String secret);
+
+	Cart withSubtotal(BigDecimal subtotal);
 }

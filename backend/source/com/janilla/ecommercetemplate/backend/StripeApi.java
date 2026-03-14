@@ -43,16 +43,13 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.janilla.backend.persistence.Persistence;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.AddressData;
 import com.janilla.ecommercetemplate.Cart;
 import com.janilla.ecommercetemplate.CartItem;
-import com.janilla.ecommercetemplate.Currency;
+import com.janilla.ecommercetemplate.EcommerceConstants;
 import com.janilla.ecommercetemplate.Order;
-import com.janilla.ecommercetemplate.OrderStatus;
-import com.janilla.ecommercetemplate.PaymentMethod;
-import com.janilla.ecommercetemplate.Status;
 import com.janilla.ecommercetemplate.Transaction;
-import com.janilla.ecommercetemplate.UserImpl;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpRequest;
 import com.janilla.java.Converter;
@@ -65,22 +62,17 @@ import com.janilla.web.Handle;
 @Handle(path = "/api/payments/stripe")
 public class StripeApi extends PaymentApi {
 
+	protected final EcommerceConstants constants;
+
 	protected final String secretKey = configuration.getProperty("ecommerce-template.stripe.secret-key");
 
-//	protected final Function<HttpResponse, Object> json = x -> {
-//		try {
-//			return Json.parse(new String(Channels.newInputStream((ReadableByteChannel) x.getBody()).readAllBytes()));
-//		} catch (IOException e) {
-//			throw new UncheckedIOException(e);
-//		}
-//	};
-
-	public StripeApi(Properties configuration, Persistence persistence) {
+	public StripeApi(Properties configuration, Persistence persistence, EcommerceConstants constants) {
 		super(configuration, persistence);
+		this.constants = constants;
 	}
 
 	@Override
-	protected InitiateResult initiate(UserImpl user, String guestEmail, Cart cart, AddressData billingAddress,
+	protected InitiateResult initiate(User<?> user, String guestEmail, Cart cart, AddressData billingAddress,
 			AddressData shippingAddress) {
 		record C(String id) {
 		}
@@ -131,15 +123,15 @@ public class StripeApi extends PaymentApi {
 		}
 
 		persistence.crud(Transaction.class)
-				.create(new Transaction(null, cart.items(), PaymentMethod.STRIPE, billingAddress, Status.PENDING, user,
-						guestEmail, null, cart, cart.subtotal(), cart.currency(), c.id(), pi.id(), null, null, null,
-						null));
+				.create(constants.newTransaction(cart.items(), constants.stripePaymentMethod(), billingAddress,
+						constants.pendingTransactionStatus(), user, guestEmail, null, cart, cart.subtotal(),
+						cart.currency(), c.id(), pi.id()));
 
 		return new InitiateResult(pi.id(), pi.client_secret());
 	}
 
 	@Override
-	protected ConfirmOrderResult confirmOrder(UserImpl user, String guestEmail, String paymentIntent) {
+	protected ConfirmOrderResult confirmOrder(User<?> user, String guestEmail, String paymentIntent) {
 		Transaction t;
 		{
 			var x = persistence.crud(Transaction.class);
@@ -162,14 +154,14 @@ public class StripeApi extends PaymentApi {
 		var sa = (AddressData) new Converter().convert(Json.parse(pi.metadata().get("shippingAddress")),
 				AddressData.class);
 		var o = persistence.crud(Order.class)
-				.create(new Order(null, cii, sa, user, guestEmail, List.of(t), OrderStatus.PROCESSING,
-						BigDecimal.valueOf(pi.amount(), 2), Currency.valueOf(pi.currency().toUpperCase()), null, null,
-						null, null));
+				.create(constants.newOrder(cii, sa, user, guestEmail, List.of(t), constants.processingOrderStatus(),
+						BigDecimal.valueOf(pi.amount(), 2), constants.currency(pi.currency().toUpperCase())));
 
 		persistence.crud(Cart.class).update(Long.valueOf(pi.metadata().get("cartId")),
 				x -> x.withPurchasedAt(Instant.now()));
 
-		persistence.crud(Transaction.class).update(t.id(), x -> x.withOrder(o).withStatus(Status.SUCCEEDED));
+		persistence.crud(Transaction.class).update(t.id(),
+				x -> x.withOrder(o).withStatus(constants.succeededTransactionStatus()));
 
 		return new ConfirmOrderResult(o.id(), t.id());
 	}

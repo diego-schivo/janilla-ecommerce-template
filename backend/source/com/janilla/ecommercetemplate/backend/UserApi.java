@@ -31,21 +31,23 @@ import java.util.function.Predicate;
 import com.janilla.backend.cms.AbstractUserApi;
 import com.janilla.backend.persistence.Persistence;
 import com.janilla.blanktemplate.backend.BackendHttpExchange;
-import com.janilla.ecommercetemplate.UserImpl;
+import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.UserRoleImpl;
 import com.janilla.http.HttpExchange;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/users")
-public class UserApi extends AbstractUserApi<Long, UserImpl, UserRoleImpl> {
+public class UserApi extends AbstractUserApi<Long, User<Long>> {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public UserApi(Predicate<HttpExchange> drafts, Persistence persistence, Properties configuration,
 			String configurationKey) {
-		super(UserImpl.class, drafts, persistence, "name", configuration.getProperty(configurationKey + ".jwt.key"));
+		super((Class) User.class, drafts, persistence, "name",
+				configuration.getProperty(configurationKey + ".jwt.key"));
 	}
 
 	@Handle(method = "POST")
-	public UserImpl create(CreateData<UserImpl> data, BackendHttpExchange exchange) {
+	public User<Long> createx(CreateData<User<Long>> data, BackendHttpExchange exchange) {
 		if (exchange.sessionUser() == null) {
 			var u = data.user().withRoles(Set.of(UserRoleImpl.CUSTOMER));
 			data = data.withUser(u);

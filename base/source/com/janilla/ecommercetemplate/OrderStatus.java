@@ -24,7 +24,5 @@
  */
 package com.janilla.ecommercetemplate;
 
-public enum OrderStatus {
-
-	PROCESSING, COMPLETED
+public interface OrderStatus {
 }

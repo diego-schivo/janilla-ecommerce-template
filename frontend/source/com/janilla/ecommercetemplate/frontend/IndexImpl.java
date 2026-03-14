@@ -27,24 +27,15 @@ package com.janilla.ecommercetemplate.frontend;
 import java.util.List;
 import java.util.Map;
 
-import com.janilla.blanktemplate.Configuration;
-import com.janilla.blanktemplate.frontend.Index;
-import com.janilla.web.Render;
+import com.janilla.frontend.App;
+import com.janilla.frontend.Index;
+import com.janilla.frontend.Script;
+import com.janilla.frontend.Template;
 
-@Render(template = "index.html")
-public record IndexImpl(String title, @Render(renderer = JsonRenderer.class) Map<String, String> imports, String key,
-		String apiUrl, @Render(renderer = StateRenderer.class) Map<String, Object> state, List<Template> templates,
-		Stripe stripe, String stripePublishableKey, String stripeUrl) implements Index {
+record IndexImpl(String title, Map<String, String> imports, List<Script> scripts, App app, List<Template> templates)
+		implements Index {
 
-	public IndexImpl withStripe(Stripe stripe) {
-		return new IndexImpl(title, imports, key, apiUrl, state, templates, stripe, stripePublishableKey, stripeUrl);
-	}
-
-	@Render(template = "stripe")
-	public record Stripe() {
-
-		public String url() {
-			return Configuration.PROPERTY_GETTER.get().apply("stripe.url");
-		}
-	}
+//	public IndexImpl withStripe(Stripe stripe) {
+//		return new IndexImpl(title, imports, scripts, app, templates, stripe);
+//	}
 }

@@ -31,7 +31,7 @@ import java.util.Properties;
 import com.janilla.ecommercetemplate.Product;
 import com.janilla.http.HttpClient;
 import com.janilla.http.HttpCookie;
-import com.janilla.ioc.DiFactory;
+import com.janilla.java.Converter;
 import com.janilla.java.SimpleParameterizedType;
 import com.janilla.java.UriQueryBuilder;
 import com.janilla.persistence.ListPortion;
@@ -41,8 +41,8 @@ import com.janilla.websitetemplate.frontend.WebsiteDataFetching;
 public class EcommerceDataFetching extends WebsiteDataFetching {
 
 	public EcommerceDataFetching(Properties configuration, String configurationKey, HttpClient httpClient,
-			DiFactory diFactory) {
-		super(configuration, configurationKey, httpClient, diFactory);
+			Converter converter) {
+		super(configuration, configurationKey, httpClient, converter);
 	}
 
 	public ListPortion<Category> categories() {

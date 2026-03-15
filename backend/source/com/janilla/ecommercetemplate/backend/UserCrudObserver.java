@@ -29,27 +29,27 @@ import com.janilla.backend.persistence.Persistence;
 import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.Address;
 import com.janilla.ecommercetemplate.Cart;
-import com.janilla.ecommercetemplate.EcommerceConstants;
+import com.janilla.ecommercetemplate.EcommerceDomain;
 import com.janilla.ecommercetemplate.EcommerceUser;
 
 public class UserCrudObserver implements CrudObserver<User<?>> {
 
 	protected final Persistence persistence;
 
-	protected final EcommerceConstants constants;
+	protected final EcommerceDomain domain;
 
-	public UserCrudObserver(Persistence persistence, EcommerceConstants constants) {
+	public UserCrudObserver(Persistence persistence, EcommerceDomain domain) {
 		this.persistence = persistence;
-		this.constants = constants;
+		this.domain = domain;
 	}
 
 	@Override
 	public User<?> afterRead(User<?> entity) {
 		var e = (EcommerceUser<?>) entity;
 		var cc = persistence.crud(Cart.class).filter("customer", new Object[] { e.id() });
-		e = e.withCarts(cc.stream().map(x -> constants.emptyCart().withId(x)).toList());
+		e = e.withCarts(cc.stream().map(x -> domain.emptyCart().withId(x)).toList());
 		var aa = persistence.crud(Address.class).filter("customer", new Object[] { e.id() });
-		e = e.withAddresses(aa.stream().map(x -> constants.emptyAddress().withId(x)).toList());
+		e = e.withAddresses(aa.stream().map(x -> domain.emptyAddress().withId(x)).toList());
 		return e;
 	}
 

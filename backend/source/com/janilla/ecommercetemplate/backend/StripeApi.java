@@ -47,7 +47,7 @@ import com.janilla.cms.User;
 import com.janilla.ecommercetemplate.AddressData;
 import com.janilla.ecommercetemplate.Cart;
 import com.janilla.ecommercetemplate.CartItem;
-import com.janilla.ecommercetemplate.EcommerceConstants;
+import com.janilla.ecommercetemplate.EcommerceDomain;
 import com.janilla.ecommercetemplate.Order;
 import com.janilla.ecommercetemplate.Transaction;
 import com.janilla.http.HttpClient;
@@ -62,13 +62,13 @@ import com.janilla.web.Handle;
 @Handle(path = "/api/payments/stripe")
 public class StripeApi extends PaymentApi {
 
-	protected final EcommerceConstants constants;
+	protected final EcommerceDomain domain;
 
 	protected final String secretKey = configuration.getProperty("ecommerce-template.stripe.secret-key");
 
-	public StripeApi(Properties configuration, Persistence persistence, EcommerceConstants constants) {
+	public StripeApi(Properties configuration, Persistence persistence, EcommerceDomain domain) {
 		super(configuration, persistence);
-		this.constants = constants;
+		this.domain = domain;
 	}
 
 	@Override
@@ -123,8 +123,9 @@ public class StripeApi extends PaymentApi {
 		}
 
 		persistence.crud(Transaction.class)
-				.create(constants.newTransaction(cart.items(), constants.stripePaymentMethod(), billingAddress,
-						constants.pendingTransactionStatus(), user, guestEmail, null, cart, cart.subtotal(),
+				.create(domain.newTransaction(cart.items(), domain.paymentMethod("STRIPE"), billingAddress,
+						domain.transactionStatus(
+								"PENDING"), user, guestEmail, null, cart, cart.subtotal(),
 						cart.currency(), c.id(), pi.id()));
 
 		return new InitiateResult(pi.id(), pi.client_secret());
@@ -154,14 +155,15 @@ public class StripeApi extends PaymentApi {
 		var sa = (AddressData) new Converter().convert(Json.parse(pi.metadata().get("shippingAddress")),
 				AddressData.class);
 		var o = persistence.crud(Order.class)
-				.create(constants.newOrder(cii, sa, user, guestEmail, List.of(t), constants.processingOrderStatus(),
-						BigDecimal.valueOf(pi.amount(), 2), constants.currency(pi.currency().toUpperCase())));
+				.create(domain.newOrder(cii, sa, user, guestEmail, List.of(t), domain.orderStatus(
+						"PROCESSING"),
+						BigDecimal.valueOf(pi.amount(), 2), domain.currency(pi.currency().toUpperCase())));
 
 		persistence.crud(Cart.class).update(Long.valueOf(pi.metadata().get("cartId")),
 				x -> x.withPurchasedAt(Instant.now()));
 
 		persistence.crud(Transaction.class).update(t.id(),
-				x -> x.withOrder(o).withStatus(constants.succeededTransactionStatus()));
+				x -> x.withOrder(o).withStatus(domain.transactionStatus("SUCCEEDED")));
 
 		return new ConfirmOrderResult(o.id(), t.id());
 	}

@@ -34,7 +34,7 @@ import com.janilla.http.HttpExchange;
 import com.janilla.web.Bind;
 import com.janilla.web.Handle;
 import com.janilla.web.NotFoundException;
-import com.janilla.websitetemplate.WebsiteConstants;
+import com.janilla.websitetemplate.WebsiteDomain;
 import com.janilla.websitetemplate.frontend.WebsiteDataFetching;
 import com.janilla.websitetemplate.frontend.WebsiteWebHandling;
 
@@ -44,9 +44,9 @@ public class EcommerceWebHandling extends WebsiteWebHandling {
 
 	protected final String configurationKey;
 
-	public EcommerceWebHandling(IndexFactory indexFactory, WebsiteConstants constants, WebsiteDataFetching dataFetching,
+	public EcommerceWebHandling(IndexFactory indexFactory, WebsiteDomain domain, WebsiteDataFetching dataFetching,
 			Properties configuration, String configurationKey) {
-		super(indexFactory, constants, dataFetching);
+		super(indexFactory, domain, dataFetching);
 		this.configuration = configuration;
 		this.configurationKey = configurationKey;
 	}

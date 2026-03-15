@@ -25,16 +25,13 @@
 package com.janilla.ecommercetemplate.frontend;
 
 import java.net.InetSocketAddress;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
 
-import com.janilla.blanktemplate.frontend.BlankFrontend;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DefaultDiFactory;
 import com.janilla.ioc.DiFactory;
@@ -87,16 +84,23 @@ public class EcommerceFrontend extends WebsiteFrontend {
 		super(diFactory, configurationFile, configurationKey);
 	}
 
+//	@Override
+//	protected Map<String, List<Path>> resourcePaths() {
+//		var pp1 = Java.getPackagePaths("com.janilla.frontend", false).filter(Files::isRegularFile).toList();
+//		var pp2 = Java.getPackagePaths("com.janilla.frontend.cms", false).filter(Files::isRegularFile).toList();
+//		var pp3 = Java.getPackagePaths(BlankFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+//				.toList();
+//		var pp4 = Java.getPackagePaths(WebsiteFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+//				.toList();
+//		var pp5 = Java.getPackagePaths(EcommerceFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
+//				.toList();
+//		return Map.of("/base", pp1, "/cms", pp2, "/blank", pp3, "/website", pp4, "", pp5);
+//	}
+
 	@Override
-	protected Map<String, List<Path>> resourcePaths() {
-		var pp1 = Java.getPackagePaths("com.janilla.frontend", false).filter(Files::isRegularFile).toList();
-		var pp2 = Java.getPackagePaths("com.janilla.frontend.cms", false).filter(Files::isRegularFile).toList();
-		var pp3 = Java.getPackagePaths(BlankFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
-				.toList();
-		var pp4 = Java.getPackagePaths(WebsiteFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
-				.toList();
-		var pp5 = Java.getPackagePaths(EcommerceFrontend.class.getPackageName(), false).filter(Files::isRegularFile)
-				.toList();
-		return Map.of("/base", pp1, "/cms", pp2, "/blank", pp3, "/website", pp4, "", pp5);
+	protected void putResourcePrefixes() {
+		super.putResourcePrefixes();
+		resourcePrefixes.put("com.janilla.websitetemplate.frontend", "/website");
+		resourcePrefixes.put("com.janilla.ecommercetemplate.frontend", "");
 	}
 }

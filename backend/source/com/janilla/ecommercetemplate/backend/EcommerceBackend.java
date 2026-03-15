@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
 
 import com.janilla.ecommercetemplate.Country;
-import com.janilla.ecommercetemplate.EcommerceConstants;
+import com.janilla.ecommercetemplate.EcommerceDomain;
 import com.janilla.ecommercetemplate.Title;
 import com.janilla.http.HttpServer;
 import com.janilla.ioc.DefaultDiFactory;
@@ -98,7 +98,7 @@ public class EcommerceBackend extends WebsiteBackend {
 	public Map<String, List<String>> enums() {
 //		return Stream.of(Title.class, Country.class).collect(Collectors.toMap(x -> x.getSimpleName(),
 //				x -> Arrays.stream(x.getEnumConstants()).map(Enum::name).toList()));
-		var cc = ((EcommerceConstants) constants);
+		var cc = ((EcommerceDomain) domain);
 		return Map.of(Title.class.getSimpleName(), cc.titles().map(x -> x.name()).toList(),
 				Country.class.getSimpleName(), cc.countries().map(x -> x.name()).toList());
 	}

@@ -34,8 +34,4 @@ import com.janilla.frontend.Template;
 
 record IndexImpl(String title, Map<String, String> imports, List<Script> scripts, App app, List<Template> templates)
 		implements Index {
-
-//	public IndexImpl withStripe(Stripe stripe) {
-//		return new IndexImpl(title, imports, scripts, app, templates, stripe);
-//	}
 }

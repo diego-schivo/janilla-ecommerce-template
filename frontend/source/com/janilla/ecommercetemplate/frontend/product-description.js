@@ -118,6 +118,6 @@ export default class ProductDescription extends WebComponent {
             a.success("Item added to cart.");
             dispatchEvent(new CustomEvent("cartchanged", { detail: j }));
         } else
-            a.renderToast(j, "error");
+            a.error(j);
     }
 }

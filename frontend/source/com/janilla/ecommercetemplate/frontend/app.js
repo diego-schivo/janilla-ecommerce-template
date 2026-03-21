@@ -34,7 +34,7 @@ export default class App extends WebsiteApp {
     }
 
     static get templateNames() {
-        return ["/blank/app", "/website/app", "app"];
+		return ["/base/app", "/blank/app", "/website/app", "app"];
     }
 
     async updateDisplaySite() {

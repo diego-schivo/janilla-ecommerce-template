@@ -50,10 +50,11 @@ public class OrderApi extends AbstractCollectionApi<Long, Order> {
 	@Handle(method = "GET")
 	public List<Order> read(Long customer, UserHttpExchange<User<?>> exchange) {
 		var u = (User<?>) exchange.sessionUser();
-		if (u == null || !(u.hasRole(UserRoleImpl.ADMIN) || u.hasRole(UserRoleImpl.CUSTOMER)))
+		var rr = u != null ? u.roles() : null;
+		if (rr == null || !(rr.contains(UserRoleImpl.ADMIN) || rr.contains(UserRoleImpl.CUSTOMER)))
 			throw new UnauthorizedException();
 
-		if (u.hasRole(UserRoleImpl.CUSTOMER)) {
+		if (rr != null && rr.contains(UserRoleImpl.CUSTOMER)) {
 			if (customer == null)
 				customer = (Long) u.id();
 			else if (!customer.equals(u.id()))
@@ -71,11 +72,12 @@ public class OrderApi extends AbstractCollectionApi<Long, Order> {
 	public Order read(Long id, Integer depth, HttpExchange exchange) {
 		@SuppressWarnings("unchecked")
 		var u = ((UserHttpExchange<User<?>>) exchange).sessionUser();
-		if (u == null || !(u.hasRole(UserRoleImpl.ADMIN) || u.hasRole(UserRoleImpl.CUSTOMER)))
+		var rr = u != null ? u.roles() : null;
+		if (rr == null || !(rr.contains(UserRoleImpl.ADMIN) || rr.contains(UserRoleImpl.CUSTOMER)))
 			throw new UnauthorizedException();
 
 		var o = super.read(id, depth, exchange);
-		if (u.hasRole(UserRoleImpl.CUSTOMER) && !u.id().equals(o.customer().id()))
+		if (rr != null && rr.contains(UserRoleImpl.CUSTOMER) && !u.id().equals(o.customer().id()))
 			throw new ForbiddenException();
 		return o;
 	}

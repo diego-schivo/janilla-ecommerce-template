@@ -47,7 +47,7 @@ public class UserApi extends AbstractUserApi<Long, User<Long>> {
 	}
 
 	@Handle(method = "POST")
-	public User<Long> createx(CreateData<User<Long>> data, BackendHttpExchange exchange) {
+	public User<Long> create(UserData<User<Long>> data, BackendHttpExchange exchange) {
 		if (exchange.sessionUser() == null) {
 			var u = data.user().withRoles(Set.of(UserRoleImpl.CUSTOMER));
 			data = data.withUser(u);

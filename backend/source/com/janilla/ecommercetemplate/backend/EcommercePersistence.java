@@ -57,13 +57,13 @@ public class EcommercePersistence extends WebsitePersistence {
 		var c = super.newCrud(type);
 		if (c != null) {
 			Class<? extends CrudObserver<?>> t;
-			if (type == Cart.class)
+			if (type.equals(Cart.class))
 				t = CartCrudObserver.class;
-			else if (type == Product.class)
+			else if (type.equals(Product.class))
 				t = ProductCrudObserver.class;
-			else if (type == User.class)
+			else if (type.equals(User.class))
 				t = UserCrudObserver.class;
-			else if (type == VariantType.class)
+			else if (type.equals(VariantType.class))
 				t = VariantTypeCrudObserver.class;
 			else
 				t = null;
